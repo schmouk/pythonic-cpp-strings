@@ -26,5 +26,6 @@
 */
 int main()
 {
+    CppString s;
     return 0;
 }
