@@ -20,4 +20,77 @@
     along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
+//=============================================================
+#include <string>
+//#include <initializer_list>
 
+
+//=============================================================
+// Forward declarations
+template<
+    class CharT,
+    class TraitsT = std::char_traits<CharT>,
+    class AllocatorT = std::allocator<CharT>
+> class CppStringT;                     //!< The templated base class. Use its specializations instead!
+
+using CppString  = CppStringT<char>;    //!< Specialization of basic class with template argument 'char'
+using CppWString = CppStringT<wchar_t>; //!< Specialization of basic class with template argument 'wchar_t'
+
+
+//=====   CppStringT<>   ======================================
+/**
+* \brief This is the templated base class for all CppString
+* classes.
+* 
+* Users should instantiate any specialization of this  base  class
+* rather than this base class itself:
+*   - \see CppString for CppStringT<char>.
+*   - \see CppWString for CppStringT<wchar_t>.
+* 
+* This base class inherits from std::basic_string<CharT>. As such,
+* it  gets  direct access to all public methods of its base class.
+* \see  https://en.cppreference.com/w/cpp/string/basic_string  for
+* a full list of such methods, for instance.
+* 
+* You may specialize it by your own with any of the next char
+* types:
+*   - char8_t  (C++20)
+*   - char16_t (C++11)
+*   - char32_t (C++11)
+*/
+template<class CharT, class TraitsT, class AllocatorT>
+class CppStringT : public std::basic_string<CharT>
+{
+public:
+    //---   Wrappers   ----------------------------------------
+    using MyBaseClass = std::basic_string<CharT>;
+    using size_type = MyBaseClass::size_type;
+
+    //---   Constructors   ------------------------------------
+    inline CppStringT() : MyBaseClass() {}
+    inline CppStringT(const CppStringT& other) : MyBaseClass(other) {}
+    inline CppStringT(const CppStringT& other, const AllocatorT& alloc) : MyBaseClass(other, alloc){}
+    inline CppStringT(CppStringT&& other) : MyBaseClass(other) {}
+    inline CppStringT(CppStringT&& other, const AllocatorT& alloc) : MyBaseClass(other, alloc) {}
+    inline CppStringT(MyBaseClass::size_type count, CharT ch) : MyBaseClass(count, ch) {}
+    inline CppStringT(const CppStringT& other, size_type pos) : MyBaseClass(other, pos) {}
+    inline CppStringT(const CppStringT& other, size_type pos, size_type count) noexcept : MyBaseClass(other, pos, count) {}
+    inline CppStringT(const CharT* s) : MyBaseClass(s) {}
+    inline CppStringT(const CharT* s, size_type count) : MyBaseClass(s, count) {}
+    inline CppStringT(std::initializer_list<CharT> ilist) : MyBaseClass(ilist) {}
+
+    template<class InputIt>
+    inline CppStringT(InputIt first, InputIt last) : MyBaseClass(first, last) {}
+
+    template<class StringViewLike>
+    explicit CppStringT(const StringViewLike& svl) : MyBaseClass(svl) {}
+
+    template<class StringViewLike>
+    CppStringT(const StringViewLike& svl, size_type pos, size_type n) : MyBaseClass(svl, pos, n) {}
+
+protected:
+
+
+private:
+
+};
