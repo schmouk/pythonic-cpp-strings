@@ -64,7 +64,21 @@ class CppStringT : public std::basic_string<CharT>
 public:
     //---   Wrappers   ----------------------------------------
     using MyBaseClass = std::basic_string<CharT>;
-    using size_type = MyBaseClass::size_type;
+
+    using traits_type            = MyBaseClass::traits_type;
+    using value_type             = MyBaseClass::value_type;
+    using allocator_type         = MyBaseClass::allocator_type;
+    using size_type              = MyBaseClass::size_type;
+    using difference_type        = MyBaseClass::difference_type;
+    using reference              = MyBaseClass::reference;
+    using const_reference        = MyBaseClass::const_reference;
+    using pointer                = MyBaseClass::pointer;
+    using const_pointer          = MyBaseClass::const_pointer;
+    using iterator               = MyBaseClass::iterator;
+    using const_iterator         = MyBaseClass::const_iterator;
+    using reverse_iterator       = MyBaseClass::reverse_iterator;
+    using const_reverse_iterator = MyBaseClass::const_reverse_iterator;
+
 
     //---   Constructors   ------------------------------------
     inline CppStringT() : MyBaseClass() {}
@@ -87,6 +101,10 @@ public:
 
     template<class StringViewLike>
     CppStringT(const StringViewLike& svl, size_type pos, size_type n) : MyBaseClass(svl, pos, n) {}
+
+
+    //---   Methods   -----------------------------------------
+
 
 protected:
 
