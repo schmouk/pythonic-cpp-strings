@@ -109,7 +109,7 @@ public:
 
     //---   is_punctuation   ----------------------------------
     /** \brief Returns true if the string contains only one character and if this character belongs to the ASCII punctuation set. */
-    inline const bool is_punctuation() noexcept
+    inline const bool is_punctuation() const noexcept
     {
         return this->length() == 1 && is_punctuation((*this)[0]);
     }
@@ -128,7 +128,7 @@ public:
     * in  the  Unicode character database,  either its general category is Zs 
     * (“Separator, space”), or its bidirectional class is one of WS, B, or S.
     */
-    inline const bool is_space() noexcept
+    inline const bool is_space() const noexcept
     {
         if (this->length() == 0)
             return false;
@@ -144,6 +144,19 @@ public:
         return _ASCII_SPACES.contains(ch);
     }
 
+
+    //---   is_words_sep   ------------------------------------
+    /** \brief Returns true if there are only whitespace and punctuation characters in the string and there is at least one character, or false otherwise. */
+    inline const bool is_words_sep() const noexcept
+    {
+        return is_space() || is_punctuation();
+    }
+
+    /** \brief Returns true if character belongs to ASCII spaces or punctuation sets. */
+    static inline const bool is_words_sep(const value_type& ch) noexcept
+    {
+        return is_space(ch) || is_punctuation(ch);
+    }
 
 
 protected:
