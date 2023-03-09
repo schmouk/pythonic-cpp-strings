@@ -108,10 +108,10 @@ public:
     //===   Methods   =========================================
 
     //---   is_punctuation   ----------------------------------
-    /** \brief Returns true if a character belongs to ASCII punctuation set. */
-    inline const bool is_punctuation(const value_type ch) noexcept
+    /** \brief Returns true if the string contains only one character and if this character belongs to the ASCII punctuation set. */
+    inline const bool is_punctuation(const MyBaseClass& str) noexcept
     {
-        return _ASCII_PUNCT_DATA.contains(ch);
+        return str.size == 1  &&  _ASCII_PUNCT_DATA.contains(str[0]);
     }
 
     //---   is_space   ----------------------------------------
@@ -126,7 +126,7 @@ public:
         if (str.size() == 0)
             return false;
         for (auto& c : str)
-            if (std::find(str.cbegin(), str.cend(), c) == str.cend())
+            if (std::find(_ASCII_SEP.cbegin(), _ASCII_SEP.cend(), c) == _ASCII_SEP.cend())
                 return false;
         return true;
     }
