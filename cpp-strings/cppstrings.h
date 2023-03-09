@@ -22,6 +22,7 @@
 
 //=============================================================
 #include <string>
+#include <vector>
 //#include <initializer_list>
 
 
@@ -31,7 +32,7 @@ template<
     class CharT,
     class TraitsT = std::char_traits<CharT>,
     class AllocatorT = std::allocator<CharT>
-> class CppStringT;                     //!< The templated base class. Use its specializations instead!
+> class CppStringT;                     //!< The templated base class. Use its belowing specializations instead!
 
 using CppString  = CppStringT<char>;    //!< Specialization of basic class with template argument 'char'
 using CppWString = CppStringT<wchar_t>; //!< Specialization of basic class with template argument 'wchar_t'
@@ -62,7 +63,7 @@ template<class CharT, class TraitsT, class AllocatorT>
 class CppStringT : public std::basic_string<CharT>
 {
 public:
-    //---   Wrappers   ----------------------------------------
+    //===   Wrappers   ========================================
     using MyBaseClass = std::basic_string<CharT>;
 
     using traits_type            = MyBaseClass::traits_type;
@@ -80,7 +81,7 @@ public:
     using const_reverse_iterator = MyBaseClass::const_reverse_iterator;
 
 
-    //---   Constructors   ------------------------------------
+    //===   Constructors   ====================================
     inline CppStringT() : MyBaseClass() {}
     inline CppStringT(const CppStringT& other) : MyBaseClass(other) {}
     inline CppStringT(const CppStringT& other, const AllocatorT& alloc) : MyBaseClass(other, alloc){}
@@ -103,12 +104,21 @@ public:
     CppStringT(const StringViewLike& svl, size_type pos, size_type n) : MyBaseClass(svl, pos, n) {}
 
 
-    //---   Methods   -----------------------------------------
+    //===   Methods   =========================================
+
+    //---   is_punctuation   ----------------------------------
+    /** \brief Returns true if a character belongs to ASCII punctuation set. */
+    inline const bool is_punctuation(const value_type ch) noexcept
+    {
+        return _ASCII_PUNCT_DATA.contains(ch);
+    }
 
 
 protected:
 
 
 private:
+    //===   DATA   ============================================
+    static inline constexpr std::vector<value_type> _ASCII_PUNCT_DATA{ '!', ',', '.', ':', ';', '?' };
 
 };

@@ -26,6 +26,8 @@
 */
 int main()
 {
-    CppString s;
+    CppString  s;
+    CppWString ws;
+
     return 0;
 }
