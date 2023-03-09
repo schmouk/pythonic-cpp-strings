@@ -185,6 +185,32 @@ public:
     }
 
 
+    //---   upper ()  -----------------------------------------
+    /** \brief In-place replaces all characters of the string with their uppercase conversion. Returns a reference to string.
+    *
+    * Notice: uses the currently set std::locale, which is the "C" one
+    * by default or any other one as previously set by the user.
+    */
+    inline CppStringT& upper() noexcept
+    {
+        std::transform(this->begin(), this->end(),
+            this->begin(),
+            [](value_type ch) { return this->upper(ch); });
+        return *this;
+    }
+
+    /** \brief Returns uppercase conversion of the character.
+    *
+    * Notice: uses the currently set std::locale, which is the "C" one
+    * by default or any other one as previously set by the user.
+    */
+    static inline const value_type upper(const value_type ch) noexcept
+    {
+        return value_type(std::toupper(ch));
+    }
+
+
+
 protected:
 
 
