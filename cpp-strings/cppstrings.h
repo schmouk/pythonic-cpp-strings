@@ -109,12 +109,29 @@ public:
     //===   Methods   =========================================
 
     //---   capitalize()   ------------------------------------
-    // /** \brief In-place modifies the string with its first character capitalized and the rest lowercased. Returns a reference to the string*/
+    /** \brief In-place modifies the string with its first character capitalized and the rest lowercased. Returns a reference to the string*/
     inline CppStringT& capitalize() noexcept
     {
         this->lower();
         (*this)[0] = upper((*this)[0]);
         return *this;
+    }
+
+
+    //---   center()   ----------------------------------------
+    /** Returns the string centered in a string of length width.
+    * *
+    * Padding is done using the specified fillchar (default is an ASCII space). 
+    * A copy of the original string is returned if width is less than or  equal 
+    * to the length of the string. The original string remains unchanged.
+    */
+    inline CppStringT center(const size_type width, const value_type fillch = value_type(' ')) const noexcept
+    {
+        const size_type l = this->length();
+        if (l <= width)
+            return CppStringT(*this);
+        const size_type half = (width - l) / 2;
+        return CppStringT(fillch, half) + *this + CppStringT(fillch, width - half - l);
     }
 
 
