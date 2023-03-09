@@ -22,6 +22,7 @@
 
 //=============================================================
 #include <algorithm>
+#include <cctype>
 #include <string>
 #include <vector>
 //#include <initializer_list>
@@ -107,7 +108,7 @@ public:
 
     //===   Methods   =========================================
 
-    //---   is_punctuation   ----------------------------------
+    //---   is_punctuation()   --------------------------------
     /** \brief Returns true if the string contains only one character and if this character belongs to the ASCII punctuation set. */
     inline const bool is_punctuation() const noexcept
     {
@@ -121,7 +122,7 @@ public:
     }
 
 
-    //---   is_space   ----------------------------------------
+    //---   is_space()   --------------------------------------
     /** \brief Returns true if there are only whitespace characters in the string and there is at least one character, or false otherwise.
     *
     * Notice for version 2.0 of this library: a character  is  whitespace  if
@@ -145,7 +146,7 @@ public:
     }
 
 
-    //---   is_words_sep   ------------------------------------
+    //---   is_words_sep()   ----------------------------------
     /** \brief Returns true if there are only whitespace and punctuation characters in the string and there is at least one character, or false otherwise. */
     inline const bool is_words_sep() const noexcept
     {
@@ -156,6 +157,31 @@ public:
     static inline const bool is_words_sep(const value_type& ch) noexcept
     {
         return is_space(ch) || is_punctuation(ch);
+    }
+
+
+    //---   lower ()  -----------------------------------------
+    /** \brief In-place replaces all characters of the string with their lowercase conversion. Returns a reference to string.
+    *
+    * Notice: uses the currently set std::locale, which is the "C" one
+    * by default or any other one as previously set by the user.
+    */
+    inline CppStringT& lower() noexcept
+    {
+        std::transform(this->begin(), this->end(),
+                       this->begin(),
+                       [](value_type ch) { return this->lower(ch); });
+        return *this;
+    }
+
+    /** \brief Returns lowercase conversion of the character.
+    *
+    * Notice: uses the currently set std::locale, which is the "C" one
+    * by default or any other one as previously set by the user.
+    */
+    static inline const value_type lower(const value_type ch) noexcept
+    {
+        return value_type(std::tolower(ch));
     }
 
 
