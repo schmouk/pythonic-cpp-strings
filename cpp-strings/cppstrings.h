@@ -21,6 +21,7 @@
 */
 
 //=============================================================
+#include <algorithm>
 #include <string>
 #include <vector>
 //#include <initializer_list>
@@ -113,6 +114,23 @@ public:
         return _ASCII_PUNCT_DATA.contains(ch);
     }
 
+    //---   is_space   ----------------------------------------
+    /** \brief Returns true if there are only whitespace characters in the string and there is at least one character, or false otherwise.
+    *
+    * Notice for version 2.0 of this library: a character  is  whitespace  if
+    * in  the  Unicode character database,  either its general category is Zs 
+    * (“Separator, space”), or its bidirectional class is one of WS, B, or S.
+    */
+    inline const bool is_space(const MyBaseClass& str) noexcept
+    {
+        if (str.size() == 0)
+            return false;
+        for (auto& c : str)
+            if (std::find(str.cbegin(), str.cend(), c) == str.cend())
+                return false;
+        return true;
+    }
+
 
 protected:
 
@@ -120,5 +138,6 @@ protected:
 private:
     //===   DATA   ============================================
     static inline constexpr std::vector<value_type> _ASCII_PUNCT_DATA{ '!', ',', '.', ':', ';', '?' };
+    static inline constexpr std::vector<value_type> _ASCII_SEP{ ' ', '\t', '\n', 'r', '\f' };
 
 };
