@@ -109,10 +109,17 @@ public:
 
     //---   is_punctuation   ----------------------------------
     /** \brief Returns true if the string contains only one character and if this character belongs to the ASCII punctuation set. */
-    inline const bool is_punctuation(const MyBaseClass& str) noexcept
+    inline const bool is_punctuation() noexcept
     {
-        return str.size == 1  &&  _ASCII_PUNCT_DATA.contains(str[0]);
+        return this->length() == 1 && is_punctuation((*this)[0]);
     }
+
+    /** \brief Returns true if character belongs to the ASCII punctuation set. */
+    static inline const bool is_punctuation(const value_type& ch) noexcept
+    {
+        return _ASCII_PUNCT_DATA.contains(ch);
+    }
+
 
     //---   is_space   ----------------------------------------
     /** \brief Returns true if there are only whitespace characters in the string and there is at least one character, or false otherwise.
@@ -121,15 +128,22 @@ public:
     * in  the  Unicode character database,  either its general category is Zs 
     * (“Separator, space”), or its bidirectional class is one of WS, B, or S.
     */
-    inline const bool is_space(const MyBaseClass& str) noexcept
+    inline const bool is_space() noexcept
     {
-        if (str.size() == 0)
+        if (this->length() == 0)
             return false;
-        for (auto& c : str)
-            if (std::find(_ASCII_SEP.cbegin(), _ASCII_SEP.cend(), c) == _ASCII_SEP.cend())
+        for (auto& c : *this)
+            if (!is_space(c))
                 return false;
         return true;
     }
+
+    /** \brief Returns true if character belongs to the ASCII spaces set. */
+    static inline const bool is_space(const value_type& ch) noexcept
+    {
+        return _ASCII_SPACES.contains(ch);
+    }
+
 
 
 protected:
@@ -138,6 +152,6 @@ protected:
 private:
     //===   DATA   ============================================
     static inline constexpr std::vector<value_type> _ASCII_PUNCT_DATA{ '!', ',', '.', ':', ';', '?' };
-    static inline constexpr std::vector<value_type> _ASCII_SEP{ ' ', '\t', '\n', 'r', '\f' };
+    static inline constexpr std::vector<value_type> _ASCII_SPACES{ ' ', '\t', '\n', 'r', '\f' };
 
 };
