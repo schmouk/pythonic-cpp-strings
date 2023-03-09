@@ -108,6 +108,16 @@ public:
 
     //===   Methods   =========================================
 
+    //---   capitalize()   ------------------------------------
+    // /** \brief In-place modifies the string with its first character capitalized and the rest lowercased. Returns a reference to the string*/
+    inline CppStringT& capitalize() noexcept
+    {
+        this->lower();
+        (*this)[0] = upper((*this)[0]);
+        return *this;
+    }
+
+
     //---   is_punctuation()   --------------------------------
     /** \brief Returns true if the string contains only one character and if this character belongs to the ASCII punctuation set. */
     inline const bool is_punctuation() const noexcept
