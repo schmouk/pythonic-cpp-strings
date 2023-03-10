@@ -226,6 +226,21 @@ public:
     }
 
 
+    //---   index_n()   ---------------------------------------
+    /** Like find_n(sub, start, length), but raises NotFoundException when the substring is not found. */
+    inline constexpr size_type index_n(const CppStringT& sub, const size_type start, const size_type length) const
+    {
+        return index_n(sub, start, start + length - 1);
+    }
+
+    /** Like find_n(sub, length), but raises NotFoundException when the substring is not found. */
+    inline constexpr size_type index_n(const CppStringT& sub, const size_type length) const
+    {
+        return index_n(sub, 0, length - 1);
+    }
+
+
+
     //---   is_punctuation()   --------------------------------
     /** \brief Returns true if the string contains only one character and if this character belongs to the ASCII punctuation set. */
     inline const bool is_punctuation() const noexcept
