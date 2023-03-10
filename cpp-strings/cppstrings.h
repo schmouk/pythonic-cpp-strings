@@ -23,10 +23,10 @@
 //=============================================================
 #include <algorithm>
 #include <cctype>
+#include <format>
 #include <stdexcept>
 #include <string>
 #include <vector>
-//#include <initializer_list>
 
 
 //=============================================================
@@ -211,6 +211,18 @@ public:
     inline constexpr size_type find_n(const CppStringT& sub, const size_type length) const noexcept
     {
         return find(sub, 0, length - 1);
+    }
+
+
+    //---   index()   -----------------------------------------
+    /** Like find(), but raises NotFoundException when the substring is not found. */
+    inline constexpr size_type index(const CppStringT& sub, const size_type start, const size_type end) const
+    {
+        const size_type ret_value = find(sub, start, end);
+        if (size_type == CppStringT::npos)
+            throw NotFoundException(std::format("substring \"{}\" not found in string \"{}\"", sub, this->c_str()));
+        else
+            return ret_value;
     }
 
 
