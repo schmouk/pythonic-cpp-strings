@@ -429,11 +429,7 @@ public:
      */
     inline constexpr size_type rindex(const CppStringT& sub, const size_type start) const
     {
-        const size_type ret_value = rfind(sub, start);
-        if (size_type == CppStringT::npos)
-            throw NotFoundException(std::format("substring \"{}\" not found in string \"{}\"", sub, this->c_str()));
-        else
-            return ret_value;
+        return rindex(sub, start, this->size() - 1);
     }
 
     /** Like rfind(sub), but raises NotFoundException when the substring is not found.
@@ -443,11 +439,7 @@ public:
      */
     inline constexpr size_type rindex(const CppStringT& sub) const
     {
-        const size_type ret_value = rfind(sub);
-        if (size_type == CppStringT::npos)
-            throw NotFoundException(std::format("substring \"{}\" not found in string \"{}\"", sub, this->c_str()));
-        else
-            return ret_value;
+        return rindex(sub, 0, this->size() - 1);
     }
 
 
