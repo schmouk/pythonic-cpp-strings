@@ -119,8 +119,8 @@ public:
 
 
     //---   center()   ----------------------------------------
-    /** Returns the string centered in a string of length width.
-    * *
+    /** \brief Returns the string centered in a string of length width.
+    *
     * Padding is done using the specified fillchar (default is an ASCII space). 
     * A copy of the original string is returned if width is less than or  equal 
     * to the length of the string. The original string remains unchanged.
@@ -132,6 +132,22 @@ public:
             return CppStringT(*this);
         const size_type half = (width - l) / 2;
         return CppStringT(fillch, half) + *this + CppStringT(fillch, width - half - l);
+    }
+
+
+    //---   find()   ------------------------------------------
+    /** Returns the lowest index in the string where substring sub is found within the slice string[start:end], or -1 if sub is not found.
+    *
+    * Note: this method should be used only if you need to  know  the  position 
+    * of sub. To check if sub is a substring or not, use the method contains().
+    */
+    inline constexpr size_type find(const CppStringT& sub, const size_type start, const size_type end) const noexcept
+    {
+        const size_type l = this->length();
+        if (start >= l || end >= l || start > end)
+            return -1;
+        else
+            return MyBaseClass(this->cbegin() + start, this->cbegin() + end()).find(sub);
     }
 
 
