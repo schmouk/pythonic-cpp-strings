@@ -249,9 +249,9 @@ public:
     * \see index_n(), rindex() and rindex_n().
     * \see find(), find_n(), rfind() and rfind_n().
     */
-    inline constexpr size_type index_n(const CppStringT& sub, const size_type start, const size_type length) const
+    inline constexpr size_type index_n(const CppStringT& sub, const size_type start, const size_type count) const
     {
-        return index_n(sub, start, start + length - 1);
+        return index(sub, start, start + count - 1);
     }
 
     /** Like find_n(sub, start), but raises NotFoundException when the substring is not found.
@@ -259,11 +259,10 @@ public:
     * \see index_n(), rindex() and rindex_n().
     * \see find(), find_n(), rfind() and rfind_n().
     */
-    inline constexpr size_type index_n(const CppStringT& sub, const size_type length) const
+    inline constexpr size_type index_n(const CppStringT& sub, const size_type count) const
     {
-        return index_n(sub, 0, length - 1);
+        return index(sub, 0, count - 1);
     }
-
 
 
     //---   is_punctuation()   --------------------------------
