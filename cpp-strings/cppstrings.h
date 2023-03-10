@@ -138,7 +138,7 @@ public:
     */
     inline CppStringT center(const size_type width, const value_type fillch = value_type(' ')) const noexcept
     {
-        const size_type l{ this->length() };
+        const size_type l{ this->size() };
         if (l <= width)
             return CppStringT(*this);
         const size_type half{ (width - l) / 2 };
@@ -150,7 +150,7 @@ public:
     /** \brief Returns the number of non-overlapping occurrences of substring sub in the range [start, end]. */
     inline constexpr size_type count(const CppStringT& sub, const size_type start = 0, const size_type end = 0) const noexcept
     {
-        const size_type length{ this->length() };
+        const size_type length{ this->size() };
         const size_type end_{ (end == 0) ? length : end };
 
         size_type n = 0;
@@ -269,7 +269,7 @@ public:
     /** \brief Returns true if the string contains only one character and if this character belongs to the ASCII punctuation set. */
     inline const bool is_punctuation() const noexcept
     {
-        return this->length() == 1 && is_punctuation((*this)[0]);
+        return this->size() == 1 && is_punctuation((*this)[0]);
     }
 
     /** \brief Returns true if character belongs to the ASCII punctuation set. */
@@ -288,7 +288,7 @@ public:
     */
     inline const bool is_space() const noexcept
     {
-        if (this->length() == 0)
+        if (this->size() == 0)
             return false;
         for (auto& c : *this)
             if (!is_space(c))
