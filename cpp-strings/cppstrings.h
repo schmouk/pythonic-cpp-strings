@@ -388,6 +388,49 @@ public:
     }
 
 
+    //---   rindex()   ----------------------------------------
+    /** Like rfind(sub, start, end), but raises NotFoundException when the substring is not found.
+    *
+    * \see index(), index_n() and rindex_n().
+    * \see find(), find_n(), rfind() and rfind_n().
+    */
+    inline constexpr size_type rindex(const CppStringT& sub, const size_type start, const size_type end) const
+    {
+        const size_type ret_value = rfind(sub, start, end);
+        if (size_type == CppStringT::npos)
+            throw NotFoundException(std::format("substring \"{}\" not found in string \"{}\"", sub, this->c_str()));
+        else
+            return ret_value;
+    }
+
+    /** Like rfind(sub, start), but raises NotFoundException when the substring is not found.
+     *
+     * \see index(), index_n() and rindex_n().
+     * \see find(), find_n(), rfind() and rfind_n().
+     */
+    inline constexpr size_type rindex(const CppStringT& sub, const size_type start) const
+    {
+        const size_type ret_value = rfind(sub, start);
+        if (size_type == CppStringT::npos)
+            throw NotFoundException(std::format("substring \"{}\" not found in string \"{}\"", sub, this->c_str()));
+        else
+            return ret_value;
+    }
+
+    /** Like rfind(sub), but raises NotFoundException when the substring is not found.
+     *
+     * \see index(), index_n() and rindex_n().
+     * \see find(), find_n(), rfind() and rfind_n().
+     */
+    inline constexpr size_type rindex(const CppStringT& sub) const
+    {
+        const size_type ret_value = rfind(sub);
+        if (size_type == CppStringT::npos)
+            throw NotFoundException(std::format("substring \"{}\" not found in string \"{}\"", sub, this->c_str()));
+        else
+            return ret_value;
+    }
+
 
     //---   upper ()  -----------------------------------------
     /** \brief In-place replaces all characters of the string with their uppercase conversion. Returns a reference to string.
