@@ -345,6 +345,8 @@ public:
     //---   rfind()   -----------------------------------------
     /** Returns the highest index in the string where substring sub is found within the slice str[start:end], or -1 (i.e. 'npos') if sub is not found.
     *
+    * Note that this is an offset from the start of the string, not the end. 
+    * 
     * Note: this method should be used only if you need to  know  the  position
     * of sub. To check if sub is a substring or not, use the method contains().
     *
@@ -353,15 +355,16 @@ public:
     */
     inline constexpr size_type rfind(const CppStringT& sub, const size_type start, const size_type end) const noexcept
     {
-        const size_type length{ this->length() };
-        if (start >= length || start > end)
+        if (start > end)
             return CppStringT::npos;
         else
-            return this->find_end(this->cbegin()+start, this->cbegin()+end, sub.cbegin(), sub.cend());
+            return this->substr(start, end - start + 1).rfind(sub);
     }
 
     /** Returns the highest index in the string where substring sub is found starting at start position in string, or -1 (i.e. 'npos') if sub is not found.
     *
+    * Note that this is an offset from the start of the string, not the end. 
+    * 
     * Note: this method should be used only if you need to  know  the  position
     * of sub. To check if sub is a substring or not, use the method contains().
     *
@@ -370,15 +373,13 @@ public:
     */
     inline constexpr size_type rfind(const CppStringT& sub, const size_type start) const noexcept
     {
-        const size_type length{ this->length() };
-        if (start >= length)
-            return CppStringT::npos;
-        else
-            return this->find_end(this->cbegin() + start, this->cend(), sub.cbegin(), sub.cend());
+        return rfind(sub, start, this->size() - start + 1);
     }
 
     /** Returns the highest index in the string where substring sub is found in the whole string, or -1 (i.e. 'npos') if sub is not found.
     *
+    * Note that this is an offset from the start of the string, not the end. 
+    * 
     * Note: this method should be used only if you need to  know  the  position
     * of sub. To check if sub is a substring or not, use the method contains().
     *
@@ -387,7 +388,7 @@ public:
     */
     inline constexpr size_type rfind(const CppStringT& sub) const noexcept
     {
-        return this->find_end(this->cbegin(), this->cend(), sub.cbegin(), sub.cend());
+        return MyBaseClass::rfind(sub);
     }
 
 
