@@ -179,47 +179,51 @@ public:
     //---   find()   ------------------------------------------
     /** Returns the lowest index in the string where substring sub is found within the slice str[start:end], or -1 (i.e. 'npos') if sub is not found.
     *
-    * Note: this method should be used only if you need to  know  the  position 
-    * of sub. To check if sub is a substring or not, use the method contains().
-    * 
+    * Note: this method should be used only if you need to know the position of
+    * sub.  To check if sub is a substring or not, use the method contains_n().
+    *
     * \see find_n(), rfind() and rfind_n().
     * \see index(), index_n(), rindex() and rindex_n().
     */
     inline constexpr size_type find(const CppStringT& sub, const size_type start, const size_type end) const noexcept
     {
-        const size_type length{ this->length() };
-        if (start >= length || start > end)
+        if (start > end)
             return CppStringT::npos;
         else
-            return MyBaseClass(this->cbegin() + start, this->cbegin() + std::min(end, length - 1)).find(sub);
+            return find_n(sub, start, end - start + 1);
     }
 
 
     //---   find_n()   ----------------------------------------
-    /** Returns the lowest index in the string where substring sub is found within the slice str[start:start+length-1], or -1 (i.e. 'npos') if sub is not found.
+    /** Returns the lowest index in the string where substring sub is found within the slice str[start:start+count-1], or -1 (i.e. 'npos') if sub is not found.
     *
-    * Note: this method should be used only if you need to  know  the  position
-    * of sub. To check if sub is a substring or not, use the method contains_n().
+    * Note: this method should be used only if you need to know the position of
+    * sub.  To check if sub is a substring or not, use the method contains_n().
     *
     * \see find(), rfind() and rfind_n().
     * \see index(), index_n(), rindex() and rindex_n().
     */
-    inline constexpr size_type find_n(const CppStringT& sub, const size_type start, const size_type length) const noexcept
+    inline constexpr size_type find_n(const CppStringT& sub, const size_type start, const size_type count) const noexcept
     {
-        return find(sub, start, start + length - 1);
+        try {
+            return this->substr(start, count).find(sub);
+        }
+        catch (...) {
+            return CppStringT::npos;
+        }
     }
 
-    /** Returns the lowest index in the string where substring sub is found within the slice str[0:length-1], or -1 (i.e. 'npos') if sub is not found.
+    /** Returns the lowest index in the string where substring sub is found within the slice str[0:count-1], or -1 (i.e. 'npos') if sub is not found.
     *
-    * Note: this method should be used only if you need to  know  the  position
-    * of sub. To check if sub is a substring or not, use the method contains_n().
+    * Note: this method should be used only if you need to know the position of
+    * sub.  To check if sub is a substring or not, use the method contains_n().
     *
     * \see find(), rfind() and rfind_n().
     * \see index(), index_n(), rindex() and rindex_n().
     */
-    inline constexpr size_type find_n(const CppStringT& sub, const size_type length) const noexcept
+    inline constexpr size_type find_n(const CppStringT& sub, const size_type count) const noexcept
     {
-        return find(sub, 0, length - 1);
+        return find_n(sub, 0, count);
     }
 
 
@@ -250,7 +254,7 @@ public:
         return index_n(sub, start, start + length - 1);
     }
 
-    /** Like find_n(sub, length), but raises NotFoundException when the substring is not found.
+    /** Like find_n(sub, start), but raises NotFoundException when the substring is not found.
     *
     * \see index_n(), rindex() and rindex_n().
     * \see find(), find_n(), rfind() and rfind_n().
@@ -385,6 +389,21 @@ public:
     inline constexpr size_type rfind(const CppStringT& sub) const noexcept
     {
         return this->find_end(this->cbegin(), this->cend(), sub.cbegin(), sub.cend());
+    }
+
+
+    //---   rfind_n()   ---------------------------------------
+    /** Returns the highest index in the string where substring sub is found within the slice str[start:start+length-1], or -1 (i.e. 'npos') if sub is not found.
+    *
+    * Note: this method should be used only if you need to  know  the  position
+    * of sub. To check if sub is a substring or not, use the method contains_n().
+    *
+    * \see find(), find_n() and rfind().
+    * \see index(), index_n(), rindex() and rindex_n().
+    */
+    inline constexpr size_type rfind_n(const CppStringT& sub, const size_type start, const size_type length) const noexcept
+    {
+        return rfind(sub, start, start + length - 1);
     }
 
 
