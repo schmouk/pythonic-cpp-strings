@@ -181,6 +181,28 @@ public:
     }
 
 
+    //---   find_n()   ----------------------------------------
+    /** Returns the lowest index in the string where substring sub is found within the slice str[start:start+length-1], or -1 (i.e. 'npos') if sub is not found.
+    *
+    * Note: this method should be used only if you need to  know  the  position
+    * of sub. To check if sub is a substring or not, use the method contains_n().
+    */
+    inline constexpr size_type find_n(const CppStringT& sub, const size_type start, const size_type length) const noexcept
+    {
+        return find(sub, start, start + length - 1);
+    }
+
+    /** Returns the lowest index in the string where substring sub is found within the slice str[0:length-1], or -1 (i.e. 'npos') if sub is not found.
+    *
+    * Note: this method should be used only if you need to  know  the  position
+    * of sub. To check if sub is a substring or not, use the method contains_n().
+    */
+    inline constexpr size_type find_n(const CppStringT& sub, const size_type length) const noexcept
+    {
+        return find(sub, 0, length - 1);
+    }
+
+
     //---   is_punctuation()   --------------------------------
     /** \brief Returns true if the string contains only one character and if this character belongs to the ASCII punctuation set. */
     inline const bool is_punctuation() const noexcept
