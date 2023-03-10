@@ -23,6 +23,7 @@
 //=============================================================
 #include <algorithm>
 #include <cctype>
+#include <stdexcept>
 #include <string>
 #include <vector>
 //#include <initializer_list>
@@ -105,6 +106,16 @@ public:
     template<class StringViewLike>
     CppStringT(const StringViewLike& svl, size_type pos, size_type n) : MyBaseClass(svl, pos, n) {}
 
+
+    //===   Exceptions   ======================================
+    class NotFoundException : public std::logic_error
+    {
+    public:
+        using MyBaseClass = std::logic_error;
+
+        inline NotFoundException(const std::string& what_arg) : MyBaseClass(what_arg) {}
+        inline NotFoundException(const char* what_arg) : MyBaseClass(what_arg) {}
+    };
 
     //===   Methods   =========================================
 
