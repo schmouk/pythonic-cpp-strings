@@ -127,27 +127,42 @@ public:
     */
     inline CppStringT center(const size_type width, const value_type fillch = value_type(' ')) const noexcept
     {
-        const size_type l = this->length();
+        const size_type l{ this->length() };
         if (l <= width)
             return CppStringT(*this);
-        const size_type half = (width - l) / 2;
+        const size_type half{ (width - l) / 2 };
         return CppStringT(fillch, half) + *this + CppStringT(fillch, width - half - l);
     }
 
 
+    //---   count()   -----------------------------------------
+    /** \brief Returns the number of non-overlapping occurrences of substring sub in the range [start, end]. */
+    inline constexpr size_type count(const CppStringT& sub, const size_type start = 0, const size_type end = 0) const noexcept
+    {
+        const size_type length{ this->length() };
+        const size_type end_{ (end == 0) ? length : end };
+
+        size_type n = 0;
+        size_type start_ = start;
+        while ((start_ = find(sub, start_, end_)) != CppStringT::npos)
+            n++;
+
+        return n;
+    }
+
     //---   find()   ------------------------------------------
-    /** Returns the lowest index in the string where substring sub is found within the slice string[start:end], or -1 if sub is not found.
+    /** Returns the lowest index in the string where substring sub is found within the slice str[start:end], or -1 (i.e. 'npos') if sub is not found.
     *
     * Note: this method should be used only if you need to  know  the  position 
     * of sub. To check if sub is a substring or not, use the method contains().
     */
     inline constexpr size_type find(const CppStringT& sub, const size_type start, const size_type end) const noexcept
     {
-        const size_type l = this->length();
-        if (start >= l || end >= l || start > end)
-            return -1;
+        const size_type length{ this->length() };
+        if (start >= length || start > end)
+            return CppStringT::npos;
         else
-            return MyBaseClass(this->cbegin() + start, this->cbegin() + end()).find(sub);
+            return MyBaseClass(this->cbegin() + start, this->cbegin() + std::min(end, length - 1)).find(sub);
     }
 
 
@@ -237,8 +252,8 @@ public:
     inline CppStringT& upper() noexcept
     {
         std::transform(this->begin(), this->end(),
-            this->begin(),
-            [](value_type ch) { return this->upper(ch); });
+                       this->begin(),
+                       [](value_type ch) { return this->upper(ch); });
         return *this;
     }
 
@@ -259,7 +274,7 @@ protected:
 
 private:
     //===   DATA   ============================================
-    static inline constexpr std::vector<value_type> _ASCII_PUNCT_DATA{ '!', ',', '.', ':', ';', '?' };
-    static inline constexpr std::vector<value_type> _ASCII_SPACES{ ' ', '\t', '\n', 'r', '\f' };
+    static inline constexpr std::vector<value_type> _ASCII_PUNCT_DATA { '!', ',', '.', ':', ';', '?' };
+    static inline constexpr std::vector<value_type> _ASCII_SPACES     { ' ', '\t', '\n', 'r', '\f' };
 
 };
