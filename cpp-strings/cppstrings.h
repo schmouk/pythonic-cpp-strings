@@ -150,6 +150,21 @@ public:
         return n;
     }
 
+
+    //---   count_n()   ---------------------------------------
+    /** \brief Returns the number of non-overlapping occurrences of substring sub in the range [start, start+length-1]. */
+    inline constexpr size_type count_n(const CppStringT& sub, const size_type start, const size_type length) const noexcept
+    {
+        return count(sub, start, start + length - 1);
+    }
+
+    /** \brief Returns the number of non-overlapping occurrences of substring sub in the range [0, length-1]. */
+    inline constexpr size_type count_n(const CppStringT& sub, const size_type length) const noexcept
+    {
+        return count(sub, 0, length - 1);
+    }
+
+
     //---   find()   ------------------------------------------
     /** Returns the lowest index in the string where substring sub is found within the slice str[start:end], or -1 (i.e. 'npos') if sub is not found.
     *
