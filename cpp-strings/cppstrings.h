@@ -405,35 +405,21 @@ namespace pcs // i.e. "pythonic c++ strings"
         }
 
 
-        //---   is_punctuation()   --------------------------------
+        //---   ispunctuation()   ---------------------------------
         /** \brief Returns true if the string contains only one character and if this character belongs to the ASCII punctuation set. */
-        inline const bool is_punctuation() const noexcept
+        inline const bool ispunctuation() const noexcept
         {
             return this->size() == 1 && pcs::is_punctuation((*this)[0]);
         }
 
 
-        //---   is_space()   --------------------------------------
-        /** \brief Returns true if there are only whitespace characters in the string and there is at least one character, or false otherwise.
-        *
-        * Notice for version 2.0 of this library: a character  is  whitespace  if
-        * in  the  Unicode character database,  either its general category is Zs
-        * (“Separator, space”), or its bidirectional class is one of WS, B, or S.
-        */
-        inline const bool is_space() const noexcept
+        //---   is_Returns true if there are only whitespace characters in the string and there is at least one character, or false otherwise. */-
+        inline const bool isspace() const noexcept
         {
             if (this->size() == 0)
                 return false;
-            for (auto& c : *this)
-                if (!is_space(c))
-                    return false;
-            return true;
-        }
-
-        /** \brief Returns true if character belongs to the ASCII spaces set. */
-        static inline const bool is_space(const value_type& ch) noexcept
-        {
-            return _ASCII_SPACES.contains(ch);
+            else
+                return std::all_of(this->cbegin(), this->cend(), pcs::is_space<CharT>);
         }
 
 
@@ -441,13 +427,7 @@ namespace pcs // i.e. "pythonic c++ strings"
         /** \brief Returns true if there are only whitespace and punctuation characters in the string and there is at least one character, or false otherwise. */
         inline const bool is_words_sep() const noexcept
         {
-            return is_space() || is_punctuation();
-        }
-
-        /** \brief Returns true if character belongs to ASCII spaces or punctuation sets. */
-        static inline const bool is_words_sep(const value_type& ch) noexcept
-        {
-            return is_space(ch) || is_punctuation(ch);
+            return isspace() || ispunctuation();
         }
 
 
@@ -641,9 +621,6 @@ namespace pcs // i.e. "pythonic c++ strings"
 
 
     private:
-        //===   DATA   ============================================
-        static inline constexpr std::vector<value_type> _ASCII_PUNCT_DATA{ '!', ',', '.', ':', ';', '?' };
-        static inline constexpr std::vector<value_type> _ASCII_SPACES{ ' ', '\t', '\n', 'r', '\f' };
 
     };
 
@@ -665,7 +642,7 @@ namespace pcs // i.e. "pythonic c++ strings"
 
 
     //---   is_punctuation   ----------------------------------
-    /** \brief SHOULD NEVER BE USED. Use next specializations instead. */
+    /** \brief Returns true if character ch is punctuation, or false otherwise. Conforms to the current locale settings. */
     template<class CharT>
     inline const bool is_punctuation(const CharT ch)
     {
@@ -673,28 +650,19 @@ namespace pcs // i.e. "pythonic c++ strings"
         return std::find(punct_chars.cbegin(), punct_chars.cend(), (ch)) != punct_chars.cend();
     }
 
-    /** \brief Returns true if character ch is punctuation, or false otherwise. Conforms to the current locale settings. */
-    /*
-    template<>
-    inline const bool is_punctuation<char>(const char ch)
-    {
-        static const std::vector<char> punct_chars { '!', ',', '.', ':', ';', '?' };
-        return std::find(punct_chars.cbegin(), punct_chars.cend(), (ch)) != punct_chars.cend();
-    }
-    */
-
-    /** \brief Returns true if character ch is punctuation, or false otherwise. Conforms to the current locale settings. */
-    /*
-    template<>
-    inline const bool is_punctuation<wchar_t>(const wchar_t ch)
-    {
-        static const std::vector<wchar_t> punct_chars{ '!', ',', '.', ':', ';', '?' };
-        return std::find(punct_chars.cbegin(), punct_chars.cend(), (ch)) != punct_chars.cend();
-    }
-    */
 
     //---   is_space()   --------------------------------------
+    /** \brief SHOULD NEVER BE USED. Use next specializations instead. */
     template<class CharT>
-    inline const bool is_space(const CharT ch);         //!< Returns true if character ch is white space, or false otherwise. */
+    inline const bool is_space(const CharT ch) { return false; }
+
+    /** \brief Returns true if character ch is alphabetic, or false otherwise. Conforms to the current locale settings. */
+    template<>
+    inline const bool is_space<char>(const char ch) { return std::isspace(static_cast<unsigned char>(ch)); }
+
+    /** \brief Returns true if character ch is alphabetic, or false otherwise. Conforms to the current locale settings. */
+    template<>
+    inline const bool is_space<wchar_t>(const wchar_t ch) { return std::iswspace(ch); }
+
 
 } // end of namespace pcs  // (pythonic c++ strings)

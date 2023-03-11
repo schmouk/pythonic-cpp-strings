@@ -19,6 +19,8 @@
     along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
+#include <iostream>
+
 #include "cppstrings.h"
 using namespace pcs;
 
@@ -29,6 +31,8 @@ int main()
 {
     CppString  s;
     CppWString ws;
+
+    //std::cout << ws.isspace() << std::endl;
 
     return 0;
 }
