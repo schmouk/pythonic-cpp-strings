@@ -249,6 +249,35 @@ public:
     }
 
 
+    //---   expand_tabs()   -----------------------------------
+    /** Returns a copy of the string where all tab characters are replaced by one or more spaces, depending on the current column and the given tab size. */
+    CppStringT expand_tabs(const size_type tabsize = 8) const noexcept
+    {
+        const size_type tabsize_{ tabsize == 0 ? 1 : tabsize };
+        CppStringT ret{};
+
+        std::size_t current_pos{ 0 };
+        for (const value_type ch : *this) {
+            if (ch == value_type('\t')) {
+                do {
+                    ret += value_type(' ');
+                    current_pos++;
+                } while (current_pos % tabsize_ != 0);
+            }
+            else if (ch == value_type('\n') || ch == value_type('\r')) {
+                ret += ch;
+                current_pos = 0;
+            }
+            else {
+                ret += ch;
+                current_pos++;
+            }
+        }
+
+        return ret;
+    }
+
+
     //---   find_n()   ----------------------------------------
     /** Returns the lowest index in the string where substring sub is found within the slice str[start:start+count-1], or -1 (i.e. 'npos') if sub is not found.
     *
