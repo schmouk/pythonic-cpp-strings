@@ -20,6 +20,7 @@
 */
 
 #include "cppstrings.h"
+using namespace pcs;
 
 /**
 * Notice: this module is for tests and validation purposes only.

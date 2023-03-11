@@ -31,606 +31,638 @@
 #include <vector>
 
 
-//=============================================================
-// Forward declarations
-template<
-    class CharT,
-    class TraitsT = std::char_traits<CharT>,
-    class AllocatorT = std::allocator<CharT>
-> class CppStringT;                     //!< The templated base class. Use its belowing specializations instead!
-
-using CppString  = CppStringT<char>;    //!< Specialization of basic class with template argument 'char'
-using CppWString = CppStringT<wchar_t>; //!< Specialization of basic class with template argument 'wchar_t'
-
-
-//=====   CppStringT<>   ======================================
-/**
-* \brief This is the templated base class for all CppString
-* classes.
-* 
-* Users should instantiate any specialization of this  base  class
-* rather than this base class itself:
-*   - \see CppString for CppStringT<char>.
-*   - \see CppWString for CppStringT<wchar_t>.
-* 
-* This base class inherits from std::basic_string<CharT>. As such,
-* it  gets  direct access to all public methods of its base class.
-* \see  https://en.cppreference.com/w/cpp/string/basic_string  for
-* a full list of such methods, for instance.
-* 
-* You may specialize it by your own with any of the next char
-* types:
-*   - char8_t  (C++20)
-*   - char16_t (C++11)
-*   - char32_t (C++11)
-*/
-template<class CharT, class TraitsT, class AllocatorT>
-class CppStringT : public std::basic_string<CharT>
+namespace pcs // i.e. "pythonic c++ strings"
 {
-public:
-    //===   Wrappers   ========================================
-    using MyBaseClass = std::basic_string<CharT>;
+    //=============================================================
+    // Forward declarations
 
-    using traits_type            = MyBaseClass::traits_type;
-    using value_type             = MyBaseClass::value_type;
-    using allocator_type         = MyBaseClass::allocator_type;
-    using size_type              = MyBaseClass::size_type;
-    using difference_type        = MyBaseClass::difference_type;
-    using reference              = MyBaseClass::reference;
-    using const_reference        = MyBaseClass::const_reference;
-    using pointer                = MyBaseClass::pointer;
-    using const_pointer          = MyBaseClass::const_pointer;
-    using iterator               = MyBaseClass::iterator;
-    using const_iterator         = MyBaseClass::const_iterator;
-    using reverse_iterator       = MyBaseClass::reverse_iterator;
-    using const_reverse_iterator = MyBaseClass::const_reverse_iterator;
+    // base class -- not to be directly instantiated, see belowing specializations instead
+    template<
+        class CharT,
+        class TraitsT = std::char_traits<CharT>,
+        class AllocatorT = std::allocator<CharT>
+    > class CppStringT;                     //!< The templated base class. Use its belowing specializations instead!
 
+    // specializations of the base class -- these are the ones that should be instantiated by user.
+    using CppString  = CppStringT<char>;    //!< Specialization of basic class with template argument 'char'
+    using CppWString = CppStringT<wchar_t>; //!< Specialization of basic class with template argument 'wchar_t'
 
-    //===   Constructors   ====================================
-    inline CppStringT() : MyBaseClass() {}
-    inline CppStringT(const CppStringT& other) : MyBaseClass(other) {}
-    inline CppStringT(const CppStringT& other, const AllocatorT& alloc) : MyBaseClass(other, alloc){}
-    inline CppStringT(CppStringT&& other) : MyBaseClass(other) {}
-    inline CppStringT(CppStringT&& other, const AllocatorT& alloc) : MyBaseClass(other, alloc) {}
-    inline CppStringT(MyBaseClass::size_type count, CharT ch) : MyBaseClass(count, ch) {}
-    inline CppStringT(const CppStringT& other, size_type pos) : MyBaseClass(other, pos) {}
-    inline CppStringT(const CppStringT& other, size_type pos, size_type count) noexcept : MyBaseClass(other, pos, count) {}
-    inline CppStringT(const CharT* s) : MyBaseClass(s) {}
-    inline CppStringT(const CharT* s, size_type count) : MyBaseClass(s, count) {}
-    inline CppStringT(std::initializer_list<CharT> ilist) : MyBaseClass(ilist) {}
-
-    template<class InputIt>
-    inline CppStringT(InputIt first, InputIt last) : MyBaseClass(first, last) {}
-
-    template<class StringViewLike>
-    explicit CppStringT(const StringViewLike& svl) : MyBaseClass(svl) {}
-
-    template<class StringViewLike>
-    CppStringT(const StringViewLike& svl, size_type pos, size_type n) : MyBaseClass(svl, pos, n) {}
+    // chars classifications -- not to be directly called, see respective specializations at the very end of this module.
+    template<class CharT>
+    inline const bool is_alpha(const CharT ch);
 
 
-    //===   Exceptions   ======================================
-    class NotFoundException : public std::logic_error
+
+    //=====   CppStringT<>   ======================================
+    /**
+    * \brief This is the templated base class for all CppString
+    * classes.
+    *
+    * Users should instantiate any specialization of this  base  class
+    * rather than this base class itself:
+    *   - \see CppString for CppStringT<char>.
+    *   - \see CppWString for CppStringT<wchar_t>.
+    *
+    * This base class inherits from std::basic_string<CharT>. As such,
+    * it  gets  direct access to all public methods of its base class.
+    * \see  https://en.cppreference.com/w/cpp/string/basic_string  for
+    * a full list of such methods, for instance.
+    *
+    * You may specialize it by your own with any of the next char
+    * types:
+    *   - char8_t  (C++20)
+    *   - char16_t (C++11)
+    *   - char32_t (C++11)
+    */
+    template<class CharT, class TraitsT, class AllocatorT>
+    class CppStringT : public std::basic_string<CharT>
     {
     public:
-        using MyBaseClass = std::logic_error;
+        //===   Wrappers   ========================================
+        using MyBaseClass = std::basic_string<CharT>;
 
-        inline NotFoundException(const std::string& what_arg) : MyBaseClass(what_arg) {}
-        inline NotFoundException(const char* what_arg) : MyBaseClass(what_arg) {}
+        using traits_type            = MyBaseClass::traits_type;
+        using value_type             = MyBaseClass::value_type;
+        using allocator_type         = MyBaseClass::allocator_type;
+        using size_type              = MyBaseClass::size_type;
+        using difference_type        = MyBaseClass::difference_type;
+        using reference              = MyBaseClass::reference;
+        using const_reference        = MyBaseClass::const_reference;
+        using pointer                = MyBaseClass::pointer;
+        using const_pointer          = MyBaseClass::const_pointer;
+        using iterator               = MyBaseClass::iterator;
+        using const_iterator         = MyBaseClass::const_iterator;
+        using reverse_iterator       = MyBaseClass::reverse_iterator;
+        using const_reverse_iterator = MyBaseClass::const_reverse_iterator;
+
+
+        //===   Constructors / Destructor   ===================
+        inline CppStringT()                                                                 : MyBaseClass() {}
+        inline CppStringT(const CppStringT& other)                                          : MyBaseClass(other) {}
+        inline CppStringT(const CppStringT& other, const AllocatorT& alloc)                 : MyBaseClass(other, alloc) {}
+        inline CppStringT(CppStringT&& other)                                               : MyBaseClass(other) {}
+        inline CppStringT(CppStringT&& other, const AllocatorT& alloc)                      : MyBaseClass(other, alloc) {}
+        inline CppStringT(MyBaseClass::size_type count, CharT ch)                           : MyBaseClass(count, ch) {}
+        inline CppStringT(const CppStringT& other, size_type pos)                           : MyBaseClass(other, pos) {}
+        inline CppStringT(const CppStringT& other, size_type pos, size_type count) noexcept : MyBaseClass(other, pos, count) {}
+        inline CppStringT(const CharT* s)                                                   : MyBaseClass(s) {}
+        inline CppStringT(const CharT* s, size_type count)                                  : MyBaseClass(s, count) {}
+        inline CppStringT(std::initializer_list<CharT> ilist)                               : MyBaseClass(ilist) {}
+
+        template<class InputIt>
+        inline CppStringT(InputIt first, InputIt last)                                      : MyBaseClass(first, last) {}
+
+        template<class StringViewLike>
+        explicit CppStringT(const StringViewLike& svl)                                      : MyBaseClass(svl) {}
+        template<class StringViewLike>
+        CppStringT(const StringViewLike& svl, size_type pos, size_type n)                   : MyBaseClass(svl, pos, n) {}
+
+        inline ~CppStringT() = default;
+
+
+        //===   Exceptions   ======================================
+        class NotFoundException : public std::logic_error
+        {
+        public:
+            using MyBaseClass = std::logic_error;
+
+            inline NotFoundException(const std::string& what_arg) : MyBaseClass(what_arg) {}
+            inline NotFoundException(const char* what_arg) : MyBaseClass(what_arg) {}
+        };
+
+        //===   Methods   =========================================
+
+        //---   capitalize()   ------------------------------------
+        /** \brief In-place modifies the string with its first character capitalized and the rest lowercased. Returns a reference to the string*/
+        inline CppStringT& capitalize() noexcept
+        {
+            this->lower();
+            (*this)[0] = upper((*this)[0]);
+            return *this;
+        }
+
+
+        //---   center()   ----------------------------------------
+        /** \brief Returns the string centered in a string of length width.
+        *
+        * Padding is done using the specified fillchar (default is an ASCII space).
+        * A copy of the original string is returned if width is less than or  equal
+        * to the length of the string. The original string remains unchanged.
+        */
+        inline CppStringT center(const size_type width, const value_type fillch = value_type(' ')) const noexcept
+        {
+            const size_type l{ this->size() };
+            if (l <= width)
+                return CppStringT(*this);
+            const size_type half{ (width - l) / 2 };
+            return CppStringT(fillch, half) + *this + CppStringT(fillch, width - half - l);
+        }
+
+
+        //---   count()   -----------------------------------------
+        /** \brief Returns the number of non-overlapping occurrences of substring sub in the range [start, end]. */
+        inline constexpr size_type count(const CppStringT& sub, const size_type start = 0, const size_type end = 0) const noexcept
+        {
+            const size_type length{ this->size() };
+            const size_type end_{ (end == 0) ? length : end };
+
+            size_type n = 0;
+            size_type start_ = start;
+            while ((start_ = find(sub, start_, end_)) != CppStringT::npos)
+                n++;
+
+            return n;
+        }
+
+
+        //---   count_n()   ---------------------------------------
+        /** \brief Returns the number of non-overlapping occurrences of substring sub in the range [start, start+length-1]. */
+        inline constexpr size_type count_n(const CppStringT& sub, const size_type start, const size_type length) const noexcept
+        {
+            return count(sub, start, start + length - 1);
+        }
+
+        /** \brief Returns the number of non-overlapping occurrences of substring sub in the range [0, length-1]. */
+        inline constexpr size_type count_n(const CppStringT& sub, const size_type length) const noexcept
+        {
+            return count(sub, 0, length - 1);
+        }
+
+
+        //---   find()   ------------------------------------------
+        /** Returns the lowest index in the string where substring sub is found within the slice str[start:end], or -1 (i.e. 'npos') if sub is not found.
+        *
+        * Note: this method should be used only if you need to know the position of
+        * sub.  To check if sub is a substring or not, use the method contains_n().
+        *
+        * \see find_n(), rfind() and rfind_n().
+        * \see index(), index_n(), rindex() and rindex_n().
+        */
+        inline constexpr size_type find(const CppStringT& sub, const size_type start, const size_type end) const noexcept
+        {
+            if (start > end)
+                return CppStringT::npos;
+            else
+                return find_n(sub, start, end - start + 1);
+        }
+
+
+        //---   endswith()   --------------------------------------
+        /** Returns true if the string ends with the specified suffix, otherwise returns false. Test begins at start position and stops at end position. */
+        inline const bool endswith(const CppStringT& suffix, const size_type start, const size_type end) const noexcept
+        {
+            return endswith(std::span{ suffix }, start, end);
+        }
+
+        /** Returns true if the string ends with the specified suffix, otherwise returns false. Test begins at start position and stops at end of string. */
+        inline const bool endswith(const CppStringT& suffix, const size_type start) const noexcept
+        {
+            return endswith(std::span{ suffix }, start, this->size() - 1);
+        }
+
+        /** Returns true if the string ends with the specified suffix, otherwise returns false. Test runs on the whole string. */
+        inline const bool endswith(const CppStringT& suffix) const noexcept
+        {
+            return this->ends_with(suffix);
+        }
+
+        /** Returns true if the string ends with any of the specified suffixes, otherwise returns false. Test begins at start position and stops at end of string. */
+        inline const bool endswith(const std::span<CppStringT>& suffixes, const size_type start, const size_type end) const noexcept
+        {
+            if (start > end)
+                return false;
+
+            for (auto& suffix : suffixes) {
+                if (this->substr(start, end).ends_with(suffix))
+                    return true;
+            }
+
+            return false;
+        }
+
+
+        //---   endswith_n()   ------------------------------------
+            /** Returns true if the string ends with the specified suffix, otherwise returns false. Test begins at start position and stops after count positions. */
+        inline const bool endswith_n(const CppStringT& suffix, const size_type start, const size_type count) const noexcept
+        {
+            return endswith(std::span{ suffix }, start, start + count - 1);
+        }
+
+        /** Returns true if the string ends with the specified suffix, otherwise returns false. Test begins at position 0 and stops after count positions. */
+        inline const bool endswith_n(const CppStringT& suffix, const size_type count) const noexcept
+        {
+            return endswith(std::span{ suffix }, 0, count - 1);
+        }
+
+        /** Returns true if the string ends with any of the specified suffixes, otherwise returns false. Test begins at start position and stops after count positions. */
+        inline const bool endswith_n(const std::span<CppStringT>& suffixes, const size_type start, const size_type count) const noexcept
+        {
+            return endswith(suffixes, start, start + count - 1);
+        }
+
+
+        //---   expand_tabs()   -----------------------------------
+        /** Returns a copy of the string where all tab characters are replaced by one or more spaces, depending on the current column and the given tab size. */
+        CppStringT expand_tabs(const size_type tabsize = 8) const noexcept
+        {
+            const size_type tabsize_{ tabsize == 0 ? 1 : tabsize };
+            CppStringT ret{};
+
+            std::size_t current_pos{ 0 };
+            for (const value_type ch : *this) {
+                if (ch == value_type('\t')) {
+                    do {
+                        ret += value_type(' ');
+                        current_pos++;
+                    } while (current_pos % tabsize_ != 0);
+                }
+                else if (ch == value_type('\n') || ch == value_type('\r')) {
+                    ret += ch;
+                    current_pos = 0;
+                }
+                else {
+                    ret += ch;
+                    current_pos++;
+                }
+            }
+
+            return ret;
+        }
+
+
+        //---   find_n()   ----------------------------------------
+        /** Returns the lowest index in the string where substring sub is found within the slice str[start:start+count-1], or -1 (i.e. 'npos') if sub is not found.
+        *
+        * Note: this method should be used only if you need to know the position of
+        * sub.  To check if sub is a substring or not, use the method contains_n().
+        *
+        * \see find(), rfind() and rfind_n().
+        * \see index(), index_n(), rindex() and rindex_n().
+        */
+        inline constexpr size_type find_n(const CppStringT& sub, const size_type start, const size_type count) const noexcept
+        {
+            try {
+                return this->substr(start, count).find(sub);
+            }
+            catch (...) {
+                return CppStringT::npos;
+            }
+        }
+
+        /** Returns the lowest index in the string where substring sub is found within the slice str[0:count-1], or -1 (i.e. 'npos') if sub is not found.
+        *
+        * Note: this method should be used only if you need to know the position of
+        * sub.  To check if sub is a substring or not, use the method contains_n().
+        *
+        * \see find(), rfind() and rfind_n().
+        * \see index(), index_n(), rindex() and rindex_n().
+        */
+        inline constexpr size_type find_n(const CppStringT& sub, const size_type count) const noexcept
+        {
+            return find_n(sub, 0, count);
+        }
+
+
+        //---   index()   -----------------------------------------
+        /** Like find(), but raises NotFoundException when the substring is not found.
+        *
+        * \see index_n(), rindex() and rindex_n().
+        * \see find(), find_n(), rfind() and rfind_n().
+        */
+        inline constexpr size_type index(const CppStringT& sub, const size_type start, const size_type end) const
+        {
+            const size_type ret_value = find(sub, start, end);
+            if (size_type == CppStringT::npos)
+                throw NotFoundException(std::format("substring \"{}\" not found in string \"{}\"", sub, this->c_str()));
+            else
+                return ret_value;
+        }
+
+
+        //---   index_n()   ---------------------------------------
+        /** Like find_n(sub, start, count), but raises NotFoundException when the substring is not found.
+        *
+        * \see index_n(), rindex() and rindex_n().
+        * \see find(), find_n(), rfind() and rfind_n().
+        */
+        inline constexpr size_type index_n(const CppStringT& sub, const size_type start, const size_type count) const
+        {
+            return index(sub, start, start + count - 1);
+        }
+
+        /** Like find_n(sub, count), but raises NotFoundException when the substring is not found.
+        *
+        * \see index_n(), rindex() and rindex_n().
+        * \see find(), find_n(), rfind() and rfind_n().
+        */
+        inline constexpr size_type index_n(const CppStringT& sub, const size_type count) const
+        {
+            return index(sub, 0, count);
+        }
+
+
+        //---   isalnum()   ---------------------------------------
+        /** \brief Returns true if all characters in the string are alphanumeric and there is at least one character, or false otherwise. */
+        inline const bool isalnum() const noexcept
+        {
+            return this->isalpha() || this->isdecimal() || this->isdigit() || this->isnumeric();
+        }
+
+
+        //---   isalpha()   --------------------------------------
+        /** \brief Returns true if all characters in the string are alphabetic and there is at least one character, or false otherwise. */
+        inline const bool isalpha() const noexcept
+        {
+            if (this->size() == 0)
+                return false;
+            else
+                return std::all_of(this->cbegin(), this->cend(), [](const value_type ch) { return pcs::is_alpha<CharT>(ch); });
+        }
+
+
+        //---   isdecimal()   -------------------------------------
+        inline const bool isdecimal() const noexcept
+        {
+            return false;
+        }
+
+
+        //---   isdigit()   ---------------------------------------
+        inline const bool isdigit() const noexcept
+        {
+            return false;
+        }
+
+
+        //---   isnumeric()   -------------------------------------
+        inline const bool isnumeric() const noexcept
+        {
+            return false;
+        }
+
+
+        //---   is_punctuation()   --------------------------------
+        /** \brief Returns true if the string contains only one character and if this character belongs to the ASCII punctuation set. */
+        inline const bool is_punctuation() const noexcept
+        {
+            return this->size() == 1 && is_punctuation((*this)[0]);
+        }
+
+        /** \brief Returns true if character belongs to the ASCII punctuation set. */
+        static inline const bool is_punctuation(const value_type& ch) noexcept
+        {
+            return _ASCII_PUNCT_DATA.contains(ch);
+        }
+
+
+        //---   is_space()   --------------------------------------
+        /** \brief Returns true if there are only whitespace characters in the string and there is at least one character, or false otherwise.
+        *
+        * Notice for version 2.0 of this library: a character  is  whitespace  if
+        * in  the  Unicode character database,  either its general category is Zs
+        * (“Separator, space”), or its bidirectional class is one of WS, B, or S.
+        */
+        inline const bool is_space() const noexcept
+        {
+            if (this->size() == 0)
+                return false;
+            for (auto& c : *this)
+                if (!is_space(c))
+                    return false;
+            return true;
+        }
+
+        /** \brief Returns true if character belongs to the ASCII spaces set. */
+        static inline const bool is_space(const value_type& ch) noexcept
+        {
+            return _ASCII_SPACES.contains(ch);
+        }
+
+
+        //---   is_words_sep()   ----------------------------------
+        /** \brief Returns true if there are only whitespace and punctuation characters in the string and there is at least one character, or false otherwise. */
+        inline const bool is_words_sep() const noexcept
+        {
+            return is_space() || is_punctuation();
+        }
+
+        /** \brief Returns true if character belongs to ASCII spaces or punctuation sets. */
+        static inline const bool is_words_sep(const value_type& ch) noexcept
+        {
+            return is_space(ch) || is_punctuation(ch);
+        }
+
+
+        //---   lower ()  -----------------------------------------
+        /** \brief In-place replaces all characters of the string with their lowercase conversion. Returns a reference to string.
+        *
+        * Notice: uses the currently set std::locale, which is the "C" one
+        * by default or any other one as previously set by the user.
+        */
+        inline CppStringT& lower() noexcept
+        {
+            std::transform(this->begin(), this->end(),
+                this->begin(),
+                [](value_type ch) { return this->lower(ch); });
+            return *this;
+        }
+
+        /** \brief Returns lowercase conversion of the character.
+        *
+        * Notice: uses the currently set std::locale, which is the "C" one
+        * by default or any other one as previously set by the user.
+        */
+        static inline const value_type lower(const value_type ch) noexcept
+        {
+            return value_type(std::tolower(ch));
+        }
+
+
+        //---   rfind()   -----------------------------------------
+        /** Returns the highest index in the string where substring sub is found within the slice str[start:end], or -1 (i.e. 'npos') if sub is not found.
+        *
+        * Note that this is an offset from the start of the string, not the end.
+        *
+        * Note: this method should be used only if you need to  know  the  position
+        * of sub. To check if sub is a substring or not, use the method contains().
+        *
+        * \see find(), find_n() and rfind_n().
+        * \see index(), index_n(), rindex() and rindex_n().
+        */
+        inline constexpr size_type rfind(const CppStringT& sub, const size_type start, const size_type end) const noexcept
+        {
+            if (start > end)
+                return CppStringT::npos;
+            else
+                return this->substr(start, end - start + 1).rfind(sub);
+        }
+
+        /** Returns the highest index in the string where substring sub is found starting at start position in string, or -1 (i.e. 'npos') if sub is not found.
+        *
+        * Note that this is an offset from the start of the string, not the end.
+        *
+        * Note: this method should be used only if you need to  know  the  position
+        * of sub. To check if sub is a substring or not, use the method contains().
+        *
+        * \see find(), find_n() and rfind_n().
+        * \see index(), index_n(), rindex() and rindex_n().
+        */
+        inline constexpr size_type rfind(const CppStringT& sub, const size_type start) const noexcept
+        {
+            return rfind(sub, start, this->size() - start + 1);
+        }
+
+        /** Returns the highest index in the string where substring sub is found in the whole string, or -1 (i.e. 'npos') if sub is not found.
+        *
+        * Note that this is an offset from the start of the string, not the end.
+        *
+        * Note: this method should be used only if you need to  know  the  position
+        * of sub. To check if sub is a substring or not, use the method contains().
+        *
+        * \see find(), find_n() and rfind_n().
+        * \see index(), index_n(), rindex() and rindex_n().
+        */
+        inline constexpr size_type rfind(const CppStringT& sub) const noexcept
+        {
+            return MyBaseClass::rfind(sub);
+        }
+
+
+        //---   rfind_n()   ---------------------------------------
+        /** Returns the highest index in the string where substring sub is found within the slice str[start:start+count-1], or -1 (i.e. 'npos') if sub is not found.
+        *
+        * Note: this method should be used only if you need to  know  the  position
+        * of sub. To check if sub is a substring or not, use the method contains_n().
+        *
+        * \see find(), find_n() and rfind().
+        * \see index(), index_n(), rindex() and rindex_n().
+        */
+        inline constexpr size_type rfind_n(const CppStringT& sub, const size_type start, const size_type count) const noexcept
+        {
+            return rfind(sub, start, start + count - 1);
+        }
+
+        /** Returns the highest index in the string where substring sub is found within the slice str[0:count-1], or -1 (i.e. 'npos') if sub is not found.
+         *
+         * Note: this method should be used only if you need to  know  the  position
+         * of sub. To check if sub is a substring or not, use the method contains_n().
+         *
+         * \see find(), find_n() and rfind().
+         * \see index(), index_n(), rindex() and rindex_n().
+         */
+        inline constexpr size_type rfind_n(const CppStringT& sub, const size_type count) const noexcept
+        {
+            return rfind(sub, 0, count);
+        }
+
+
+        //---   rindex()   ----------------------------------------
+        /** Like rfind(sub, start, end), but raises NotFoundException when the substring is not found.
+        *
+        * \see index(), index_n() and rindex_n().
+        * \see find(), find_n(), rfind() and rfind_n().
+        */
+        inline constexpr size_type rindex(const CppStringT& sub, const size_type start, const size_type end) const
+        {
+            const size_type ret_value = rfind(sub, start, end);
+            if (size_type == CppStringT::npos)
+                throw NotFoundException(std::format("substring \"{}\" not found in string \"{}\"", sub, this->c_str()));
+            else
+                return ret_value;
+        }
+
+        /** Like rfind(sub, start), but raises NotFoundException when the substring is not found.
+         *
+         * \see index(), index_n() and rindex_n().
+         * \see find(), find_n(), rfind() and rfind_n().
+         */
+        inline constexpr size_type rindex(const CppStringT& sub, const size_type start) const
+        {
+            return rindex(sub, start, this->size() - 1);
+        }
+
+        /** Like rfind(sub), but raises NotFoundException when the substring is not found.
+         *
+         * \see index(), index_n() and rindex_n().
+         * \see find(), find_n(), rfind() and rfind_n().
+         */
+        inline constexpr size_type rindex(const CppStringT& sub) const
+        {
+            return rindex(sub, 0, this->size() - 1);
+        }
+
+
+        //---   rindex_n()   --------------------------------------
+        /** Like rfind_n(sub, start, count), but raises NotFoundException when the substring is not found.
+        *
+        * \see index_n(), rindex() and rindex_n().
+        * \see find(), find_n(), rfind() and rfind_n().
+        */
+        inline constexpr size_type rindex_n(const CppStringT& sub, const size_type start, const size_type count) const
+        {
+            return rindex(sub, start, start + count - 1);
+        }
+
+        /** Like rfind_n(sub, count), but raises NotFoundException when the substring is not found.
+        *
+        * \see index_n(), rindex() and rindex_n().
+        * \see find(), find_n(), rfind() and rfind_n().
+        */
+        inline constexpr size_type rindex_n(const CppStringT& sub, const size_type count) const
+        {
+            return rindex(sub, 0, count);
+        }
+
+
+        //---   upper ()  -----------------------------------------
+        /** \brief In-place replaces all characters of the string with their uppercase conversion. Returns a reference to string.
+        *
+        * Notice: uses the currently set std::locale, which is the "C" one
+        * by default or any other one as previously set by the user.
+        */
+        inline CppStringT& upper() noexcept
+        {
+            std::transform(this->begin(), this->end(),
+                this->begin(),
+                [](value_type ch) { return this->upper(ch); });
+            return *this;
+        }
+
+        /** \brief Returns uppercase conversion of the character.
+        *
+        * Notice: uses the currently set std::locale, which is the "C" one
+        * by default or any other one as previously set by the user.
+        */
+        static inline const value_type upper(const value_type ch) noexcept
+        {
+            return value_type(std::toupper(ch));
+        }
+
+
+    protected:
+
+
+    private:
+        //===   DATA   ============================================
+        static inline constexpr std::vector<value_type> _ASCII_PUNCT_DATA{ '!', ',', '.', ':', ';', '?' };
+        static inline constexpr std::vector<value_type> _ASCII_SPACES{ ' ', '\t', '\n', 'r', '\f' };
+
     };
 
-    //===   Methods   =========================================
 
-    //---   capitalize()   ------------------------------------
-    /** \brief In-place modifies the string with its first character capitalized and the rest lowercased. Returns a reference to the string*/
-    inline CppStringT& capitalize() noexcept
-    {
-        this->lower();
-        (*this)[0] = upper((*this)[0]);
-        return *this;
-    }
 
+    //=====   templated chars classes   ===========================
+    //---   is_alpha()   ------------------------------------------
+    /** \brief SHOULD NEVER BE USED. Use next specializations instead. */
+    template<class CharT>
+    inline const bool is_alpha(const CharT ch) { return false; }
 
-    //---   center()   ----------------------------------------
-    /** \brief Returns the string centered in a string of length width.
-    *
-    * Padding is done using the specified fillchar (default is an ASCII space). 
-    * A copy of the original string is returned if width is less than or  equal 
-    * to the length of the string. The original string remains unchanged.
-    */
-    inline CppStringT center(const size_type width, const value_type fillch = value_type(' ')) const noexcept
-    {
-        const size_type l{ this->size() };
-        if (l <= width)
-            return CppStringT(*this);
-        const size_type half{ (width - l) / 2 };
-        return CppStringT(fillch, half) + *this + CppStringT(fillch, width - half - l);
-    }
+    /** \brief Returns true if character ch is alphabetic, or false otherwise. Conforms to the current locale settings. */
+    template<>
+    inline const bool is_alpha<char>(const char ch) { return std::isalpha(static_cast<unsigned char>(ch)); }
 
+    /** \brief Returns true if character ch is alphabetic, or false otherwise. Conforms to the current locale settings. */
+    template<>
+    inline const bool is_alpha<wchar_t>(const wchar_t ch) { return std::iswalpha(ch); }
 
-    //---   count()   -----------------------------------------
-    /** \brief Returns the number of non-overlapping occurrences of substring sub in the range [start, end]. */
-    inline constexpr size_type count(const CppStringT& sub, const size_type start = 0, const size_type end = 0) const noexcept
-    {
-        const size_type length{ this->size() };
-        const size_type end_{ (end == 0) ? length : end };
-
-        size_type n = 0;
-        size_type start_ = start;
-        while ((start_ = find(sub, start_, end_)) != CppStringT::npos)
-            n++;
-
-        return n;
-    }
-
-
-    //---   count_n()   ---------------------------------------
-    /** \brief Returns the number of non-overlapping occurrences of substring sub in the range [start, start+length-1]. */
-    inline constexpr size_type count_n(const CppStringT& sub, const size_type start, const size_type length) const noexcept
-    {
-        return count(sub, start, start + length - 1);
-    }
-
-    /** \brief Returns the number of non-overlapping occurrences of substring sub in the range [0, length-1]. */
-    inline constexpr size_type count_n(const CppStringT& sub, const size_type length) const noexcept
-    {
-        return count(sub, 0, length - 1);
-    }
-
-
-    //---   find()   ------------------------------------------
-    /** Returns the lowest index in the string where substring sub is found within the slice str[start:end], or -1 (i.e. 'npos') if sub is not found.
-    *
-    * Note: this method should be used only if you need to know the position of
-    * sub.  To check if sub is a substring or not, use the method contains_n().
-    *
-    * \see find_n(), rfind() and rfind_n().
-    * \see index(), index_n(), rindex() and rindex_n().
-    */
-    inline constexpr size_type find(const CppStringT& sub, const size_type start, const size_type end) const noexcept
-    {
-        if (start > end)
-            return CppStringT::npos;
-        else
-            return find_n(sub, start, end - start + 1);
-    }
-
-
-    //---   endswith()   --------------------------------------
-    /** Returns true if the string ends with the specified suffix, otherwise returns false. Test begins at start position and stops at end position. */
-    inline const bool endswith(const CppStringT& suffix, const size_type start, const size_type end) const noexcept
-    {
-        return endswith(std::span{ suffix }, start, end);
-    }
-
-    /** Returns true if the string ends with the specified suffix, otherwise returns false. Test begins at start position and stops at end of string. */
-    inline const bool endswith(const CppStringT& suffix, const size_type start) const noexcept
-    {
-        return endswith(std::span{ suffix }, start, this->size()-1);
-    }
-
-    /** Returns true if the string ends with the specified suffix, otherwise returns false. Test runs on the whole string. */
-    inline const bool endswith(const CppStringT& suffix) const noexcept
-    {
-        return this->ends_with(suffix);
-    }
-
-    /** Returns true if the string ends with any of the specified suffixes, otherwise returns false. Test begins at start position and stops at end of string. */
-    inline const bool endswith(const std::span<CppStringT>& suffixes, const size_type start, const size_type end) const noexcept
-    {
-        if (start > end)
-            return false;
-
-        for (auto& suffix : suffixes) {
-            if (this->substr(start, end).ends_with(suffix))
-                return true;
-        }
-
-        return false;
-    }
-
-
-    //---   endswith_n()   ------------------------------------
-        /** Returns true if the string ends with the specified suffix, otherwise returns false. Test begins at start position and stops after count positions. */
-    inline const bool endswith_n(const CppStringT& suffix, const size_type start, const size_type count) const noexcept
-    {
-        return endswith(std::span{ suffix }, start, start + count - 1);
-    }
-
-    /** Returns true if the string ends with the specified suffix, otherwise returns false. Test begins at position 0 and stops after count positions. */
-    inline const bool endswith_n(const CppStringT& suffix, const size_type count) const noexcept
-    {
-        return endswith(std::span{ suffix }, 0, count - 1);
-    }
-
-    /** Returns true if the string ends with any of the specified suffixes, otherwise returns false. Test begins at start position and stops after count positions. */
-    inline const bool endswith_n(const std::span<CppStringT>& suffixes, const size_type start, const size_type count) const noexcept
-    {
-        return endswith(suffixes, start, start + count - 1);
-    }
-
-
-    //---   expand_tabs()   -----------------------------------
-    /** Returns a copy of the string where all tab characters are replaced by one or more spaces, depending on the current column and the given tab size. */
-    CppStringT expand_tabs(const size_type tabsize = 8) const noexcept
-    {
-        const size_type tabsize_{ tabsize == 0 ? 1 : tabsize };
-        CppStringT ret{};
-
-        std::size_t current_pos{ 0 };
-        for (const value_type ch : *this) {
-            if (ch == value_type('\t')) {
-                do {
-                    ret += value_type(' ');
-                    current_pos++;
-                } while (current_pos % tabsize_ != 0);
-            }
-            else if (ch == value_type('\n') || ch == value_type('\r')) {
-                ret += ch;
-                current_pos = 0;
-            }
-            else {
-                ret += ch;
-                current_pos++;
-            }
-        }
-
-        return ret;
-    }
-
-
-    //---   find_n()   ----------------------------------------
-    /** Returns the lowest index in the string where substring sub is found within the slice str[start:start+count-1], or -1 (i.e. 'npos') if sub is not found.
-    *
-    * Note: this method should be used only if you need to know the position of
-    * sub.  To check if sub is a substring or not, use the method contains_n().
-    *
-    * \see find(), rfind() and rfind_n().
-    * \see index(), index_n(), rindex() and rindex_n().
-    */
-    inline constexpr size_type find_n(const CppStringT& sub, const size_type start, const size_type count) const noexcept
-    {
-        try {
-            return this->substr(start, count).find(sub);
-        }
-        catch (...) {
-            return CppStringT::npos;
-        }
-    }
-
-    /** Returns the lowest index in the string where substring sub is found within the slice str[0:count-1], or -1 (i.e. 'npos') if sub is not found.
-    *
-    * Note: this method should be used only if you need to know the position of
-    * sub.  To check if sub is a substring or not, use the method contains_n().
-    *
-    * \see find(), rfind() and rfind_n().
-    * \see index(), index_n(), rindex() and rindex_n().
-    */
-    inline constexpr size_type find_n(const CppStringT& sub, const size_type count) const noexcept
-    {
-        return find_n(sub, 0, count);
-    }
-
-
-    //---   index()   -----------------------------------------
-    /** Like find(), but raises NotFoundException when the substring is not found.
-    *
-    * \see index_n(), rindex() and rindex_n().
-    * \see find(), find_n(), rfind() and rfind_n().
-    */
-    inline constexpr size_type index(const CppStringT& sub, const size_type start, const size_type end) const
-    {
-        const size_type ret_value = find(sub, start, end);
-        if (size_type == CppStringT::npos)
-            throw NotFoundException(std::format("substring \"{}\" not found in string \"{}\"", sub, this->c_str()));
-        else
-            return ret_value;
-    }
-
-
-    //---   index_n()   ---------------------------------------
-    /** Like find_n(sub, start, count), but raises NotFoundException when the substring is not found.
-    *
-    * \see index_n(), rindex() and rindex_n().
-    * \see find(), find_n(), rfind() and rfind_n().
-    */
-    inline constexpr size_type index_n(const CppStringT& sub, const size_type start, const size_type count) const
-    {
-        return index(sub, start, start + count - 1);
-    }
-
-    /** Like find_n(sub, count), but raises NotFoundException when the substring is not found.
-    *
-    * \see index_n(), rindex() and rindex_n().
-    * \see find(), find_n(), rfind() and rfind_n().
-    */
-    inline constexpr size_type index_n(const CppStringT& sub, const size_type count) const
-    {
-        return index(sub, 0, count);
-    }
-
-
-    //---   isalnum()   ---------------------------------------
-    /** \brief Returns true if all characters in the string are alphanumeric and there is at least one character, or false otherwise. */
-    inline const bool isalnum() const noexcept
-    {
-        return this->isalpha() || this->isdecimal() || this->isdigit() || this->isnumeric();
-    }
-
-
-    //---   isalpha()   --------------------------------------
-    inline const bool isalpha() const noexcept
-    {
-        return false;
-    }
-
-
-    //---   isdecimal()   -------------------------------------
-    inline const bool isdecimal() const noexcept
-    {
-        return false;
-    }
-
-
-    //---   isdigit()   ---------------------------------------
-    inline const bool isdigit() const noexcept
-    {
-        return false;
-    }
-
-
-    //---   isnumeric()   -------------------------------------
-    inline const bool isnumeric() const noexcept
-    {
-        return false;
-    }
-
-
-    //---   is_punctuation()   --------------------------------
-    /** \brief Returns true if the string contains only one character and if this character belongs to the ASCII punctuation set. */
-    inline const bool is_punctuation() const noexcept
-    {
-        return this->size() == 1 && is_punctuation((*this)[0]);
-    }
-
-    /** \brief Returns true if character belongs to the ASCII punctuation set. */
-    static inline const bool is_punctuation(const value_type& ch) noexcept
-    {
-        return _ASCII_PUNCT_DATA.contains(ch);
-    }
-
-
-    //---   is_space()   --------------------------------------
-    /** \brief Returns true if there are only whitespace characters in the string and there is at least one character, or false otherwise.
-    *
-    * Notice for version 2.0 of this library: a character  is  whitespace  if
-    * in  the  Unicode character database,  either its general category is Zs 
-    * (“Separator, space”), or its bidirectional class is one of WS, B, or S.
-    */
-    inline const bool is_space() const noexcept
-    {
-        if (this->size() == 0)
-            return false;
-        for (auto& c : *this)
-            if (!is_space(c))
-                return false;
-        return true;
-    }
-
-    /** \brief Returns true if character belongs to the ASCII spaces set. */
-    static inline const bool is_space(const value_type& ch) noexcept
-    {
-        return _ASCII_SPACES.contains(ch);
-    }
-
-
-    //---   is_words_sep()   ----------------------------------
-    /** \brief Returns true if there are only whitespace and punctuation characters in the string and there is at least one character, or false otherwise. */
-    inline const bool is_words_sep() const noexcept
-    {
-        return is_space() || is_punctuation();
-    }
-
-    /** \brief Returns true if character belongs to ASCII spaces or punctuation sets. */
-    static inline const bool is_words_sep(const value_type& ch) noexcept
-    {
-        return is_space(ch) || is_punctuation(ch);
-    }
-
-
-    //---   lower ()  -----------------------------------------
-    /** \brief In-place replaces all characters of the string with their lowercase conversion. Returns a reference to string.
-    *
-    * Notice: uses the currently set std::locale, which is the "C" one
-    * by default or any other one as previously set by the user.
-    */
-    inline CppStringT& lower() noexcept
-    {
-        std::transform(this->begin(), this->end(),
-                       this->begin(),
-                       [](value_type ch) { return this->lower(ch); });
-        return *this;
-    }
-
-    /** \brief Returns lowercase conversion of the character.
-    *
-    * Notice: uses the currently set std::locale, which is the "C" one
-    * by default or any other one as previously set by the user.
-    */
-    static inline const value_type lower(const value_type ch) noexcept
-    {
-        return value_type(std::tolower(ch));
-    }
-
-
-    //---   rfind()   -----------------------------------------
-    /** Returns the highest index in the string where substring sub is found within the slice str[start:end], or -1 (i.e. 'npos') if sub is not found.
-    *
-    * Note that this is an offset from the start of the string, not the end. 
-    * 
-    * Note: this method should be used only if you need to  know  the  position
-    * of sub. To check if sub is a substring or not, use the method contains().
-    *
-    * \see find(), find_n() and rfind_n().
-    * \see index(), index_n(), rindex() and rindex_n().
-    */
-    inline constexpr size_type rfind(const CppStringT& sub, const size_type start, const size_type end) const noexcept
-    {
-        if (start > end)
-            return CppStringT::npos;
-        else
-            return this->substr(start, end - start + 1).rfind(sub);
-    }
-
-    /** Returns the highest index in the string where substring sub is found starting at start position in string, or -1 (i.e. 'npos') if sub is not found.
-    *
-    * Note that this is an offset from the start of the string, not the end. 
-    * 
-    * Note: this method should be used only if you need to  know  the  position
-    * of sub. To check if sub is a substring or not, use the method contains().
-    *
-    * \see find(), find_n() and rfind_n().
-    * \see index(), index_n(), rindex() and rindex_n().
-    */
-    inline constexpr size_type rfind(const CppStringT& sub, const size_type start) const noexcept
-    {
-        return rfind(sub, start, this->size() - start + 1);
-    }
-
-    /** Returns the highest index in the string where substring sub is found in the whole string, or -1 (i.e. 'npos') if sub is not found.
-    *
-    * Note that this is an offset from the start of the string, not the end. 
-    * 
-    * Note: this method should be used only if you need to  know  the  position
-    * of sub. To check if sub is a substring or not, use the method contains().
-    *
-    * \see find(), find_n() and rfind_n().
-    * \see index(), index_n(), rindex() and rindex_n().
-    */
-    inline constexpr size_type rfind(const CppStringT& sub) const noexcept
-    {
-        return MyBaseClass::rfind(sub);
-    }
-
-
-    //---   rfind_n()   ---------------------------------------
-    /** Returns the highest index in the string where substring sub is found within the slice str[start:start+count-1], or -1 (i.e. 'npos') if sub is not found.
-    *
-    * Note: this method should be used only if you need to  know  the  position
-    * of sub. To check if sub is a substring or not, use the method contains_n().
-    *
-    * \see find(), find_n() and rfind().
-    * \see index(), index_n(), rindex() and rindex_n().
-    */
-    inline constexpr size_type rfind_n(const CppStringT& sub, const size_type start, const size_type count) const noexcept
-    {
-        return rfind(sub, start, start + count - 1);
-    }
-
-    /** Returns the highest index in the string where substring sub is found within the slice str[0:count-1], or -1 (i.e. 'npos') if sub is not found.
-     *
-     * Note: this method should be used only if you need to  know  the  position
-     * of sub. To check if sub is a substring or not, use the method contains_n().
-     *
-     * \see find(), find_n() and rfind().
-     * \see index(), index_n(), rindex() and rindex_n().
-     */
-    inline constexpr size_type rfind_n(const CppStringT& sub, const size_type count) const noexcept
-    {
-        return rfind(sub, 0, count);
-    }
-
-
-    //---   rindex()   ----------------------------------------
-    /** Like rfind(sub, start, end), but raises NotFoundException when the substring is not found.
-    *
-    * \see index(), index_n() and rindex_n().
-    * \see find(), find_n(), rfind() and rfind_n().
-    */
-    inline constexpr size_type rindex(const CppStringT& sub, const size_type start, const size_type end) const
-    {
-        const size_type ret_value = rfind(sub, start, end);
-        if (size_type == CppStringT::npos)
-            throw NotFoundException(std::format("substring \"{}\" not found in string \"{}\"", sub, this->c_str()));
-        else
-            return ret_value;
-    }
-
-    /** Like rfind(sub, start), but raises NotFoundException when the substring is not found.
-     *
-     * \see index(), index_n() and rindex_n().
-     * \see find(), find_n(), rfind() and rfind_n().
-     */
-    inline constexpr size_type rindex(const CppStringT& sub, const size_type start) const
-    {
-        return rindex(sub, start, this->size() - 1);
-    }
-
-    /** Like rfind(sub), but raises NotFoundException when the substring is not found.
-     *
-     * \see index(), index_n() and rindex_n().
-     * \see find(), find_n(), rfind() and rfind_n().
-     */
-    inline constexpr size_type rindex(const CppStringT& sub) const
-    {
-        return rindex(sub, 0, this->size() - 1);
-    }
-
-
-    //---   rindex_n()   --------------------------------------
-    /** Like rfind_n(sub, start, count), but raises NotFoundException when the substring is not found.
-    *
-    * \see index_n(), rindex() and rindex_n().
-    * \see find(), find_n(), rfind() and rfind_n().
-    */
-    inline constexpr size_type rindex_n(const CppStringT& sub, const size_type start, const size_type count) const
-    {
-        return rindex(sub, start, start + count - 1);
-    }
-
-    /** Like rfind_n(sub, count), but raises NotFoundException when the substring is not found.
-    *
-    * \see index_n(), rindex() and rindex_n().
-    * \see find(), find_n(), rfind() and rfind_n().
-    */
-    inline constexpr size_type rindex_n(const CppStringT& sub, const size_type count) const
-    {
-        return rindex(sub, 0, count);
-    }
-
-
-    //---   upper ()  -----------------------------------------
-    /** \brief In-place replaces all characters of the string with their uppercase conversion. Returns a reference to string.
-    *
-    * Notice: uses the currently set std::locale, which is the "C" one
-    * by default or any other one as previously set by the user.
-    */
-    inline CppStringT& upper() noexcept
-    {
-        std::transform(this->begin(), this->end(),
-                       this->begin(),
-                       [](value_type ch) { return this->upper(ch); });
-        return *this;
-    }
-
-    /** \brief Returns uppercase conversion of the character.
-    *
-    * Notice: uses the currently set std::locale, which is the "C" one
-    * by default or any other one as previously set by the user.
-    */
-    static inline const value_type upper(const value_type ch) noexcept
-    {
-        return value_type(std::toupper(ch));
-    }
-
-
-
-protected:
-
-
-private:
-    //===   DATA   ============================================
-    static inline constexpr std::vector<value_type> _ASCII_PUNCT_DATA { '!', ',', '.', ':', ';', '?' };
-    static inline constexpr std::vector<value_type> _ASCII_SPACES     { ' ', '\t', '\n', 'r', '\f' };
-
-};
+} // end of namespace pcs  // (pythonic c++ strings)
