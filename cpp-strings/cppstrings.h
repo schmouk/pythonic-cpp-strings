@@ -24,8 +24,9 @@
 #include <algorithm>
 #include <cctype>
 #include <format>
+#include <span>
 #include <stdexcept>
-#include <string>
+#include <string_view>
 #include <vector>
 
 
@@ -191,6 +192,40 @@ public:
             return CppStringT::npos;
         else
             return find_n(sub, start, end - start + 1);
+    }
+
+
+    //---   endswith()   --------------------------------------
+    /** Returns true if the string ends with the specified suffix, otherwise return false. Test begins at start position and stops at end position. */
+    inline const bool endswith(const CppStringT& suffix, const size_type start, const size_type end) const noexcept
+    {
+        return endswith(std::span{ suffix }, start, end);
+    }
+
+    /** Returns true if the string ends with the specified suffix, otherwise return false. Test begins at start position and stops at end of string. */
+    inline const bool endswith(const CppStringT& suffix, const size_type start) const noexcept
+    {
+        return endswith(std::span{ suffix }, start, this->size()-1);
+    }
+
+    /** Returns true if the string ends with the specified suffix, otherwise return false. Test runs on the whole string. */
+    inline const bool endswith(const CppStringT& suffix) const noexcept
+    {
+        return this->ends_with(suffix);
+    }
+
+    /** Returns true if the string ends with any of the specified suffixes, otherwise return false. Test begins at start position and stops at end of string. */
+    inline const bool endswith(const std::span<CppStringT>& suffixes, const size_type start, const size_type end) const noexcept
+    {
+        if (start > end)
+            return false;
+
+        for (auto& suffix : suffixes) {
+            if (this->substr(start, end).ends_with(suffix))
+                return true;
+        }
+
+        return false;
     }
 
 
