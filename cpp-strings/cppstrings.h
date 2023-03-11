@@ -41,22 +41,26 @@ namespace pcs // i.e. "pythonic c++ strings"
         class CharT,
         class TraitsT = std::char_traits<CharT>,
         class AllocatorT = std::allocator<CharT>
-    > class CppStringT;                     //!< The templated base class. Use its belowing specializations instead!
+    > class CppStringT;
 
     // specializations of the base class -- these are the ones that should be instantiated by user.
-    using CppString  = CppStringT<char>;    //!< Specialization of basic class with template argument 'char'
-    using CppWString = CppStringT<wchar_t>; //!< Specialization of basic class with template argument 'wchar_t'
+    using CppString  = CppStringT<char>;                //!< Specialization of basic class with template argument 'char'
+    using CppWString = CppStringT<wchar_t>;             //!< Specialization of basic class with template argument 'wchar_t'
 
     // chars classifications -- not to be directly called, see respective specializations at the very end of this module.
     template<class CharT>
-    inline const bool is_alpha(const CharT ch);
+    inline const bool is_alpha(const CharT ch);         //!< Returns true if character ch is alphabetic, or false otherwise. */
+
+    template<class CharT>
+    inline const bool is_punctuation(const CharT ch);   //!< Returns true if character ch is punctuation, or false otherwise. */
+
+    template<class CharT>
+    inline const bool is_space(const CharT ch);         //!< Returns true if character ch is white space, or false otherwise. */
 
 
 
     //=====   CppStringT<>   ======================================
-    /**
-    * \brief This is the templated base class for all CppString
-    * classes.
+    /** \brief This is the templated base class for all CppString classes.
     *
     * Users should instantiate any specialization of this  base  class
     * rather than this base class itself:
@@ -405,13 +409,7 @@ namespace pcs // i.e. "pythonic c++ strings"
         /** \brief Returns true if the string contains only one character and if this character belongs to the ASCII punctuation set. */
         inline const bool is_punctuation() const noexcept
         {
-            return this->size() == 1 && is_punctuation((*this)[0]);
-        }
-
-        /** \brief Returns true if character belongs to the ASCII punctuation set. */
-        static inline const bool is_punctuation(const value_type& ch) noexcept
-        {
-            return _ASCII_PUNCT_DATA.contains(ch);
+            return this->size() == 1 && pcs::is_punctuation((*this)[0]);
         }
 
 
@@ -664,5 +662,39 @@ namespace pcs // i.e. "pythonic c++ strings"
     /** \brief Returns true if character ch is alphabetic, or false otherwise. Conforms to the current locale settings. */
     template<>
     inline const bool is_alpha<wchar_t>(const wchar_t ch) { return std::iswalpha(ch); }
+
+
+    //---   is_punctuation   ----------------------------------
+    /** \brief SHOULD NEVER BE USED. Use next specializations instead. */
+    template<class CharT>
+    inline const bool is_punctuation(const CharT ch)
+    {
+        static const std::vector<CharT> punct_chars{ '!', ',', '.', ':', ';', '?' };
+        return std::find(punct_chars.cbegin(), punct_chars.cend(), (ch)) != punct_chars.cend();
+    }
+
+    /** \brief Returns true if character ch is punctuation, or false otherwise. Conforms to the current locale settings. */
+    /*
+    template<>
+    inline const bool is_punctuation<char>(const char ch)
+    {
+        static const std::vector<char> punct_chars { '!', ',', '.', ':', ';', '?' };
+        return std::find(punct_chars.cbegin(), punct_chars.cend(), (ch)) != punct_chars.cend();
+    }
+    */
+
+    /** \brief Returns true if character ch is punctuation, or false otherwise. Conforms to the current locale settings. */
+    /*
+    template<>
+    inline const bool is_punctuation<wchar_t>(const wchar_t ch)
+    {
+        static const std::vector<wchar_t> punct_chars{ '!', ',', '.', ':', ';', '?' };
+        return std::find(punct_chars.cbegin(), punct_chars.cend(), (ch)) != punct_chars.cend();
+    }
+    */
+
+    //---   is_space()   --------------------------------------
+    template<class CharT>
+    inline const bool is_space(const CharT ch);         //!< Returns true if character ch is white space, or false otherwise. */
 
 } // end of namespace pcs  // (pythonic c++ strings)
