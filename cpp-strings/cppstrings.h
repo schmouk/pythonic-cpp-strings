@@ -23,6 +23,7 @@
 //=============================================================
 #include <algorithm>
 #include <cctype>
+#include <cwctype>
 #include <format>
 #include <span>
 #include <stdexcept>
@@ -346,6 +347,42 @@ public:
     inline constexpr size_type index_n(const CppStringT& sub, const size_type count) const
     {
         return index(sub, 0, count);
+    }
+
+
+    //---   isalnum()   ---------------------------------------
+    /** \brief Returns true if all characters in the string are alphanumeric and there is at least one character, or false otherwise. */
+    inline const bool isalnum() const noexcept
+    {
+        return this->isalpha() || this->isdecimal() || this->isdigit() || this->isnumeric();
+    }
+
+
+    //---   isalpha()   --------------------------------------
+    inline const bool isalpha() const noexcept
+    {
+        return false;
+    }
+
+
+    //---   isdecimal()   -------------------------------------
+    inline const bool isdecimal() const noexcept
+    {
+        return false;
+    }
+
+
+    //---   isdigit()   ---------------------------------------
+    inline const bool isdigit() const noexcept
+    {
+        return false;
+    }
+
+
+    //---   isnumeric()   -------------------------------------
+    inline const bool isnumeric() const noexcept
+    {
+        return false;
     }
 
 
