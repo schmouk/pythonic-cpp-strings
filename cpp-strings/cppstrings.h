@@ -244,7 +244,7 @@ public:
 
 
     //---   index_n()   ---------------------------------------
-    /** Like find_n(sub, start, length), but raises NotFoundException when the substring is not found.
+    /** Like find_n(sub, start, count), but raises NotFoundException when the substring is not found.
     *
     * \see index_n(), rindex() and rindex_n().
     * \see find(), find_n(), rfind() and rfind_n().
@@ -254,14 +254,14 @@ public:
         return index(sub, start, start + count - 1);
     }
 
-    /** Like find_n(sub, start), but raises NotFoundException when the substring is not found.
+    /** Like find_n(sub, count), but raises NotFoundException when the substring is not found.
     *
     * \see index_n(), rindex() and rindex_n().
     * \see find(), find_n(), rfind() and rfind_n().
     */
     inline constexpr size_type index_n(const CppStringT& sub, const size_type count) const
     {
-        return index(sub, 0, count - 1);
+        return index(sub, 0, count);
     }
 
 
@@ -393,7 +393,7 @@ public:
 
 
     //---   rfind_n()   ---------------------------------------
-    /** Returns the highest index in the string where substring sub is found within the slice str[start:start+length-1], or -1 (i.e. 'npos') if sub is not found.
+    /** Returns the highest index in the string where substring sub is found within the slice str[start:start+count-1], or -1 (i.e. 'npos') if sub is not found.
     *
     * Note: this method should be used only if you need to  know  the  position
     * of sub. To check if sub is a substring or not, use the method contains_n().
@@ -401,9 +401,22 @@ public:
     * \see find(), find_n() and rfind().
     * \see index(), index_n(), rindex() and rindex_n().
     */
-    inline constexpr size_type rfind_n(const CppStringT& sub, const size_type start, const size_type length) const noexcept
+    inline constexpr size_type rfind_n(const CppStringT& sub, const size_type start, const size_type count) const noexcept
     {
-        return rfind(sub, start, start + length - 1);
+        return rfind(sub, start, start + count - 1);
+    }
+
+    /** Returns the highest index in the string where substring sub is found within the slice str[0:count-1], or -1 (i.e. 'npos') if sub is not found.
+     *
+     * Note: this method should be used only if you need to  know  the  position
+     * of sub. To check if sub is a substring or not, use the method contains_n().
+     *
+     * \see find(), find_n() and rfind().
+     * \see index(), index_n(), rindex() and rindex_n().
+     */
+    inline constexpr size_type rfind_n(const CppStringT& sub, const size_type count) const noexcept
+    {
+        return rfind(sub, 0, count);
     }
 
 
@@ -440,6 +453,28 @@ public:
     inline constexpr size_type rindex(const CppStringT& sub) const
     {
         return rindex(sub, 0, this->size() - 1);
+    }
+
+
+    //---   rindex_n()   --------------------------------------
+    /** Like rfind_n(sub, start, count), but raises NotFoundException when the substring is not found.
+    *
+    * \see index_n(), rindex() and rindex_n().
+    * \see find(), find_n(), rfind() and rfind_n().
+    */
+    inline constexpr size_type rindex_n(const CppStringT& sub, const size_type start, const size_type count) const
+    {
+        return rindex(sub, start, start + count - 1);
+    }
+
+    /** Like rfind_n(sub, count), but raises NotFoundException when the substring is not found.
+    *
+    * \see index_n(), rindex() and rindex_n().
+    * \see find(), find_n(), rfind() and rfind_n().
+    */
+    inline constexpr size_type rindex_n(const CppStringT& sub, const size_type count) const
+    {
+        return rindex(sub, 0, count);
     }
 
 
