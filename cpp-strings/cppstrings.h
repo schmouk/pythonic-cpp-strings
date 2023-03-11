@@ -196,25 +196,25 @@ public:
 
 
     //---   endswith()   --------------------------------------
-    /** Returns true if the string ends with the specified suffix, otherwise return false. Test begins at start position and stops at end position. */
+    /** Returns true if the string ends with the specified suffix, otherwise returns false. Test begins at start position and stops at end position. */
     inline const bool endswith(const CppStringT& suffix, const size_type start, const size_type end) const noexcept
     {
         return endswith(std::span{ suffix }, start, end);
     }
 
-    /** Returns true if the string ends with the specified suffix, otherwise return false. Test begins at start position and stops at end of string. */
+    /** Returns true if the string ends with the specified suffix, otherwise returns false. Test begins at start position and stops at end of string. */
     inline const bool endswith(const CppStringT& suffix, const size_type start) const noexcept
     {
         return endswith(std::span{ suffix }, start, this->size()-1);
     }
 
-    /** Returns true if the string ends with the specified suffix, otherwise return false. Test runs on the whole string. */
+    /** Returns true if the string ends with the specified suffix, otherwise returns false. Test runs on the whole string. */
     inline const bool endswith(const CppStringT& suffix) const noexcept
     {
         return this->ends_with(suffix);
     }
 
-    /** Returns true if the string ends with any of the specified suffixes, otherwise return false. Test begins at start position and stops at end of string. */
+    /** Returns true if the string ends with any of the specified suffixes, otherwise returns false. Test begins at start position and stops at end of string. */
     inline const bool endswith(const std::span<CppStringT>& suffixes, const size_type start, const size_type end) const noexcept
     {
         if (start > end)
@@ -226,6 +226,26 @@ public:
         }
 
         return false;
+    }
+
+
+    //---   endswith_n()   ------------------------------------
+        /** Returns true if the string ends with the specified suffix, otherwise returns false. Test begins at start position and stops after count positions. */
+    inline const bool endswith_n(const CppStringT& suffix, const size_type start, const size_type count) const noexcept
+    {
+        return endswith(std::span{ suffix }, start, start + count - 1);
+    }
+
+    /** Returns true if the string ends with the specified suffix, otherwise returns false. Test begins at position 0 and stops after count positions. */
+    inline const bool endswith_n(const CppStringT& suffix, const size_type count) const noexcept
+    {
+        return endswith(std::span{ suffix }, 0, count - 1);
+    }
+
+    /** Returns true if the string ends with any of the specified suffixes, otherwise returns false. Test begins at start position and stops after count positions. */
+    inline const bool endswith_n(const std::span<CppStringT>& suffixes, const size_type start, const size_type count) const noexcept
+    {
+        return endswith(suffixes, start, start + count - 1);
     }
 
 
