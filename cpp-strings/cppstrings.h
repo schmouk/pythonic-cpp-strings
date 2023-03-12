@@ -75,6 +75,9 @@ namespace pcs // i.e. "pythonic c++ strings"
     template<class CharT>
     inline const bool is_space(const CharT ch) noexcept;        //!< Returns true if character ch is white space, or false otherwise.
 
+    template<class CharT>
+    inline const bool is_upper(const CharT ch) noexcept;        //!< Returns true if character is uppercase, or false otherwise.
+
 
 
     //=====   CppStringT<>   ======================================
@@ -534,6 +537,14 @@ namespace pcs // i.e. "pythonic c++ strings"
         }
 
 
+        //---   isupper()   ---------------------------------------
+        /** \brief Returns true if all cased characters in the string are uppercase and there is at least one cased character, or false otherwise. */
+        inline const bool isupper() const noexcept
+        {
+            return !this->empty() && std::all_of(this->cbegin(), this->cend(), pcs::is_upper<CharT>);
+        }
+
+
         //---   is_words_sep()   ----------------------------------
         /** \brief Returns true if there are only whitespace and punctuation characters in the string and there is at least one character, or false otherwise. */
         inline const bool is_words_sep() const noexcept
@@ -878,5 +889,27 @@ namespace pcs // i.e. "pythonic c++ strings"
     inline const bool is_space<wchar_t>(const wchar_t ch) noexcept
     { return std::iswspace(ch); }
 
+
+    //---   is_upper()   ------------------------------------------
+    /** \brief SHOULD NEVER BE USED. Use next specializations instead. */
+    template<class CharT>
+    inline const bool is_upper(const CharT ch) noexcept
+    {
+        return false;
+    }
+
+    /** \brief Returns true if character ch is uppercase, or false otherwise. Conforms to the current locale settings. */
+    template<>
+    inline const bool is_upper<char>(const char ch) noexcept
+    {
+        return std::isupper(static_cast<unsigned char>(ch));
+    }
+
+    /** \brief Returns true if character ch is uppercase, or false otherwise. Conforms to the current locale settings. */
+    template<>
+    inline const bool is_upper<wchar_t>(const wchar_t ch) noexcept
+    {
+        return std::iswupper(ch);
+    }
 
 } // end of namespace pcs  // (pythonic c++ strings)

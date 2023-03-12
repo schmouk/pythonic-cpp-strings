@@ -32,7 +32,7 @@ int main()
     CppString  s;
     CppWString ws;
 
-    //std::cout << ws.isspace() << std::endl;
+    std::cout << ws.isupper() << std::endl;
 
     return 0;
 }
