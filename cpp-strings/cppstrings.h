@@ -695,7 +695,7 @@ namespace pcs // i.e. "pythonic c++ strings"
 
         //---   replace()   ---------------------------------------
         /** \brief Returns a copy of the string with all occurrences of substring old replaced by new. */
-        inline CppStringT replace(const CppStringT& old, const CppStringT& new_) const noexcept
+        CppStringT replace(const CppStringT& old, const CppStringT& new_) const noexcept
         {
             if (!this->contains(old))
                 return *this;
@@ -715,7 +715,7 @@ namespace pcs // i.e. "pythonic c++ strings"
         }
 
         /** \brief Returns a copy of the string with first count occurrences of substring old replaced by new. */
-        inline CppStringT replace(const CppStringT& old, const CppStringT& new_, size_type count) const noexcept
+        CppStringT replace(const CppStringT& old, const CppStringT& new_, size_type count) const noexcept
         {
             if (!this->contains(old) || count == 0)
                 return *this;
@@ -733,6 +733,27 @@ namespace pcs // i.e. "pythonic c++ strings"
                 res += this->substr(last_index, this->size - last_index);
 
             return res;
+        }
+
+
+        //---   rpartition()   -------------------------------------
+        /** Split the string at the last occurrence of sep, and returns a 3-items vector containing the part before the separator, the separator itself, and the part after the separator.
+        *
+        * If the separator is not  found,  returns  a  3-items  vector
+        * containing the string itself, followed by two empty strings.
+        */
+        std::vector<CppStringT> rpartition(const CppStringT& sep) const noexcept
+        {
+            const size_type sep_index = rfind(sep);
+            if (sep_index == CppStringT::npos) {
+                const CppStringT empty{};
+                return std::vector<CppStringT>({ *this, empty, empty });
+            }
+            else {
+                const size_type third_index = sep_index + sep.size();
+                const size_type third_size = this->size() - third_index + 1;
+                return std::vector<CppStringT>({ this->substr(0, sep_index), sep, this->substr(third_index, third_size) });
+            }
         }
 
 
