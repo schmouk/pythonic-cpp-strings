@@ -64,6 +64,9 @@ namespace pcs // i.e. "pythonic c++ strings"
     inline const bool is_id_start(const CharT ch) noexcept;     //!< Returns true if character is a starting char for identifiers, or false otherwise.
 
     template<class CharT>
+    inline const bool is_lower(const CharT ch) noexcept;      //!< Returns true if character is lowercase, or false otherwise.
+
+    template<class CharT>
     inline const bool is_punctuation(const CharT ch) noexcept;  //!< Returns true if character ch is punctuation, or false otherwise.
 
     template<class CharT>
@@ -463,6 +466,14 @@ namespace pcs // i.e. "pythonic c++ strings"
         }
 
 
+        //---   islower()   ---------------------------------------
+        /** \brief Returns true if all cased characters in the string are lowercase and there is at least one cased character, or false otherwise. */
+        inline const bool islower() const noexcept
+        {
+            return !this->empty() && std::all_of(this->cbegin(), this->cend(), pcs::is_lower<CharT>);
+        }
+
+
         //---   isnumeric()   -------------------------------------
         inline const bool isnumeric() const noexcept
         {
@@ -743,6 +754,29 @@ namespace pcs // i.e. "pythonic c++ strings"
     template<class CharT>
     inline const bool is_id_start(const CharT ch) noexcept
     { return pcs::is_alpha(ch) || ch == CharT('_'); }
+
+
+    //---   is_lower()   ------------------------------------------
+    /** \brief SHOULD NEVER BE USED. Use next specializations instead. */
+    template<class CharT>
+    inline const bool is_lower(const CharT ch) noexcept
+    {
+        return false;
+    }
+
+    /** \brief Returns true if character ch is lowercase, or false otherwise. Conforms to the current locale settings. */
+    template<>
+    inline const bool is_lower<char>(const char ch) noexcept
+    {
+        return std::islower(static_cast<unsigned char>(ch));
+    }
+
+    /** \brief Returns true if character ch is lowercase, or false otherwise. Conforms to the current locale settings. */
+    template<>
+    inline const bool is_lower<wchar_t>(const wchar_t ch) noexcept
+    {
+        return std::iswlower(ch);
+    }
 
 
     //---   is_punctuation()   ------------------------------------
