@@ -412,9 +412,21 @@ namespace pcs // i.e. "pythonic c++ strings"
 
 
         //---   isdigit()   ---------------------------------------
+        /** \brief Returns true if all characters in the string are digits and there is at least one character, or false otherwise.
+        *
+        * Digits include decimal characters and digits that need special 
+        * handling,  such as the compatibility superscript digits.  This 
+        * covers digits which cannot be used to form numbers in base 10, 
+        * like the Kharosthi numbers.  Formally,  a digit is a character 
+        * that has the property value Numeric_Type=Digit or Numeric_Type=Decimal.
+        * 
+        * CAUTION: current implementation of  library  cpp-strings  does
+        * not implement above algorithm. It just returns the same result
+        * as 'isdecimal()' which is NOT what Python str library does.
+        */
         inline const bool isdigit() const noexcept
         {
-            return false;
+            return isdecimal();
         }
 
 
