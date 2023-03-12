@@ -603,8 +603,8 @@ namespace pcs // i.e. "pythonic c++ strings"
         inline CppStringT& lower() noexcept
         {
             std::transform(this->begin(), this->end(),
-                this->begin(),
-                [](value_type ch) { return this->lower(ch); });
+                           this->begin(),
+                           [](value_type ch) { return this->lower(ch); });
             return *this;
         }
 
@@ -616,6 +616,23 @@ namespace pcs // i.e. "pythonic c++ strings"
         static inline const value_type lower(const value_type ch) noexcept
         {
             return value_type(std::tolower(ch));
+        }
+
+
+        //---   lstrip()   ----------------------------------------
+        /** \brief Return a copy of the string with leading characters removed.
+        *
+        * The passed string specifies the set of characters to be removed. 
+        * If omitted,  the chars argument defaults to removing whitespace. 
+        * The chars argument is not a prefix;  rather, all combinations of 
+        * its values are stripped.
+        */
+        inline CppStringT lstrip(const CppStringT& prefix) const noexcept
+        {
+            for (auto it = this->cbegin(); it != this->cend(); ++it)
+                if (std::none_of(prefix.cbegin(), prefix.cend(), [it](const value_type ch) { *it == ch; }))
+                    return CppStringT(it, this->cend());
+            return CppStringT();
         }
 
 
@@ -772,8 +789,8 @@ namespace pcs // i.e. "pythonic c++ strings"
         inline CppStringT& upper() noexcept
         {
             std::transform(this->begin(), this->end(),
-                this->begin(),
-                [](value_type ch) { return this->upper(ch); });
+                           this->begin(),
+                           [](value_type ch) { return this->upper(ch); });
             return *this;
         }
 
