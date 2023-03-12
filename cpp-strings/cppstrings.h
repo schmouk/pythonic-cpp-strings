@@ -626,6 +626,7 @@ namespace pcs // i.e. "pythonic c++ strings"
         * The passed string specifies the set of characters to be removed. 
         * The chars argument is not a prefix;  rather, all combinations of 
         * its values are stripped.
+        * To remove a prefix, rather call method 'removeprefix()'.
         */
         inline CppStringT lstrip(const CppStringT& prefix) const noexcept
         {
@@ -655,13 +656,27 @@ namespace pcs // i.e. "pythonic c++ strings"
         {
             const size_type sep_index = find(sep);
             if (sep_index == CppStringT::npos) {
-                return std::vector<CppStringT>({ *this, CppStringT(), CppStringT() });
+                const CppStringT empty{};
+                return std::vector<CppStringT>({ *this, empty, empty });
             }
             else {
                 const size_type third_index = sep_index + sep.size();
                 const size_type third_size = this->size() - third_index + 1;
-                return std::vector<CppStringT>({ substr(0, sep_index), sep, substr(third_index, third_size) });
+                return std::vector<CppStringT>({ this->substr(0, sep_index), sep, this->substr(third_index, third_size) });
             }
+        }
+
+
+        //---   removeprefix()   ----------------------------------
+        /** \brief If the string starts with the prefix string, returns a new string with the prefix removed. Otherwise, returns a copy of the original string. */
+        inline CppStringT removeprefix(const CppStringT& prefix) const noexcept
+        {
+            if (this->startswith(prefix)) {
+                const size_type prefix_length = prefix.size();
+                return this->substr(prefix_length, this->size - prefix_length + 1);
+            }
+            else
+                return *this;
         }
 
 
@@ -806,6 +821,13 @@ namespace pcs // i.e. "pythonic c++ strings"
         inline CppStringT title() const noexcept
         {
             return *this;
+        }
+
+
+        //---   startswith   --------------------------------------
+        inline const bool startswith(const CppStringT& prefix) const noexcept
+        {
+            return false;
         }
 
 
