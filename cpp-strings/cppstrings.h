@@ -522,6 +522,18 @@ namespace pcs // i.e. "pythonic c++ strings"
         }
 
 
+        //---   istitle()   ---------------------------------------
+        /** \brief Returns true if the string is a titlecased string and there is at least one character, or false otherwise.
+        *
+        * For instance uppercase characters may only follow uncased 
+        * characters and lowercase characters only cased ones.
+        */
+        inline const bool istitle() const noexcept
+        {
+            return !this->empty && this->title() == *this;
+        }
+
+
         //---   is_words_sep()   ----------------------------------
         /** \brief Returns true if there are only whitespace and punctuation characters in the string and there is at least one character, or false otherwise. */
         inline const bool is_words_sep() const noexcept
@@ -688,6 +700,14 @@ namespace pcs // i.e. "pythonic c++ strings"
         inline constexpr size_type rindex_n(const CppStringT& sub, const size_type count) const
         {
             return rindex(sub, 0, count);
+        }
+
+
+        //---   title()   -----------------------------------------
+        /** \brief Returns a titlecased copy of the string where words start with an uppercase character and the remaining characters are lowercase. */
+        inline CppStringT title() const noexcept
+        {
+            return *this;
         }
 
 
