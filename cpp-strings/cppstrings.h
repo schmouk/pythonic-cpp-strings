@@ -64,7 +64,10 @@ namespace pcs // i.e. "pythonic c++ strings"
     inline const bool is_id_start(const CharT ch) noexcept;     //!< Returns true if character is a starting char for identifiers, or false otherwise.
 
     template<class CharT>
-    inline const bool is_lower(const CharT ch) noexcept;      //!< Returns true if character is lowercase, or false otherwise.
+    inline const bool is_lower(const CharT ch) noexcept;        //!< Returns true if character is lowercase, or false otherwise.
+
+    template<class CharT>
+    inline const bool is_printable(const CharT ch) noexcept;    //!< Returns true if character ch is printable, or false otherwise.
 
     template<class CharT>
     inline const bool is_punctuation(const CharT ch) noexcept;  //!< Returns true if character ch is punctuation, or false otherwise.
@@ -490,6 +493,19 @@ namespace pcs // i.e. "pythonic c++ strings"
         }
 
 
+        //---   isprintable()   -----------------------------------
+        /** \brief Returns true if all characters in the string are printable or if the string is empty, or false otherwise.
+        *
+        * Nonprintable characters are those characters defined in the Unicode 
+        * character  database as “Other” or “Separator”,  excepting the ASCII 
+        * space (0x20) which is considered printable.
+        */
+        inline const bool isprintable() const noexcept
+        {
+            return this->empty() || std::all_of(this->cbegin(), this->cend(), pcs::is_printable<CharT>);
+        }
+
+
         //---   ispunctuation()   ---------------------------------
         /** \brief Returns true if the string contains only one character and if this character belongs to the ASCII punctuation set. */
         inline const bool ispunctuation() const noexcept
@@ -785,6 +801,27 @@ namespace pcs // i.e. "pythonic c++ strings"
     inline const bool is_lower<wchar_t>(const wchar_t ch) noexcept
     {
         return std::iswlower(ch);
+    }
+
+
+    //---   is_printable()   --------------------------------------
+    /** \brief SHOULD NEVER BE USED. Use next specializations instead. */
+    template<class CharT>
+    inline const bool is_printable(const CharT ch) noexcept
+    { return false; }
+    
+    /** \brief Returns true if character ch is printable, or false otherwise. */
+    template<>
+    inline const bool is_printable<char>(const char ch) noexcept
+    {
+        return std::isprint(static_cast<unsigned char>(ch));
+    }
+
+    /** \brief Returns true if character ch is punctuation, or false otherwise. Conforms to the current locale settings. */
+    template<>
+    inline const bool is_printable<wchar_t>(const wchar_t ch) noexcept
+    {
+        return std::iswprint(ch);
     }
 
 
