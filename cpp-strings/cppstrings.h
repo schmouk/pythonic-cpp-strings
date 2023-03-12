@@ -216,24 +216,6 @@ namespace pcs // i.e. "pythonic c++ strings"
         }
 
 
-        //---   find()   ------------------------------------------
-        /** Returns the lowest index in the string where substring sub is found within the slice str[start:end], or -1 (i.e. 'npos') if sub is not found.
-        *
-        * Note: this method should be used only if you need to know the position of
-        * sub.  To check if sub is a substring or not, use the method contains_n().
-        *
-        * \see find_n(), rfind() and rfind_n().
-        * \see index(), index_n(), rindex() and rindex_n().
-        */
-        inline constexpr size_type find(const CppStringT& sub, const size_type start, const size_type end) const noexcept
-        {
-            if (start > end)
-                return CppStringT::npos;
-            else
-                return find_n(sub, start, end - start + 1);
-        }
-
-
         //---   endswith()   --------------------------------------
         /** Returns true if the string ends with the specified suffix, otherwise returns false. Test begins at start position and stops at end position. */
         inline const bool endswith(const CppStringT& suffix, const size_type start, const size_type end) const noexcept
@@ -269,7 +251,7 @@ namespace pcs // i.e. "pythonic c++ strings"
 
 
         //---   endswith_n()   ------------------------------------
-            /** Returns true if the string ends with the specified suffix, otherwise returns false. Test begins at start position and stops after count positions. */
+        /** Returns true if the string ends with the specified suffix, otherwise returns false. Test begins at start position and stops after count positions. */
         inline const bool endswith_n(const CppStringT& suffix, const size_type start, const size_type count) const noexcept
         {
             return endswith(std::span{ suffix }, start, start + count - 1);
@@ -314,6 +296,24 @@ namespace pcs // i.e. "pythonic c++ strings"
             }
 
             return ret;
+        }
+
+
+        //---   find()   ------------------------------------------
+        /** Returns the lowest index in the string where substring sub is found within the slice str[start:end], or -1 (i.e. 'npos') if sub is not found.
+        *
+        * Note: this method should be used only if you need to know the position of
+        * sub.  To check if sub is a substring or not, use the method contains_n().
+        *
+        * \see find_n(), rfind() and rfind_n().
+        * \see index(), index_n(), rindex() and rindex_n().
+        */
+        inline constexpr size_type find(const CppStringT& sub, const size_type start, const size_type end) const noexcept
+        {
+            if (start > end)
+                return CppStringT::npos;
+            else
+                return find_n(sub, start, end - start + 1);
         }
 
 
@@ -673,7 +673,20 @@ namespace pcs // i.e. "pythonic c++ strings"
         {
             if (this->startswith(prefix)) {
                 const size_type prefix_length = prefix.size();
-                return this->substr(prefix_length, this->size - prefix_length + 1);
+                return this->substr(prefix_length, this->size() - prefix_length + 1);
+            }
+            else
+                return *this;
+        }
+
+
+        //---   removesuffix()   ----------------------------------
+        /** \brief If the string ends with the suffix string, returns a new string with the suffix removed. Otherwise, returns a copy of the original string. */
+        inline CppStringT removesuffix(const CppStringT& suffix) const noexcept
+        {
+            if (this->endswith(suffix)) {
+                const size_type suffix_length = suffix.size();
+                return this->substr(0, this->size() - suffix_length + 1);
             }
             else
                 return *this;
