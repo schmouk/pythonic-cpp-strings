@@ -25,6 +25,7 @@
 #include <cctype>
 #include <cwctype>
 #include <format>
+#include <map>
 #include <span>
 #include <stdexcept>
 #include <string_view>
@@ -620,10 +621,9 @@ namespace pcs // i.e. "pythonic c++ strings"
 
 
         //---   lstrip()   ----------------------------------------
-        /** \brief Return a copy of the string with leading characters removed.
+        /** \brief Returns a copy of the string with leading characters removed.
         *
         * The passed string specifies the set of characters to be removed. 
-        * If omitted,  the chars argument defaults to removing whitespace. 
         * The chars argument is not a prefix;  rather, all combinations of 
         * its values are stripped.
         */
@@ -633,6 +633,35 @@ namespace pcs // i.e. "pythonic c++ strings"
                 if (std::none_of(prefix.cbegin(), prefix.cend(), [it](const value_type ch) { *it == ch; }))
                     return CppStringT(it, this->cend());
             return CppStringT();
+        }
+
+        /** \brief Returns a copy of the string with leading whitespaces removed. */
+        inline CppStringT lstrip() const noexcept
+        {
+            for (auto it = this->cbegin(); it != this->cend(); ++it)
+                if (*it != value_type(' '))
+                    return CppStringT(it, this->cend());
+            return CppStringT();
+        }
+
+
+        //---   partition()   -------------------------------------
+        /** Split the string at the first occurrence of sep, and returns a 3-items vector containing the part before the separator, the separator itself, and the part after the separator.
+        *
+        * If the separator is not  found,  returns  a  3-items  vector
+        * containing the string itself, followed by two empty strings. 
+        */
+        std::vector<CppStringT> partition(const CppStringT& sep) const noexcept
+        {
+            const size_type sep_index = find(sep);
+            if (sep_index == CppStringT::npos) {
+                return std::vector<CppStringT>({ *this, CppStringT(), CppStringT() });
+            }
+            else {
+                const size_type third_index = sep_index + sep.size();
+                const size_type third_size = this->size() - third_index + 1;
+                return std::vector<CppStringT>({ substr(0, sep_index), sep, substr(third_index, third_size) });
+            }
         }
 
 
