@@ -55,7 +55,13 @@ namespace pcs // i.e. "pythonic c++ strings"
     inline const bool is_ascii(const CharT ch) noexcept;        //!< Returns true if character ch gets ASCII code, or false otherwise.
 
     template<class CharT>
+    inline const bool is_id_continue(const CharT ch) noexcept;  //!< Returns true if character is a continuing char for identifiers, or false otherwise.
+
+    template<class CharT>
     inline const bool is_decimal(const CharT ch) noexcept;      //!< Returns true if character is a decimal digit, or false otherwise.
+
+    template<class CharT>
+    inline const bool is_id_start(const CharT ch) noexcept;     //!< Returns true if character is a starting char for identifiers, or false otherwise.
 
     template<class CharT>
     inline const bool is_punctuation(const CharT ch) noexcept;  //!< Returns true if character ch is punctuation, or false otherwise.
@@ -383,7 +389,7 @@ namespace pcs // i.e. "pythonic c++ strings"
         /** \brief Returns true if all characters in the string are alphabetic and there is at least one character, or false otherwise. */
         inline const bool isalpha() const noexcept
         {
-            return this->size() > 0  &&  std::all_of(this->cbegin(), this->cend(), [](const value_type ch) { return pcs::is_alpha<CharT>(ch); });
+            return !this->empty()  &&  std::all_of(this->cbegin(), this->cend(), [](const value_type ch) { return pcs::is_alpha<CharT>(ch); });
         }
 
 
@@ -394,7 +400,7 @@ namespace pcs // i.e. "pythonic c++ strings"
         #endif
         inline const bool isascii() const noexcept
         {
-            return this->size() == 0  ||  std::all_of(this->cbegin(), this->cend(), pcs::is_ascii<CharT>);
+            return this->empty()  ||  std::all_of(this->cbegin(), this->cend(), pcs::is_ascii<CharT>);
         }
 
 
@@ -407,7 +413,7 @@ namespace pcs // i.e. "pythonic c++ strings"
         */
         inline const bool isdecimal() const noexcept
         {
-            return this->size() > 0  &&  std::all_of(this->cbegin(), this->cend(), pcs::is_decimal<CharT>);
+            return !this->empty()  &&  std::all_of(this->cbegin(), this->cend(), pcs::is_decimal<CharT>);
         }
 
 
@@ -418,7 +424,8 @@ namespace pcs // i.e. "pythonic c++ strings"
         * handling,  such as the compatibility superscript digits.  This 
         * covers digits which cannot be used to form numbers in base 10, 
         * like the Kharosthi numbers.  Formally,  a digit is a character 
-        * that has the property value Numeric_Type=Digit or Numeric_Type=Decimal.
+        * that has the property value Numeric_Type=Digit or Numeric_Type
+        * =Decimal.
         * 
         * CAUTION: current implementation of  library  cpp-strings  does
         * not implement above algorithm. It just returns the same result
@@ -427,6 +434,32 @@ namespace pcs // i.e. "pythonic c++ strings"
         inline const bool isdigit() const noexcept
         {
             return isdecimal();
+        }
+
+
+        //---   isidentifier()   ----------------------------------
+        /** \brief Returns true if the string is not empty and is a valid identifier according to the language definition, or false otherwise.
+        *
+        * CAUTION:  the current implementation of this method does not deal with the proper c++
+        * defintiion of identifiers (see https://en.cppreference.com/w/cpp/language/identifiers 
+        * and https://www.unicode.org/reports/tr31/#Table_Lexical_Classes_for_Identifiers).
+        *
+        * While the specification of identifiers in c++ is this one:
+        * 
+        *    identifier   ::= XID_Start XID_Continue*
+        *    XID_Start    ::= ID_Start XID_Continue*
+        *    ID_Start     ::= <characters derived from the Unicode General_Category of uppercase letters, lowercase letters, titlecase letters, modifier letters, other letters, letter numbers, plus Other_ID_Start, minus Pattern_Syntax and Pattern_White_Space code points>
+        *    XID_Continue ::= <characters  derived from ID_Continue as per Unicode specs Section 5.1, NFKC Modifications (https://www.unicode.org/reports/tr31/#NFKC_Modifications)>
+        *    ID_Continue  ::= ID_Start | <characters having the Unicode General_Category of nonspacing marks, spacing combining marks, decimal number, connector punctuation, plus Other_ID_Continue, minus Pattern_Syntax and Pattern_White_Space code points>
+        * 
+        * the currently implemented rule is this simpler one:
+        * 
+        *    identifier   ::= ID_Start id_continue*
+        *    id_continue  ::= ID_Start | <decimal number>
+        */
+        inline const bool isidentifier() const noexcept
+        {
+            return !this->empty() && pcs::is_id_start((*this)[0]) && (this->size() == 1 || std::all_of(this->cbegin() + 1, this->cend(), pcs::is_id_continue));
         }
 
 
@@ -449,10 +482,7 @@ namespace pcs // i.e. "pythonic c++ strings"
         /** \brief Returns true if there are only whitespace characters in the string and there is at least one character, or false otherwise. */
         inline const bool isspace() const noexcept
         {
-            if (this->size() == 0)
-                return false;
-            else
-                return std::all_of(this->cbegin(), this->cend(), pcs::is_space<CharT>);
+            return !this->empty() && std::all_of(this->cbegin(), this->cend(), pcs::is_space<CharT>);
         }
 
 
@@ -688,23 +718,31 @@ namespace pcs // i.e. "pythonic c++ strings"
     /** \brief SHOULD NEVER BE USED. Use next specializations instead. */
     template<class CharT>
     inline const bool is_decimal(const CharT ch) noexcept
-    {
-        return false;
-    }
+    { return false; }
 
     /** \brief Returns true if character is a decimal digit, or false otherwise. */
     template<>
     inline const bool is_decimal<char>(const char ch) noexcept
-    {
-        return std::isdigit(static_cast<unsigned char>(ch));
-    }
+    { return std::isdigit(static_cast<unsigned char>(ch)); }
 
     /** \brief Returns true if character is a decimal digit, or false otherwise. */
     template<>
     inline const bool is_decimal<wchar_t>(const wchar_t ch) noexcept
-    {
-        return std::isdigit(ch);
-    }
+    { return std::iswdigit(ch); }
+
+
+    //---   is_id_continue()   ------------------------------------
+    /** \brief Returns true if character is a continuing char for identifiers, or false otherwise. */
+    template<class CharT>
+    inline const bool is_id_continue(const CharT ch) noexcept
+    { return pcs::is_id_start(ch) || pcs::is_decimal(ch); }
+
+
+    //---   is_id_start()   ---------------------------------------
+    /** \brief Returns true if character is a starting char for identifiers, or false otherwise. */
+    template<class CharT>
+    inline const bool is_id_start(const CharT ch) noexcept
+    { return pcs::is_alpha(ch) || ch == CharT('_'); }
 
 
     //---   is_punctuation()   ------------------------------------
