@@ -566,7 +566,7 @@ namespace pcs // i.e. "pythonic c++ strings"
             return first + *this + this->join(others...);
         }
 
-        /** \brief A single parameter signature. Returns a copy of this parameter. */
+        /** \brief Single parameter signature. Returns a copy of this parameter. */
         inline const CppStringT join(const CppStringT& s) const noexcept
         {
             return s;
@@ -576,6 +576,21 @@ namespace pcs // i.e. "pythonic c++ strings"
         inline const CppStringT join() const noexcept
         {
             return *this;
+        }
+
+
+        //---   ljust()   -----------------------------------------
+        /** \brief Returns the string left justified in a string of length width.
+        *
+        * Padding is done using the specified fillchar (default is an ASCII space). 
+        * The original string is returned if width is less than or equal to len(s).
+        */
+        inline CppStringT ljust(const size_type width, const value_type fillch = value_type(' ')) const noexcept
+        {
+            if (this->size() >= width)
+                return *this;
+            else
+                return CppStringT(width - this->size(), fillch) + *this;
         }
 
 
