@@ -55,6 +55,9 @@ namespace pcs // i.e. "pythonic c++ strings"
     inline const bool is_ascii(const CharT ch) noexcept;        //!< Returns true if character ch gets ASCII code, or false otherwise.
 
     template<class CharT>
+    inline const bool is_decimal(const CharT ch) noexcept;      //!< Returns true if character is a decimal digit, or false otherwise.
+
+    template<class CharT>
     inline const bool is_punctuation(const CharT ch) noexcept;  //!< Returns true if character ch is punctuation, or false otherwise.
 
     template<class CharT>
@@ -380,28 +383,31 @@ namespace pcs // i.e. "pythonic c++ strings"
         /** \brief Returns true if all characters in the string are alphabetic and there is at least one character, or false otherwise. */
         inline const bool isalpha() const noexcept
         {
-            if (this->size() == 0)
-                return false;
-            else
-                return std::all_of(this->cbegin(), this->cend(), [](const value_type ch) { return pcs::is_alpha<CharT>(ch); });
+            return this->size() > 0  &&  std::all_of(this->cbegin(), this->cend(), [](const value_type ch) { return pcs::is_alpha<CharT>(ch); });
         }
 
 
         //---   isascii()   ---------------------------------------
         /** \brief Returns true if the string is empty or all characters in the string are ASCII, or false otherwise. */
-        #if defined(isascii)  // may be already defined in header file <ctype>
+        #if defined(isascii)  // may be already defined in header file <ctype.h>
             #undef isascii
         #endif
         inline const bool isascii() const noexcept
         {
-            return this->size() == 0 || std::all_of(this->cbegin(), this->cend(), pcs::is_ascii<CharT>);
+            return this->size() == 0  ||  std::all_of(this->cbegin(), this->cend(), pcs::is_ascii<CharT>);
         }
 
 
         //---   isdecimal()   -------------------------------------
+        /** \brief Returns true if all characters in the string are decimal characters and there is at least one character, or false otherwise.
+        *
+        * Decimal characters are those that can be used to form numbers  in 
+        * base 10, e.g. U+0660, ARABIC-INDIC DIGIT ZERO. Formally a decimal 
+        * character is a character in the Unicode General Category “Nd”.
+        */
         inline const bool isdecimal() const noexcept
         {
-            return false;
+            return this->size() > 0  &&  std::all_of(this->cbegin(), this->cend(), pcs::is_decimal<CharT>);
         }
 
 
@@ -666,14 +672,44 @@ namespace pcs // i.e. "pythonic c++ strings"
     { return CharT(0x00) <= ch && ch <= CharT(0x7f); }
 
 
+    //---   is_decimal()   ----------------------------------------
+    /** \brief SHOULD NEVER BE USED. Use next specializations instead. */
+    template<class CharT>
+    inline const bool is_decimal(const CharT ch) noexcept
+    {
+        return false;
+    }
+
+    /** \brief Returns true if character is a decimal digit, or false otherwise. */
+    template<>
+    inline const bool is_decimal<char>(const char ch) noexcept
+    {
+        return std::isdigit(static_cast<unsigned char>(ch));
+    }
+
+    /** \brief Returns true if character is a decimal digit, or false otherwise. */
+    template<>
+    inline const bool is_decimal<wchar_t>(const wchar_t ch) noexcept
+    {
+        return std::isdigit(ch);
+    }
+
+
     //---   is_punctuation()   ------------------------------------
-    /** \brief Returns true if character ch is punctuation, or false otherwise. Conforms to the current locale settings. */
+    /** \brief SHOULD NEVER BE USED. Use next specializations instead. */
     template<class CharT>
     inline const bool is_punctuation(const CharT ch) noexcept
-    {
-        static const std::vector<CharT> punct_chars{ '!', ',', '.', ':', ';', '?' };
-        return std::find(punct_chars.cbegin(), punct_chars.cend(), (ch)) != punct_chars.cend();
-    }
+    { return false; }
+
+    /** \brief Returns true if character ch is punctuation, or false otherwise. Conforms to the current locale settings. */
+    template<>
+    inline const bool is_punctuation<char>(const char ch) noexcept
+    { return std::ispunct(static_cast<unsigned char>(ch)); }
+
+    /** \brief Returns true if character ch is punctuation, or false otherwise. Conforms to the current locale settings. */
+    template<>
+    inline const bool is_punctuation<wchar_t>(const wchar_t ch) noexcept
+    { return std::iswpunct(ch); }
 
 
     //---   is_space()   ------------------------------------------
