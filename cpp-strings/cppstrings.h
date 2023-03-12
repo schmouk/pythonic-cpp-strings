@@ -475,9 +475,18 @@ namespace pcs // i.e. "pythonic c++ strings"
 
 
         //---   isnumeric()   -------------------------------------
+        /** \brief Returns true if all characters in the string are numeric characters, and there is at least one character, or false otherwise.
+        *
+        * CAUTION:  current implementation just returns isdecimal() result,
+        * while the description of isnumeric() should be this one:
+        * Numeric  characters  include digit characters, and all characters 
+        * that have the Unicode numeric value property.  Formally,  numeric
+        * characters  are those with the property value Numeric_Type=Digit,
+        * Numeric_Type=Decimal or Numeric_Type=Numeric.
+        */
         inline const bool isnumeric() const noexcept
         {
-            return false;
+            return isdecimal();
         }
 
 
