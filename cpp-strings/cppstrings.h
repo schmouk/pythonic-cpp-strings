@@ -694,7 +694,7 @@ namespace pcs // i.e. "pythonic c++ strings"
 
 
         //---   replace()   ---------------------------------------
-        /** \brief Returns a copy of the string with all occurrences of substring old replaced by new. If the optional argument count is given, only the first count occurrences are replaced. */
+        /** \brief Returns a copy of the string with all occurrences of substring old replaced by new. */
         inline CppStringT replace(const CppStringT& old, const CppStringT& new_) const noexcept
         {
             if (!this->contains(old))
@@ -707,9 +707,31 @@ namespace pcs // i.e. "pythonic c++ strings"
                 res += this->substr(last_index, current_index - last_index) + new_;
                 last_index = current_index;
             }
+
             if (last_index != this->size())
                 res += this->substr(last_index, this->size - last_index);
             
+            return res;
+        }
+
+        /** \brief Returns a copy of the string with first count occurrences of substring old replaced by new. */
+        inline CppStringT replace(const CppStringT& old, const CppStringT& new_, size_type count) const noexcept
+        {
+            if (!this->contains(old) || count == 0)
+                return *this;
+
+            CppStringT res{};
+            size_type last_index = 0;
+            size_type current_index = 0;
+            while (count > 0 && (current_index = this->find(old)) != CppStringT::npos) {
+                res += this->substr(last_index, current_index - last_index) + new_;
+                last_index = current_index;
+                --count;
+            }
+
+            if (last_index != this->size())
+                res += this->substr(last_index, this->size - last_index);
+
             return res;
         }
 
