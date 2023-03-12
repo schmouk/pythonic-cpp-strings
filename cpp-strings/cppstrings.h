@@ -693,6 +693,27 @@ namespace pcs // i.e. "pythonic c++ strings"
         }
 
 
+        //---   replace()   ---------------------------------------
+        /** \brief Returns a copy of the string with all occurrences of substring old replaced by new. If the optional argument count is given, only the first count occurrences are replaced. */
+        inline CppStringT replace(const CppStringT& old, const CppStringT& new_) const noexcept
+        {
+            if (!this->contains(old))
+                return *this;
+
+            CppStringT res{};
+            size_type last_index = 0;
+            size_type current_index = 0;
+            while ((current_index = this->find(old)) != CppStringT::npos) {
+                res += this->substr(last_index, current_index - last_index) + new_;
+                last_index = current_index;
+            }
+            if (last_index != this->size())
+                res += this->substr(last_index, this->size - last_index);
+            
+            return res;
+        }
+
+
         //---   rfind()   -----------------------------------------
         /** Returns the highest index in the string where substring sub is found within the slice str[start:end], or -1 (i.e. 'npos') if sub is not found.
         *
