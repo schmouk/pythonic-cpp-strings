@@ -28,6 +28,7 @@
 #include <span>
 #include <stdexcept>
 #include <string_view>
+#include <type_traits>
 #include <vector>
 
 
@@ -550,6 +551,31 @@ namespace pcs // i.e. "pythonic c++ strings"
         inline const bool is_words_sep() const noexcept
         {
             return isspace() || ispunctuation();
+        }
+
+
+        //---   join()   ------------------------------------------
+        /** \brief Returns a string which is the concatenation of the strings in the parameters list. 
+        *
+        * The separator between elements is the string to which this method is applied.
+        */
+        template<class... NextCppStringsT>
+        inline CppStringT join(const CppStringT& first, const NextCppStringsT... others) const noexcept
+            requires (sizeof...(others) > 0)
+        {
+            return first + *this + this->join(others...);
+        }
+
+        /** \brief A single parameter signature. Returns a copy of this parameter. */
+        inline const CppStringT join(const CppStringT& s) const noexcept
+        {
+            return s;
+        }
+
+        /** \brief Empty parameters list signature. Returns a copy of current string. */
+        inline const CppStringT join() const noexcept
+        {
+            return *this;
         }
 
 
