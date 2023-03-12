@@ -44,18 +44,21 @@ namespace pcs // i.e. "pythonic c++ strings"
     > class CppStringT;
 
     // specializations of the base class -- these are the ones that should be instantiated by user.
-    using CppString  = CppStringT<char>;                //!< Specialization of basic class with template argument 'char'
-    using CppWString = CppStringT<wchar_t>;             //!< Specialization of basic class with template argument 'wchar_t'
+    using CppString  = CppStringT<char>;                        //!< Specialization of basic class with template argument 'char'
+    using CppWString = CppStringT<wchar_t>;                     //!< Specialization of basic class with template argument 'wchar_t'
 
     // chars classifications -- not to be directly called, see respective specializations at the very end of this module.
     template<class CharT>
-    inline const bool is_alpha(const CharT ch);         //!< Returns true if character ch is alphabetic, or false otherwise. */
+    inline const bool is_alpha(const CharT ch) noexcept;        //!< Returns true if character ch is alphabetic, or false otherwise.
 
     template<class CharT>
-    inline const bool is_punctuation(const CharT ch);   //!< Returns true if character ch is punctuation, or false otherwise. */
+    inline const bool is_ascii(const CharT ch) noexcept;        //!< Returns true if character ch gets ASCII code, or false otherwise.
 
     template<class CharT>
-    inline const bool is_space(const CharT ch);         //!< Returns true if character ch is white space, or false otherwise. */
+    inline const bool is_punctuation(const CharT ch) noexcept;  //!< Returns true if character ch is punctuation, or false otherwise.
+
+    template<class CharT>
+    inline const bool is_space(const CharT ch) noexcept;        //!< Returns true if character ch is white space, or false otherwise.
 
 
 
@@ -384,6 +387,17 @@ namespace pcs // i.e. "pythonic c++ strings"
         }
 
 
+        //---   isascii()   ---------------------------------------
+        /** \brief Returns true if the string is empty or all characters in the string are ASCII, or false otherwise. */
+        #if defined(isascii)  // may be already defined in header file <ctype>
+            #undef isascii
+        #endif
+        inline const bool isascii() const noexcept
+        {
+            return this->size() == 0 || std::all_of(this->cbegin(), this->cend(), pcs::is_ascii<CharT>);
+        }
+
+
         //---   isdecimal()   -------------------------------------
         inline const bool isdecimal() const noexcept
         {
@@ -413,7 +427,8 @@ namespace pcs // i.e. "pythonic c++ strings"
         }
 
 
-        //---   is_Returns true if there are only whitespace characters in the string and there is at least one character, or false otherwise. */-
+        //---   isspace()   ---------------------------------------
+        /** \brief Returns true if there are only whitespace characters in the string and there is at least one character, or false otherwise. */
         inline const bool isspace() const noexcept
         {
             if (this->size() == 0)
@@ -630,39 +645,52 @@ namespace pcs // i.e. "pythonic c++ strings"
     //---   is_alpha()   ------------------------------------------
     /** \brief SHOULD NEVER BE USED. Use next specializations instead. */
     template<class CharT>
-    inline const bool is_alpha(const CharT ch) { return false; }
+    inline const bool is_alpha(const CharT ch) noexcept
+    { return false; }
 
     /** \brief Returns true if character ch is alphabetic, or false otherwise. Conforms to the current locale settings. */
     template<>
-    inline const bool is_alpha<char>(const char ch) { return std::isalpha(static_cast<unsigned char>(ch)); }
+    inline const bool is_alpha<char>(const char ch) noexcept
+    { return std::isalpha(static_cast<unsigned char>(ch)); }
 
     /** \brief Returns true if character ch is alphabetic, or false otherwise. Conforms to the current locale settings. */
     template<>
-    inline const bool is_alpha<wchar_t>(const wchar_t ch) { return std::iswalpha(ch); }
+    inline const bool is_alpha<wchar_t>(const wchar_t ch) noexcept
+    { return std::iswalpha(ch); }
 
 
-    //---   is_punctuation   ----------------------------------
+    //---   is_ascii()   ------------------------------------------
+    /** \brief Returns true if character has code point in the range U+0000-U+007F. */
+    template<class CharT>
+    inline const bool is_ascii(const CharT ch) noexcept
+    { return CharT(0x00) <= ch && ch <= CharT(0x7f); }
+
+
+    //---   is_punctuation()   ------------------------------------
     /** \brief Returns true if character ch is punctuation, or false otherwise. Conforms to the current locale settings. */
     template<class CharT>
-    inline const bool is_punctuation(const CharT ch)
+    inline const bool is_punctuation(const CharT ch) noexcept
     {
         static const std::vector<CharT> punct_chars{ '!', ',', '.', ':', ';', '?' };
         return std::find(punct_chars.cbegin(), punct_chars.cend(), (ch)) != punct_chars.cend();
     }
 
 
-    //---   is_space()   --------------------------------------
+    //---   is_space()   ------------------------------------------
     /** \brief SHOULD NEVER BE USED. Use next specializations instead. */
     template<class CharT>
-    inline const bool is_space(const CharT ch) { return false; }
+    inline const bool is_space(const CharT ch) noexcept
+    { return false; }
 
     /** \brief Returns true if character ch is alphabetic, or false otherwise. Conforms to the current locale settings. */
     template<>
-    inline const bool is_space<char>(const char ch) { return std::isspace(static_cast<unsigned char>(ch)); }
+    inline const bool is_space<char>(const char ch) noexcept
+    { return std::isspace(static_cast<unsigned char>(ch)); }
 
     /** \brief Returns true if character ch is alphabetic, or false otherwise. Conforms to the current locale settings. */
     template<>
-    inline const bool is_space<wchar_t>(const wchar_t ch) { return std::iswspace(ch); }
+    inline const bool is_space<wchar_t>(const wchar_t ch) noexcept
+    { return std::iswspace(ch); }
 
 
 } // end of namespace pcs  // (pythonic c++ strings)
