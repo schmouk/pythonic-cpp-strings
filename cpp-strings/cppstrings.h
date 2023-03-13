@@ -736,27 +736,6 @@ namespace pcs // i.e. "pythonic c++ strings"
         }
 
 
-        //---   rpartition()   -------------------------------------
-        /** Split the string at the last occurrence of sep, and returns a 3-items vector containing the part before the separator, the separator itself, and the part after the separator.
-        *
-        * If the separator is not  found,  returns  a  3-items  vector
-        * containing the string itself, followed by two empty strings.
-        */
-        std::vector<CppStringT> rpartition(const CppStringT& sep) const noexcept
-        {
-            const size_type sep_index = rfind(sep);
-            if (sep_index == CppStringT::npos) {
-                const CppStringT empty{};
-                return std::vector<CppStringT>({ *this, empty, empty });
-            }
-            else {
-                const size_type third_index = sep_index + sep.size();
-                const size_type third_size = this->size() - third_index + 1;
-                return std::vector<CppStringT>({ this->substr(0, sep_index), sep, this->substr(third_index, third_size) });
-            }
-        }
-
-
         //---   rfind()   -----------------------------------------
         /** Returns the highest index in the string where substring sub is found within the slice str[start:end], or -1 (i.e. 'npos') if sub is not found.
         *
@@ -907,6 +886,105 @@ namespace pcs // i.e. "pythonic c++ strings"
                 return CppStringT(width - this->size(), fillch) + *this;
         }
 
+
+        //---   rpartition()   -------------------------------------
+        /** Split the string at the last occurrence of sep, and returns a 3-items vector containing the part before the separator, the separator itself, and the part after the separator.
+        *
+        * If the separator is not  found,  returns  a  3-items  vector
+        * containing the string itself, followed by two empty strings.
+        */
+        std::vector<CppStringT> rpartition(const CppStringT& sep) const noexcept
+        {
+            const size_type sep_index = rfind(sep);
+            if (sep_index == CppStringT::npos) {
+                const CppStringT empty{};
+                return std::vector<CppStringT>({ *this, empty, empty });
+            }
+            else {
+                const size_type third_index = sep_index + sep.size();
+                const size_type third_size = this->size() - third_index + 1;
+                return std::vector<CppStringT>({ this->substr(0, sep_index), sep, this->substr(third_index, third_size) });
+            }
+        }
+
+
+        //---   rsplit()   ----------------------------------------
+        /** \brief Returns a vector of the words in the string, as seperated with whitespace strings. */
+        inline std::vector<CppStringT> rsplit() const noexcept
+        {
+            return split();
+        }
+
+        /** \brief Returns a vector of the words in the string, using sep as the delimiter string. */
+        inline std::vector<CppStringT> rsplit(const CppStringT& sep) const noexcept
+        {
+            return split(sep);
+        }
+
+        /** \brief Returns a vector of the words in the string, as seperated with whitespace strings.
+        *
+        * At most maxsplit splits are done, the rightmost ones.
+        */
+        std::vector<CppStringT> rsplit(const size_type maxsplit) const noexcept
+        {
+            if (maxsplit == 0)
+                return *this;
+
+            constexpr CppStringT spc2("  ");
+            constexpr CppStringT spc(value_type(' '));
+            CppStringT tmp = *this;
+            while (tmp.contains(spc2))
+                tmp = tmp.replace(spc2, spc);
+
+            return this->rsplit(spc, maxsplit);
+        }
+
+        /** \brief Returns a vector of the words in the string, using sep as the delimiter string.
+        *
+        * At most maxsplit splits are done, the rightmost ones.  Except
+        * for splitting from the right, rsplit() behaves like split()].
+        */
+        std::vector<CppStringT> rsplit(const CppStringT& sep, const size_type maxsplit) const noexcept
+        {
+            std::vector<CppStringT> res{};
+
+            std::vector<CppStringT> indexes{};
+            CppStringT tmp = *this;
+            size_type count = maxsplit;
+            size_type index;
+            while ((index = tmp.rfind(sep)) != CppStringT::npos  &&  count > 0) {
+                indexes.insert(indexes.begin(), index);
+                if (index == 0)
+                    break;
+                tmp = tmp.substr(0, index-1);
+                count--;
+            }
+
+            if (indexes.size() == 0)
+                res.push_back(*this);
+            else {
+                index = 0;
+                for (const size_type ndx: indexes) {
+                    res.push_back(this->substr(index, ndx - index));
+                    index = ndx + 1;
+                }
+                res.push_back(this->substr(index, this->size() - index));
+            }
+            return res;
+        }
+
+
+        //---   split()   -----------------------------------------
+        inline std::vector<CppStringT> split() const noexcept
+        {
+            return std::vector<CppStringT>();
+        }
+
+        /** \brief Returns a vector of the words in the string, using sep as the delimiter string. */
+        inline std::vector<CppStringT> split(const CppStringT& sep) const noexcept
+        {
+            return std::vector<CppStringT>();
+        }
 
 
         //---   title()   -----------------------------------------
