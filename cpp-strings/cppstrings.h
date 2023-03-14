@@ -26,6 +26,7 @@
 #include <cwctype>
 #include <format>
 #include <map>
+#include <ranges>
 #include <span>
 #include <stdexcept>
 #include <string_view>
@@ -106,7 +107,8 @@ namespace pcs // i.e. "pythonic c++ strings"
     {
     public:
         //===   Wrappers   ========================================
-        using MyBaseClass = std::basic_string<CharT>;
+        using MyBaseClass  = std::basic_string<CharT>;
+        using MyStringView = std::basic_string_view<CharT>;
 
         using traits_type            = MyBaseClass::traits_type;
         using value_type             = MyBaseClass::value_type;
@@ -141,6 +143,7 @@ namespace pcs // i.e. "pythonic c++ strings"
 
         template<class StringViewLike>
         explicit CppStringT(const StringViewLike& svl)                                      : MyBaseClass(svl) {}
+
         template<class StringViewLike>
         CppStringT(const StringViewLike& svl, size_type pos, size_type n)                   : MyBaseClass(svl, pos, n) {}
 
@@ -888,7 +891,7 @@ namespace pcs // i.e. "pythonic c++ strings"
 
 
         //---   rpartition()   -------------------------------------
-        /** Split the string at the last occurrence of sep, and returns a 3-items vector containing the part before the separator, the separator itself, and the part after the separator.
+        /** Splits the string at the last occurrence of sep, and returns a 3-items vector containing the part before the separator, the separator itself, and the part after the separator.
         *
         * If the separator is not  found,  returns  a  3-items  vector
         * containing the string itself, followed by two empty strings.
@@ -909,67 +912,119 @@ namespace pcs // i.e. "pythonic c++ strings"
 
 
         //---   rsplit()   ----------------------------------------
-        /** \brief Returns a vector of the words in the string, as seperated with whitespace strings. */
+        /** \brief Returns a vector of the words in the whole string, as seperated with whitespace strings. */
         inline std::vector<CppStringT> rsplit() const noexcept
         {
             return split();
         }
 
-        /** \brief Returns a vector of the words in the string, using sep as the delimiter string. */
+        /** \brief Returns a vector of the words in the whole string, using sep as the delimiter string. */
         inline std::vector<CppStringT> rsplit(const CppStringT& sep) const noexcept
         {
             return split(sep);
         }
 
-        /** \brief Returns a vector of the words in the string, as seperated with whitespace strings.
-        *
-        * At most maxsplit splits are done, the rightmost ones.
-        */
+        /** \brief Returns a vector of the words in the string, as seperated with whitespace strings. At most maxsplit splits are done, the rightmost ones. */
         std::vector<CppStringT> rsplit(const size_type maxsplit) const noexcept
         {
-            if (maxsplit == 0)
-                return *this;
+            std::vector<CppStringT> res{};
 
-            constexpr CppStringT spc2("  ");
-            constexpr CppStringT spc(value_type(' '));
-            CppStringT tmp = *this;
-            while (tmp.contains(spc2))
-                tmp = tmp.replace(spc2, spc);
+            if (maxsplit == 0) {
+                res.push_back(*this);
+            }
+            else {
+                const CppStringT whitespace(value_type(' '));
+                std::vector<CppStringT> all_words{ this->split(whitespace) };
 
-            return this->rsplit(spc, maxsplit);
+                size_type count = maxsplit;
+                auto word_it = all_words.crbegin();
+                size_type last_split_index = all_words.size();
+                while (count > 0 && word_it != all_words.crend()) {
+                    if (!word_it->empty()) {
+                        res.insert(res.cbegin(), *word_it);
+                        --count;
+                        --last_split_index;
+                    }
+                    word_it++;
+                }
+                
+                size_type chars_count = last_split_index;
+                while (last_split_index > 0) {
+                    chars_count += all_words[last_split_index].size();
+                    --last_split_index;
+                }
+                if (chars_count > 0)
+                    res.insert(res.cbegin(), this->substr(0, chars_count));
+                /*
+                constexpr CppStringT spc2("  ");
+                constexpr CppStringT spc(value_type(' '));
+                CppStringT tmp = *this;
+                while (tmp.contains(spc2))
+                    tmp = tmp.replace(spc2, spc);
+
+                res = tmp->rsplit(spc, maxsplit);
+                */
+            }
+
+            return res;
         }
 
         /** \brief Returns a vector of the words in the string, using sep as the delimiter string.
         *
-        * At most maxsplit splits are done, the rightmost ones.  Except
-        * for splitting from the right, rsplit() behaves like split()].
+        * At most maxsplit splits are done, the rightmost ones.
         */
         std::vector<CppStringT> rsplit(const CppStringT& sep, const size_type maxsplit) const noexcept
         {
             std::vector<CppStringT> res{};
 
-            std::vector<CppStringT> indexes{};
-            CppStringT tmp = *this;
-            size_type count = maxsplit;
-            size_type index;
-            while ((index = tmp.rfind(sep)) != CppStringT::npos  &&  count > 0) {
-                indexes.insert(indexes.begin(), index);
-                if (index == 0)
-                    break;
-                tmp = tmp.substr(0, index-1);
-                count--;
+            if (maxsplit == 0) {
+                res.push_back({ *this });
             }
-
-            if (indexes.size() == 0)
-                res.push_back(*this);
             else {
-                index = 0;
-                for (const size_type ndx: indexes) {
-                    res.push_back(this->substr(index, ndx - index));
-                    index = ndx + 1;
+                std::vector<CppStringT> all_words{ this->split(sep) };
+
+                size_type count = maxsplit;
+                auto word_it = all_words.crbegin();
+                size_type last_split_index = all_words.size();
+                while (count > 0 && word_it != all_words.crend()) {
+                    res.insert(res.cbegin(), *word_it);
+                    --count;
+                    --last_split_index;
+                    word_it++;
+                }
+
+                size_type chars_count = last_split_index;
+                while (last_split_index > 0) {
+                    chars_count += all_words[last_split_index].size();
+                    --last_split_index;
+                }
+                if (chars_count > 0)
+                    res.insert(res.cbegin(), this->substr(0, chars_count));
+                /*
+                std::vector<CppStringT> indexes{};
+                CppStringT tmp = *this;
+                size_type count = maxsplit;
+                size_type index;
+                while ((index = tmp.rfind(sep)) != CppStringT::npos  &&  count > 0) {
+                    indexes.insert(indexes.begin(), index);
+                    if (index == 0)
+                        break;
+                    tmp = tmp.substr(0, index-1);
+                    count--;
+                }
+
+                if (indexes.size() == 0)
+                    res.push_back(*this);
+                else {
+                    index = 0;
+                    for (const size_type ndx: indexes) {
+                        res.push_back(this->substr(index, ndx - index));
+                        index = ndx + 1;
                 }
                 res.push_back(this->substr(index, this->size() - index));
+                */
             }
+
             return res;
         }
 
