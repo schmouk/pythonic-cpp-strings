@@ -912,7 +912,15 @@ namespace pcs // i.e. "pythonic c++ strings"
 
 
         //---   rsplit()   ----------------------------------------
-        /** \brief Returns a vector of the words in the whole string, as seperated with whitespace strings. */
+        /** \brief Returns a vector of the words in the whole string, as seperated with whitespace strings.
+        *
+        * Notice: runs of consecutive whitespace are regarded as a single
+        * separator,  and the result will contain no empty strings at the 
+        * start or end if the string has leading or trailing  whitespace.
+        * Consequently,  splitting an empty string or a string consisting 
+        * of just whitespace with a whitespace separator returns an ampty
+        * vector.
+        */
         inline std::vector<CppStringT> rsplit() const noexcept
         {
             return split();
@@ -969,10 +977,7 @@ namespace pcs // i.e. "pythonic c++ strings"
             return res;
         }
 
-        /** \brief Returns a vector of the words in the string, using sep as the delimiter string.
-        *
-        * At most maxsplit splits are done, the rightmost ones.
-        */
+        /** \brief Returns a vector of the words in the string, using sep as the delimiter string. At most maxsplit splits are done, the rightmost ones. */
         std::vector<CppStringT> rsplit(const CppStringT& sep, const size_type maxsplit) const noexcept
         {
             std::vector<CppStringT> res{};
@@ -1056,16 +1061,106 @@ namespace pcs // i.e. "pythonic c++ strings"
 
 
         //---   split()   -----------------------------------------
+        /** \brief Returns a vector of the words in the whole string, as seperated with whitespace strings.
+        *
+        * Notice: runs of consecutive whitespace are regarded as a single
+        * separator,  and the result will contain no empty strings at the
+        * start or end if the string has leading or trailing  whitespace.
+        * Consequently,  splitting an empty string or a string consisting
+        * of just whitespace with a whitespace separator returns an ampty
+        * vector.
+        */
         inline std::vector<CppStringT> split() const noexcept
         {
-            return std::vector<CppStringT>();
+            std::vector<std::string> res;
+            constexpr CppStringT whitespace(value_type(' '));
+            for (const auto& word : *this | std::views::split(whitespace))
+                if (!word.empty())
+                    res.push_back(CppStringT(word.begin(), word.end()));
+            return res;
         }
 
-        /** \brief Returns a vector of the words in the string, using sep as the delimiter string. */
+        /** \brief Returns a vector of the words in the whole string, using sep as the delimiter string.
+        *
+        * Notice: consecutive delimiters are not grouped together  and  are
+        * deemed  to delimit empty strings  (for example, "1,,2".split(",") 
+        * returns {"1", "", "2"}). The sep argument may consist of multiple 
+        * characters (for example, "1<>2<>3".split("<>") returns {"1", "2", 
+        * "3"]).  Splitting  an  empty  string  with  a specified separator 
+        * returns {""}.
+        */
         inline std::vector<CppStringT> split(const CppStringT& sep) const noexcept
         {
-            return std::vector<CppStringT>();
+            std::vector<std::string> res;
+            for (const auto& word : *this | std::views::split(sep))
+                res.push_back(CppStringT(word.begin(), word.end()));
+            return res;
         }
+
+        /** \brief Returns a vector of the words in the string, as seperated with whitespace strings. At most maxsplit splits are done, the leftmost ones. */
+        std::vector<CppStringT> split(const size_type maxsplit) const noexcept
+        {
+            std::vector<CppStringT> res{};
+
+            if (maxsplit == 0) {
+                res.push_back(*this);
+            }
+            else {
+                const CppStringT whitespace(value_type(' '));
+                std::vector<CppStringT> all_words{ this->split(whitespace) };
+
+                size_type count = maxsplit;
+                auto word_it = all_words.cbegin();
+                while (count > 0 && word_it != all_words.cend()) {
+                    if (!word_it->empty()) {
+                        res.insert(res.cbegin(), *word_it);
+                        --count;
+                    }
+                    word_it++;
+                }
+
+                size_type chars_count = 0;
+                for (auto it = word_it; it != all_words.cend(); ++it) {
+                    chars_count += it->size() + 1;
+                }
+                if (chars_count > 0)
+                    res.insert(res.cbegin(), this->substr(this->cbegin() + chars_count - 1, this->cend()));
+            }
+
+            return res;
+        }
+
+        /** \brief Returns a vector of the words in the string, using sep as the delimiter string. At most maxsplit splits are done, the leftmost ones. */
+        inline std::vector<CppStringT> split(const CppStringT& sep, const size_type maxsplit) const noexcept
+        {
+            std::vector<CppStringT> res{};
+
+            if (maxsplit == 0) {
+                res.push_back(*this);
+            }
+            else {
+                const CppStringT whitespace(value_type(' '));
+                std::vector<CppStringT> all_words{ this->split(whitespace) };
+
+                size_type count = maxsplit;
+                auto word_it = all_words.cbegin();
+                while (count > 0 && word_it != all_words.cend()) {
+                    res.insert(res.cbegin(), *word_it);
+                    --count;
+                    word_it++;
+                }
+
+                size_type chars_count = 0;
+                for (auto it = word_it; it != all_words.cend(); ++it) {
+                    chars_count += it->size() + 1;
+                }
+                if (chars_count > 0)
+                    res.insert(res.cbegin(), this->substr(this->cbegin() + chars_count - 1, this->cend()));
+            }
+
+            return res;
+        }
+
 
 
         //---   title()   -----------------------------------------
