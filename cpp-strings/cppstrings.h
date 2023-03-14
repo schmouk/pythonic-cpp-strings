@@ -1131,7 +1131,7 @@ namespace pcs // i.e. "pythonic c++ strings"
         }
 
         /** \brief Returns a vector of the words in the string, using sep as the delimiter string. At most maxsplit splits are done, the leftmost ones. */
-        inline std::vector<CppStringT> split(const CppStringT& sep, const size_type maxsplit) const noexcept
+        std::vector<CppStringT> split(const CppStringT& sep, const size_type maxsplit) const noexcept
         {
             std::vector<CppStringT> res{};
 
@@ -1140,7 +1140,7 @@ namespace pcs // i.e. "pythonic c++ strings"
             }
             else {
                 const CppStringT whitespace(value_type(' '));
-                std::vector<CppStringT> all_words{ this->split(whitespace) };
+                std::vector<CppStringT> all_words{ this->split(sep) };
 
                 size_type count = maxsplit;
                 auto word_it = all_words.cbegin();
@@ -1161,6 +1161,88 @@ namespace pcs // i.e. "pythonic c++ strings"
             return res;
         }
 
+
+        //---   splitlines()   ------------------------------------
+        /** \brief Return a list of the lines in the string, breaking at line boundaries.
+        *
+        * Line breaks are not included in the resulting list unless keepends is given and true.
+        *
+        * This method splits on the following line boundaries. In particular, the boundaries are a superset of universal newlines:
+        * \n 	        Line Feed
+        * \r 	        Carriage Return
+        * \r\n 	        Carriage Return + Line Feed
+        * \v or \x0b 	Line Tabulation
+        * \f or \x0c 	Form Feed
+        * \x1c 	        File Separator
+        * \x1d 	        Group Separator
+        * \x1e 	        Record Separator
+        * \x85 	        Next Line (C1 Control Code)
+        * \u2028 	    Line Separator
+        * \u2029 	    Paragraph Separator
+        */
+        std::vector<CppStringT> splitlines(const bool keep_end = false) const noexcept
+        {
+            std::vector<CppStringT> res{};
+            CppStringT current{};
+            bool prev_cr = false;
+
+            for (const value_type& ch : *this) {
+                switch (ch) {
+                case value_type('\v'):      // Line Tabulation
+                case value_type('\x0b'):    // Line Tabulation
+                case value_type('\f'):      // Form Feed
+                case value_type('\x0c'):    // Form Feed
+                case value_type('\x1c'):    // File Separator
+                case value_type('\x1d'):    // Group Separator
+                case value_type('\x1e'):    // Record Separator
+                case value_type('\x85'):    // Next Line (C1 Control Code)
+#pragma warning(push)
+#pragma warning(disable: 4566)
+                case value_type('\u2028'):  // Line Separator
+                case value_type('\u2029'):  // Paragraph Separator
+#pragma warning(pop)
+                    if (prev_cr) {
+                        res.push_back(current);
+                        current.clear();
+                    }
+                    if (keep_end)
+                        current += ch;
+                    res.push_back(current);
+                    current.clear();
+                    prev_cr = false;
+                    break;
+
+                case value_type('\r'):      // Line Feed
+                    if (prev_cr) {
+                        res.push_back(current);
+                        current.clear();
+                    }
+                    if (keep_end)
+                        current += ch;
+                    prev_cr = true;
+                    break;
+
+                case value_type('\n'):      // Line Feed
+                    if (keep_end)
+                        current += ch;
+                    res.push_back(current);
+                    current.clear();
+                    prev_cr = false;
+                    break;
+
+
+                default:
+                    if (prev_cr) {
+                        res.push_back(current);
+                        current.clear();
+                    }
+                    current += ch;
+                    break;
+                }
+            }
+
+            return res;
+        }
 
 
         //---   title()   -----------------------------------------
