@@ -621,7 +621,7 @@ namespace pcs // i.e. "pythonic c++ strings"
         {
             return value_type(std::tolower(ch));
         }
-
+        
 
         //---   lstrip()   ----------------------------------------
         /** \brief Returns a copy of the string with leading characters removed.
@@ -1026,6 +1026,32 @@ namespace pcs // i.e. "pythonic c++ strings"
             }
 
             return res;
+        }
+
+
+        //---   rstrip()   ----------------------------------------
+        /** \brief Returns a copy of the string with trailing characters removed.
+        *
+        * The passed string specifies the set of characters to be removed.
+        * The chars argument is not a prefix;  rather, all combinations of
+        * its values are stripped.
+        * To remove a suffix, rather call method 'removesuffix()'.
+        */
+        inline CppStringT rstrip(const CppStringT& prefix) const noexcept
+        {
+            for (auto it = this->crbegin(); it != this->crend(); ++it)
+                if (std::none_of(prefix.cbegin(), prefix.cend(), [it](const value_type ch) { *it == ch; }))
+                    return CppStringT(this->cbegin(), it);
+            return CppStringT();
+        }
+
+        /** \brief Returns a copy of the string with trailing whitespaces removed. */
+        inline CppStringT rstrip() const noexcept
+        {
+            for (auto it = this->crbegin(); it != this->crend(); ++it)
+                if (*it != value_type(' '))
+                    return CppStringT(this->cbegin(), it);
+            return CppStringT();
         }
 
 
