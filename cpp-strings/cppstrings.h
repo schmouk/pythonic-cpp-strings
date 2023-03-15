@@ -1285,6 +1285,26 @@ namespace pcs // i.e. "pythonic c++ strings"
         }
 
 
+        //---   startswith_n()   ----------------------------------
+        /** Returns true if the string starts with the specified suffix, otherwise returns false. Test begins at start position and stops after count positions. */
+        inline const bool startswith_n(const CppStringT& suffix, const size_type start, const size_type count) const noexcept
+        {
+            return startswith(std::span{ suffix }, start, start + count - 1);
+        }
+
+        /** Returns true if the string starts with the specified suffix, otherwise returns false. Test begins at position 0 and stops after count positions. */
+        inline const bool startswith_n(const CppStringT& suffix, const size_type count) const noexcept
+        {
+            return startswith(std::span{ suffix }, 0, count - 1);
+        }
+
+        /** Returns true if the string starts with any of the specified suffixes, otherwise returns false. Test begins at start position and stops after count positions. */
+        inline const bool startswith_n(const std::span<CppStringT>& suffixes, const size_type start, const size_type count) const noexcept
+        {
+            return startswith(suffixes, start, start + count - 1);
+        }
+
+
         //---   title()   -----------------------------------------
         /** \brief Returns a titlecased copy of the string where words start with an uppercase character and the remaining characters are lowercase. */
         inline CppStringT title() const noexcept
