@@ -1305,6 +1305,26 @@ namespace pcs // i.e. "pythonic c++ strings"
         }
 
 
+        //---   strip()   -----------------------------------------
+        /** \brief Returns a copy of the string with the leading and trailing characters removed.
+        *
+        * The passed string specifies the set of characters to be removed.
+        * The chars argument is not a prefix;  rather, all combinations of
+        * its values are stripped.
+        */
+        inline CppStringT strip(const CppStringT& prefix) const noexcept
+        {
+            return this->rstrip(prefix).lstrip(prefix);
+        }
+
+        /** \brief Returns a copy of the string with the leading and trailing whitespaces removed. */
+        inline CppStringT strip() const noexcept
+        {
+            return this->rstrip().lstrip();
+        }
+
+
+
         //---   title()   -----------------------------------------
         /** \brief Returns a titlecased copy of the string where words start with an uppercase character and the remaining characters are lowercase. */
         inline CppStringT title() const noexcept
