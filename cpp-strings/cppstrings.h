@@ -81,6 +81,14 @@ namespace pcs // i.e. "pythonic c++ strings"
     template<class CharT>
     inline const bool is_upper(const CharT ch) noexcept;        //!< Returns true if character is uppercase, or false otherwise.
 
+    template<class CharT>
+    inline const CharT swap_case(const CharT ch) noexcept;      //!< Returns the swapped case form of character ch if it exists, or ch itself otherwise.
+
+    template<class CharT>
+    inline const CharT to_lower(const CharT ch) noexcept;       //!< Returns the lowercase form of character ch if it exists, or ch itself otherwise.
+
+    template<class CharT>
+    inline const CharT to_upper(const CharT ch) noexcept;       //!< Returns the uppercase form of character ch if it exists, or ch itself otherwise.
 
 
     //=====   CppStringT<>   ======================================
@@ -1324,6 +1332,18 @@ namespace pcs // i.e. "pythonic c++ strings"
         }
 
 
+        //---   swapcase()   --------------------------------------
+        /** \brief Returns a copy of the string with uppercase characters converted to lowercase and vice versa.
+        *
+        * Note that it is not necessarily true that s.swapcase().swapcase() == s.
+        */
+        inline CppStringT swapcase() const noexcept
+        {
+            CppStringT res( *this );
+            std::transform(this->cbegin(), this->cend(), res.begin(), pcs::swap_case);
+            return res;
+        }
+
 
         //---   title()   -----------------------------------------
         /** \brief Returns a titlecased copy of the string where words start with an uppercase character and the remaining characters are lowercase. */
@@ -1522,5 +1542,66 @@ namespace pcs // i.e. "pythonic c++ strings"
     {
         return std::iswupper(ch);
     }
+
+
+    //---   swap_case()   -----------------------------------------
+    /** \brief Returns the swapped case form of character ch if it exists, or ch itself otherwise. */
+    template<class CharT>
+    inline const CharT swap_case(const CharT ch) noexcept
+    {
+        if (pcs::is_lower(ch))
+            return pcs::to_upper(ch);
+        else if (pcs::is_upper(ch))
+            return pcs::to_lower(ch);
+        else
+            return ch;
+    }
+
+
+    //---   to_lower()   ------------------------------------------
+    /** \brief SHOULD NEVER BE USED. Use next specializations instead. */
+    template<class CharT>
+    inline const CharT to_lower(const CharT ch) noexcept
+    {
+        return ch;
+    }
+
+    /** \brief Returns the lowercase form of character ch if it exists, or ch itself otherwise. Conforms to the current locale settings. */
+    template<>
+    inline const char to_lower<char>(const char ch) noexcept
+    {
+        return std::tolower(static_cast<unsigned char>(ch));
+    }
+
+    /** \brief Returns the lowercase form of character ch if it exists, or ch itself otherwise. Conforms to the current locale settings. */
+    template<>
+    inline const wchar_t to_lower<wchar_t>(const wchar_t ch) noexcept
+    {
+        return std::towlower(ch);
+    }
+
+
+    //---   to_upper()   ------------------------------------------
+    /** \brief SHOULD NEVER BE USED. Use next specializations instead. */
+    template<class CharT>
+    inline const CharT to_upper(const CharT ch) noexcept
+    {
+        return ch;
+    }
+
+    /** \brief Returns the uppercase form of character ch if it exists, or ch itself otherwise. Conforms to the current locale settings. */
+    template<>
+    inline const char to_upper<char>(const char ch) noexcept
+    {
+        return std::toupper(static_cast<unsigned char>(ch));
+    }
+
+    /** \brief Returns the uppercase form of character ch if it exists, or ch itself otherwise. Conforms to the current locale settings. */
+    template<>
+    inline const wchar_t to_upper<wchar_t>(const wchar_t ch) noexcept
+    {
+        return std::towupper(ch);
+    }
+
 
 } // end of namespace pcs  // (pythonic c++ strings)
