@@ -174,8 +174,10 @@ namespace pcs // i.e. "pythonic c++ strings"
         /** \brief In-place modifies the string with its first character capitalized and the rest lowercased. Returns a reference to the string*/
         inline CppStringT& capitalize() noexcept
         {
-            this->lower();
-            (*this)[0] = upper((*this)[0]);
+            if (!this->empty()) {
+                this->lower();
+                (*this)[0] = pcs::to_upper((*this)[0]);
+            }
             return *this;
         }
 
@@ -1339,17 +1341,30 @@ namespace pcs // i.e. "pythonic c++ strings"
         */
         inline CppStringT swapcase() const noexcept
         {
-            CppStringT res( *this );
+            /*
+            CppStringT res(*this);
             std::transform(this->cbegin(), this->cend(), res.begin(), pcs::swap_case);
+            return res;
+            */
+            CppStringT res;
+            std::ranges::copy(std::views::transform(*this, pcs::swap_case), std::back_inserter(res));
             return res;
         }
 
 
         //---   title()   -----------------------------------------
         /** \brief Returns a titlecased copy of the string where words start with an uppercase character and the remaining characters are lowercase. */
-        inline CppStringT title() const noexcept
+        CppStringT title() const noexcept
         {
-            return *this;
+            constexpr CppStringT whitespace(value_type(' '));
+
+            CppStringT res(*this);
+            std::vector<CppStringT> words = res.split(whitespace);
+
+            for (CppStringT& word : words)
+                word.capitalize();
+
+            return whitespace.join(words);
         }
 
 
