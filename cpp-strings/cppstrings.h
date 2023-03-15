@@ -243,13 +243,16 @@ namespace pcs // i.e. "pythonic c++ strings"
         {
             if (start > end)
                 return false;
-
+            else
+                return std::any_of(suffixes.cbegin(), suffixes.cend(), this->substr(start, end).ends_with);
+            /*
             for (auto& suffix : suffixes) {
                 if (this->substr(start, end).ends_with(suffix))
                     return true;
             }
 
             return false;
+            */
         }
 
 
@@ -1197,7 +1200,7 @@ namespace pcs // i.e. "pythonic c++ strings"
                 case value_type('\x1e'):    // Record Separator
                 case value_type('\x85'):    // Next Line (C1 Control Code)
 #pragma warning(push)
-#pragma warning(disable: 4566)
+#pragma warning(disable: 4566)  // to get no warning when current page code is not compatible with next unicode points
                 case value_type('\u2028'):  // Line Separator
                 case value_type('\u2029'):  // Paragraph Separator
 #pragma warning(pop)
@@ -1245,18 +1248,48 @@ namespace pcs // i.e. "pythonic c++ strings"
         }
 
 
+        //---   startswith()   ------------------------------------
+        /** Returns true if the string starts with the specified suffix, otherwise returns false. Test begins at start position and stops at end position. */
+        inline const bool startswith(const CppStringT& suffix, const size_type start, const size_type end) const noexcept
+        {
+            return startswith(std::span{ suffix }, start, end);
+        }
+
+        /** Returns true if the string starts with the specified suffix, otherwise returns false. Test begins at start position and stops at end of string. */
+        inline const bool startswith(const CppStringT& suffix, const size_type start) const noexcept
+        {
+            return startswith(std::span{ suffix }, start, this->size() - 1);
+        }
+
+        /** Returns true if the string starts with the specified suffix, otherwise returns false. Test runs on the whole string. */
+        inline const bool startswith(const CppStringT& suffix) const noexcept
+        {
+            return this->starts_with(suffix);
+        }
+
+        /** Returns true if the string starts with any of the specified suffixes, otherwise returns false. Test begins at start position and stops at end of string. */
+        inline const bool startswith(const std::span<CppStringT>& suffixes, const size_type start, const size_type end) const noexcept
+        {
+            if (start > end)
+                return false;
+            else
+                return std::any_of(suffixes.cbegin(), suffixes.cend(), this->substr(start, end).starts_with);
+            /*
+            for (auto& suffix : suffixes) {
+                if (this->substr(start, end).starts_with(suffix))
+                    return true;
+            }
+
+            return false;
+            */
+        }
+
+
         //---   title()   -----------------------------------------
         /** \brief Returns a titlecased copy of the string where words start with an uppercase character and the remaining characters are lowercase. */
         inline CppStringT title() const noexcept
         {
             return *this;
-        }
-
-
-        //---   startswith   --------------------------------------
-        inline const bool startswith(const CppStringT& prefix) const noexcept
-        {
-            return false;
         }
 
 
