@@ -1393,10 +1393,24 @@ namespace pcs // i.e. "pythonic c++ strings"
         }
 
 
-    protected:
+        //---   zfill()   -----------------------------------------
+        /** \brief Returns a copy of the string left filled with ASCII '0' digits to make a string of length width.
+        *
+        * A leading sign prefix ('+'/'-') is handled by inserting the padding 
+        * after the sign character rather than before. The original string is 
+        * returned if width is less than or equal to len(s).
+        */
+        inline CppStringT zfill(const size_type width) const noexcept
+        {
+            if (this->size() >= width)
+                return *this;
 
-
-    private:
+            const size_type padding_width = width - this->size();
+            if ((*this)[0] == '+' || (*this)[0] == '-')
+                return (*this)[0] + this->substr(1, this->size() - 1).ljust(padding_width, value_type('0'));
+            else
+                return this->ljust(padding_width, value_type('0'));
+        }
 
     };
 
