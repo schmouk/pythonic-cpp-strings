@@ -146,6 +146,11 @@ namespace pcs // i.e. "pythonic c++ strings"
         inline CppStringT(const CharT* s, size_type count)                                  : MyBaseClass(s, count) {}
         inline CppStringT(std::initializer_list<CharT> ilist)                               : MyBaseClass(ilist) {}
 
+        inline CppStringT(const MyBaseClass& other)                                         : MyBaseClass(other) {}
+        inline CppStringT(const MyBaseClass& other, const AllocatorT& alloc)                : MyBaseClass(other, alloc) {}
+        inline CppStringT(MyBaseClass&& other)                                              : MyBaseClass(other) {}
+        inline CppStringT(MyBaseClass&& other, const AllocatorT& alloc)                     : MyBaseClass(other, alloc) {}
+
         template<class InputIt>
         inline CppStringT(InputIt first, InputIt last)                                      : MyBaseClass(first, last) {}
 
@@ -1331,6 +1336,17 @@ namespace pcs // i.e. "pythonic c++ strings"
         inline CppStringT strip() const noexcept
         {
             return this->rstrip().lstrip();
+        }
+
+
+        //---   substr()   ----------------------------------------
+        /** \brief Returns acopy of the string, starting at index start and ending after count characters. */
+        inline CppStringT substr(const size_type start, const size_type count) const noexcept
+        {
+            if (start > this->size())
+                return *this;
+            const size_type width = std::min(count, this->size() - start);
+            return CppStringT(MyBaseClass::substr(start, width));
         }
 
 

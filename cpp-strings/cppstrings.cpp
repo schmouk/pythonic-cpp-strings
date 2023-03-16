@@ -29,10 +29,11 @@ using namespace pcs;
 */
 int main()
 {
-    CppString  s;
-    CppWString ws;
+    CppString  s("-5.1");
+    CppWString ws(L"-5.1");
 
     std::cout << ws.isupper() << std::endl;
+    std::cout << s.zfill(10).c_str() << std::endl;
 
     return 0;
 }
