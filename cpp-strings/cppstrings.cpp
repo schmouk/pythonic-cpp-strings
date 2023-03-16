@@ -29,8 +29,8 @@ using namespace pcs;
 */
 int main()
 {
-    CppString  s("-5.1");
-    CppWString ws(L"-5.1");
+    CppString  s = "-5.1";
+    CppWString ws{ L"-5.2"cs };
 
     std::cout << ws.isupper() << std::endl;
     std::cout << s.zfill(10).c_str() << std::endl;

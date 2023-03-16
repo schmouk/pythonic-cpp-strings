@@ -50,6 +50,13 @@ namespace pcs // i.e. "pythonic c++ strings"
     using CppString  = CppStringT<char>;                        //!< Specialization of basic class with template argument 'char'
     using CppWString = CppStringT<wchar_t>;                     //!< Specialization of basic class with template argument 'wchar_t'
 
+    // litteral operators
+#pragma warning(disable: 4455)
+    inline const CppString operator""cs(const char* str, std::size_t len);          //!< Forms a CppString literal. 
+    inline const CppString operator""csv(const char* str, std::size_t len);         //!< Forms a CppString view literal. 
+    /*inline const CppWString operator""cs(const wchar_t* str, std::size_t len);      //!< Forms a CppWString literal. 
+    inline const CppWString operator""csv(const wchar_t* str, std::size_t len);     //!< Forms a CppWString view literal. */
+
     // chars classifications -- not to be directly called, see respective specializations at the very end of this module.
     template<class CharT>
     inline const bool is_alpha(const CharT ch) noexcept;        //!< Returns true if character ch is alphabetic, or false otherwise.
@@ -1430,6 +1437,31 @@ namespace pcs // i.e. "pythonic c++ strings"
 
     };
 
+
+    //=====   litteral operators   ============================
+    /** \brief  Forms a CppString literal. */
+    inline const CppString operator""cs(const char* str, std::size_t len)
+    {
+        return CppString(CppString::MyBaseClass(str, len));
+    }
+
+    /** \brief  Forms a CppString view literal. */
+    inline const CppString operator""csv(const char* str, std::size_t len)
+    {
+        return CppString(CppString::MyStringView(str, len));
+    }
+
+    /*
+    inline const CppWString operator""cs(const wchar_t* str, std::size_t len)
+    {
+        return CppWString(CppWString::MyBaseClass(str, len));
+    }
+
+    inline const CppWString operator""csv(const wchar_t* str, std::size_t len)
+    {
+        return CppWString(CppWString::MyStringView(str, len));
+    }
+    */
 
 
     //=====   templated chars classes   ===========================
