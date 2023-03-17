@@ -22,6 +22,7 @@
 
 //=============================================================
 #include <algorithm>
+#include <cassert>
 #include <cctype>
 #include <cwctype>
 #include <format>
@@ -179,6 +180,7 @@ namespace pcs // i.e. "pythonic c++ strings"
             inline NotFoundException(const std::string& what_arg) : MyBaseClass(what_arg) {}
             inline NotFoundException(const char* what_arg) : MyBaseClass(what_arg) {}
         };
+
 
         //===   Methods   =========================================
 
@@ -1434,6 +1436,92 @@ namespace pcs // i.e. "pythonic c++ strings"
             else
                 return this->ljust(padding_width, value_type('0'));
         }
+
+
+        //===   Translation Table   ===============================
+        /** \brief The internal class of translation tables, as used with methods CppStringT::maketrans and CppStringT::translate. */
+        class TransTable
+        {
+        public:
+            //---   wrappers   ------------------------------------
+            using key_type   = CharT;             
+            using value_type = CppStringT;
+
+            //---   Constructors / destructor   -------------------
+            inline TransTable(const std::map<key_type, value_type> trans_table)
+                : table{ trans_table }
+            {}
+
+            TransTable(const CppStringT& keys, const CppStringT& values)
+            {
+                assert(keys.size() == values.size());
+                auto val_it = values.cbegin();
+                for (const auto k : keys)
+                    table[k] = value_type(*val_it++);
+            }
+
+            inline TransTable(const std::initializer_list<CppStringT> keys,
+                              const std::initializer_list<CppStringT> values)
+            {
+                assert(keys.size() == values.size());
+                auto val_it = values.cbegin();
+                for (const auto k : keys)
+                    table[(*k)[0]] = *val_it++;
+            }
+
+            inline TransTable(const CharT* keys, const CharT* values)
+            {
+                while (*keys && *values)
+                    table[*keys++] = value_type(*values++);
+            }
+
+            template<class InputIt>
+            inline TransTable(InputIt first_key, InputIt last_key, InputIt first_value, InputIt last_value)
+            {
+                InputIt key_it{ first_key };
+                InputIt val_it{ first_value };
+                while (key_it != last_key && val_it != last_value)
+                    table[*key_it++] = value_type(*val_it++);
+            }
+
+            template<class StringViewLike>
+            explicit TransTable(const StringViewLike& keys, const StringViewLike& values)
+            {
+                assert(keys.size() == values.size());
+                auto val_it = values.cbegin();
+                for (const auto k : keys)
+                    table[(*k)[0]] = value_type(*val_it++);
+            }
+
+            inline TransTable() noexcept = default;
+            inline TransTable(const TransTable&) noexcept = default;
+            inline TransTable(TransTable&&) noexcept = default;
+
+            inline ~TransTable() noexcept = default;
+
+            //---   operators   -----------------------------------
+            inline TransTable& operator= (const TransTable&) noexcept = default;
+            inline TransTable& operator= (TransTable&&) noexcept = default;
+
+            inline TransTable& operator= (const std::map<key_type, value_type>& trans_table) noexcept
+            {
+                table = trans_table;
+                return *this;
+            }
+
+            inline CppStringT operator[] (const CharT ch) const noexcept
+            {
+                try {
+                    return table[ch];
+                }
+                catch (...) {
+                    return CppStringT();
+                }
+            }
+
+            //---   data   ----------------------------------------
+            std::map<key_type, value_type> table{};
+        };
 
     };
 
