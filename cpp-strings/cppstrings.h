@@ -66,10 +66,10 @@ namespace pcs // i.e. "pythonic c++ strings"
     inline const bool is_ascii(const CharT ch) noexcept;        //!< Returns true if character ch gets ASCII code, or false otherwise.
 
     template<class CharT>
-    inline const bool is_id_continue(const CharT ch) noexcept;  //!< Returns true if character is a continuing char for identifiers, or false otherwise.
+    inline const bool is_decimal(const CharT ch) noexcept;      //!< Returns true if character is a decimal digit, or false otherwise.
 
     template<class CharT>
-    inline const bool is_decimal(const CharT ch) noexcept;      //!< Returns true if character is a decimal digit, or false otherwise.
+    inline const bool is_id_continue(const CharT ch) noexcept;  //!< Returns true if character is a continuing char for identifiers, or false otherwise.
 
     template<class CharT>
     inline const bool is_id_start(const CharT ch) noexcept;     //!< Returns true if character is a starting char for identifiers, or false otherwise.
@@ -151,12 +151,12 @@ namespace pcs // i.e. "pythonic c++ strings"
             using value_type = CppStringT;
 
             //---   Constructors / destructor   -------------------
-            /** \brief Creates a TransTable from a standard map. */
+            /** \brief Creates a TransTable from a standard map (#1). */
             inline TransTable(const std::map<key_type, value_type> trans_table)
                 : m_table{ trans_table }
             {}
 
-            /** \brief Creates a TransTable from two strings.
+            /** \brief Creates a TransTable from two strings (#2).
             *
             * Parameters keys and values must have the same size. The i-th
             * character in key is associated in the translation table with
@@ -170,7 +170,7 @@ namespace pcs // i.e. "pythonic c++ strings"
                     m_table[k] = value_type(*val_it++);
             }
 
-            /** \brief Creates a TransTable from three strings.
+            /** \brief Creates a TransTable from three strings (#3).
             *
             * Parameters keys and values must have the same size. The i-th
             * character in key is associated in the translation table with
@@ -188,7 +188,7 @@ namespace pcs // i.e. "pythonic c++ strings"
                     m_table[k] = CppStringT();
             }
 
-            /** \brief Creates a TransTable from two initalization lists.
+            /** \brief Creates a TransTable from two initalization lists (#4).
             *
             * Parameters keys and values must have the same size. The i-th
             * character in key is associated in the translation table with
@@ -203,7 +203,7 @@ namespace pcs // i.e. "pythonic c++ strings"
                     m_table[(*k)[0]] = *val_it++;
             }
 
-            /** \brief Creates a TransTable from three initalization lists.
+            /** \brief Creates a TransTable from three initalization lists (#5).
             *
             * Parameters keys and values must have the same size. The i-th
             * character in key is associated in the translation table with
@@ -223,7 +223,7 @@ namespace pcs // i.e. "pythonic c++ strings"
                     m_table[k] = CppStringT();
             }
 
-            /** \brief Creates a TransTable from two pointers to null-terminated lists of characters.
+            /** \brief Creates a TransTable from two pointers to null-terminated lists of characters (#6).
             *
             * Parameters keys and values must have the same size. The i-th
             * character in key is associated in the translation table with
@@ -235,7 +235,7 @@ namespace pcs // i.e. "pythonic c++ strings"
                     m_table[*keys++] = value_type(*values++);
             }
 
-            /** \brief Creates a TransTable from three pointers to null-terminated lists of characters.
+            /** \brief Creates a TransTable from three pointers to null-terminated lists of characters (#7).
             *
             * Parameters keys and values must have the same size. The i-th
             * character in key is associated in the translation table with
@@ -251,7 +251,7 @@ namespace pcs // i.e. "pythonic c++ strings"
                     m_table[*not_translated++] = CppStringT();
             }
 
-            /** \brief Creates a TransTable from two containers iterators.
+            /** \brief Creates a TransTable from two containers iterators (#8).
             *
             * Both  containers  should  have  the  same  size.   The  i-th
             * character in key is associated in the translation table with
@@ -266,7 +266,7 @@ namespace pcs // i.e. "pythonic c++ strings"
                     m_table[*key_it++] = value_type(*val_it++);
             }
 
-            /** \brief Creates a TransTable from three containers iterators.
+            /** \brief Creates a TransTable from three containers iterators (#9).
             *
             * Both  containers  should  have  the  same  size.   The  i-th
             * character in key is associated in the translation table with
