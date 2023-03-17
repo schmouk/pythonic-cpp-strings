@@ -1439,7 +1439,7 @@ namespace pcs // i.e. "pythonic c++ strings"
 
 
         //===   Translation Table   ===============================
-        /** \brief The internal class of translation tables, as used with methods CppStringT::maketrans and CppStringT::translate. */
+        /** \brief The internal class of translation tables, used with methods CppStringT::maketrans and CppStringT::translate. */
         class TransTable
         {
         public:
@@ -1448,79 +1448,207 @@ namespace pcs // i.e. "pythonic c++ strings"
             using value_type = CppStringT;
 
             //---   Constructors / destructor   -------------------
+            /** \brief Creates a TransTable from a standard map. */
             inline TransTable(const std::map<key_type, value_type> trans_table)
-                : table{ trans_table }
+                : m_table{ trans_table }
             {}
 
+            /** \brief Creates a TransTable from two strings.
+            *
+            * Parameters keys and values must have the same size. The i-th
+            * character in key is associated in the translation table with
+            * the i-th character in values.
+            */
             TransTable(const CppStringT& keys, const CppStringT& values)
             {
                 assert(keys.size() == values.size());
                 auto val_it = values.cbegin();
                 for (const auto k : keys)
-                    table[k] = value_type(*val_it++);
+                    m_table[k] = value_type(*val_it++);
             }
 
+            /** \brief Creates a TransTable from three strings.
+            *
+            * Parameters keys and values must have the same size. The i-th
+            * character in key is associated in the translation table with
+            * the i -th  character  in  values.  Finally,  the  characters
+            * contained  in  string  not_translated  are associated in the
+            * translation table with the empty string.
+            */
+            TransTable(const CppStringT& keys, const CppStringT& values, const CppStringT& not_translated)
+            {
+                assert(keys.size() == values.size());
+                auto val_it = values.cbegin();
+                for (const auto k : keys)
+                    m_table[k] = value_type(*val_it++);
+                for (const auto k : not_translated)
+                    m_table[k] = CppStringT();
+            }
+
+            /** \brief Creates a TransTable from two initalization lists.
+            *
+            * Parameters keys and values must have the same size. The i-th
+            * character in key is associated in the translation table with
+            * the i-th character in values.
+            */
             inline TransTable(const std::initializer_list<CppStringT> keys,
                               const std::initializer_list<CppStringT> values)
             {
                 assert(keys.size() == values.size());
                 auto val_it = values.cbegin();
                 for (const auto k : keys)
-                    table[(*k)[0]] = *val_it++;
+                    m_table[(*k)[0]] = *val_it++;
             }
 
+            /** \brief Creates a TransTable from three initalization lists.
+            *
+            * Parameters keys and values must have the same size. The i-th
+            * character in key is associated in the translation table with
+            * the i -th  character  in  values.  Finally,  the  characters
+            * contained  in  string  not_translated  are associated in the
+            * translation table with the empty string.
+            */
+            inline TransTable(const std::initializer_list<CppStringT> keys,
+                              const std::initializer_list<CppStringT> values,
+                              const CppStringT&                       not_translated)
+            {
+                assert(keys.size() == values.size());
+                auto val_it = values.cbegin();
+                for (const auto k : keys)
+                    m_table[(*k)[0]] = *val_it++;
+                for (const auto k : not_translated)
+                    m_table[k] = CppStringT();
+            }
+
+            /** \brief Creates a TransTable from two pointers to null-terminated lists of characters.
+            *
+            * Parameters keys and values must have the same size. The i-th
+            * character in key is associated in the translation table with
+            * the i-th character in values.
+            */
             inline TransTable(const CharT* keys, const CharT* values)
             {
                 while (*keys && *values)
-                    table[*keys++] = value_type(*values++);
+                    m_table[*keys++] = value_type(*values++);
             }
 
-            template<class InputIt>
-            inline TransTable(InputIt first_key, InputIt last_key, InputIt first_value, InputIt last_value)
+            /** \brief Creates a TransTable from three pointers to null-terminated lists of characters.
+            *
+            * Parameters keys and values must have the same size. The i-th
+            * character in key is associated in the translation table with
+            * the i -th  character  in  values.  Finally,  the  characters
+            * contained  in  string  not_translated  are associated in the
+            * translation table with the empty string.
+            */
+            inline TransTable(const CharT* keys, const CharT* values, const CharT* not_translated)
             {
-                InputIt key_it{ first_key };
-                InputIt val_it{ first_value };
-                while (key_it != last_key && val_it != last_value)
-                    table[*key_it++] = value_type(*val_it++);
+                while (*keys && *values)
+                    m_table[*keys++] = value_type(*values++);
+                while (*not_translated)
+                    m_table[*not_translated++] = CppStringT();
             }
 
+            /** \brief Creates a TransTable from two containers iterators.
+            *
+            * Both  containers  should  have  the  same  size.   The  i-th
+            * character in key is associated in the translation table with
+            * the i-th character in values.
+            */
+            template<class KeyIt, class ValueIt>
+            inline TransTable(KeyIt first_key, KeyIt last_key, ValueIt first_value, ValueIt last_value)
+            {
+                KeyIt key_it{ first_key };
+                ValueIt val_it{ first_value };
+                while (key_it != last_key && val_it != last_value)
+                    m_table[*key_it++] = value_type(*val_it++);
+            }
+
+            /** \brief Creates a TransTable from three containers iterators.
+            *
+            * Both  containers  should  have  the  same  size.   The  i-th
+            * character in key is associated in the translation table with
+            * the i -th  character  in  values.  Finally,  the  characters
+            * contained  in  string  not_translated  are associated in the
+            * translation table with the empty string.
+            */
+            template<class KeyIt, class ValueIt>
+            inline TransTable(KeyIt first_key, KeyIt last_key,
+                              ValueIt first_value, ValueIt last_value, 
+                              KeyIt first_not_translated, KeyIt last_not_translated)
+            {
+                KeyIt key_it{ first_key };
+                ValueIt val_it{ first_value };
+                while (key_it != last_key && val_it != last_value)
+                    m_table[*key_it++] = value_type(*val_it++);
+                key_it = first_not_translated;
+                while (key_it != last_not_translated)
+                    m_table[*key_it++] = CppStringT();
+            }
+
+            /** \brief Creates a TransTable from two string views.
+            *
+            * Parameters keys and values must have the same size. The i-th
+            * character in key is associated in the translation table with
+            * the i-th character in values.
+            */
             template<class StringViewLike>
             explicit TransTable(const StringViewLike& keys, const StringViewLike& values)
             {
                 assert(keys.size() == values.size());
                 auto val_it = values.cbegin();
                 for (const auto k : keys)
-                    table[(*k)[0]] = value_type(*val_it++);
+                    m_table[(*k)[0]] = value_type(*val_it++);
             }
 
-            inline TransTable() noexcept = default;
-            inline TransTable(const TransTable&) noexcept = default;
-            inline TransTable(TransTable&&) noexcept = default;
+            /** \brief Creates a TransTable from three string views.
+            *
+            * Parameters keys and values must have the same size. The i-th
+            * character in key is associated in the translation table with
+            * the i -th  character  in  values.  Finally,  the  characters
+            * contained  in  string  not_translated  are associated in the
+            * translation table with the empty string.
+            */
+            template<class StringViewLike>
+            TransTable(const StringViewLike& keys, const StringViewLike& values, const StringViewLike& not_translated)
+            {
+                assert(keys.size() == values.size());
+                auto val_it = values.cbegin();
+                for (const auto k : keys)
+                    m_table[k] = value_type(*val_it++);
+                for (const auto k : not_translated)
+                    m_table[k] = CppStringT();
+            }
 
-            inline ~TransTable() noexcept = default;
+            inline TransTable() noexcept = default;                     //!< Default empty constructor.
+            inline TransTable(const TransTable&) noexcept = default;    //!< Default copy constructor.
+            inline TransTable(TransTable&&) noexcept = default;         //!< Default move constructor.
+
+            inline ~TransTable() noexcept = default;                    //!< Default descrtuctor
 
             //---   operators   -----------------------------------
-            inline TransTable& operator= (const TransTable&) noexcept = default;
-            inline TransTable& operator= (TransTable&&) noexcept = default;
+            inline TransTable& operator= (const TransTable&) noexcept = default;    //!< Default copy assignment
+            inline TransTable& operator= (TransTable&&) noexcept = default;         //!< Default move assignment
 
+            /** \brief Assignment operator with a standard map. */
             inline TransTable& operator= (const std::map<key_type, value_type>& trans_table) noexcept
             {
-                table = trans_table;
+                m_table = trans_table;
                 return *this;
             }
 
-            inline CppStringT operator[] (const CharT ch) const noexcept
+            /** \biref Indexing operator. */
+            inline CppStringT operator[] (const key_type ch) const noexcept
             {
                 try {
-                    return table[ch];
+                    return m_table[ch];
                 }
                 catch (...) {
                     return CppStringT();
                 }
             }
 
-            //---   data   ----------------------------------------
-            std::map<key_type, value_type> table{};
+        private:
+            std::map<key_type, value_type> m_table{};  // the itnernal storage of the translation table. Access it via the indexing operator.
         };
 
     };
