@@ -156,5 +156,14 @@ namespace cppstringstests
 			}
 		}
 
+		TEST_METHOD(_cs)
+		{
+			using namespace pcs;
+			auto abcd = "abcD"cs;
+			auto wabcd = L"abcD"cs;
+			Assert::AreEqual(abcd.c_str(), CppString(abcd).c_str());
+			Assert::AreEqual(wabcd.c_str(), CppWString(wabcd).c_str());
+		}
+
 	};
 }
