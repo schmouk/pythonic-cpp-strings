@@ -1798,14 +1798,14 @@ namespace pcs // i.e. "pythonic c++ strings"
     template<>
     inline const bool is_printable<char>(const char ch) noexcept
     {
-        return std::isprint(static_cast<unsigned char>(ch));
+        return static_cast<const bool>(std::isprint(static_cast<unsigned char>(ch)));
     }
 
     /** \brief Returns true if character ch is punctuation, or false otherwise. Conforms to the current locale settings. */
     template<>
     inline const bool is_printable<wchar_t>(const wchar_t ch) noexcept
     {
-        return std::iswprint(ch);
+        return static_cast<const bool>(std::iswprint(ch));
     }
 
 

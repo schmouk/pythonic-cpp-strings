@@ -62,5 +62,14 @@ namespace cppstringstests
 			for (wchar_t ch = 0; ch < L'\uffff'; ++ch)
 				Assert::AreEqual((const bool)std::iswlower(ch), pcs::is_lower(ch));
 		}
+
+		TEST_METHOD(is_printable)
+		{
+			for (int ch = 0; ch <= 255; ++ch)
+				Assert::AreEqual((const bool)std::isprint(static_cast<unsigned char>(ch)), pcs::is_printable(char(ch)));
+			for (wchar_t ch = 0; ch < L'\uffff'; ++ch)
+				Assert::AreEqual((const bool)std::iswprint(ch), pcs::is_printable(ch));
+		}
+
 	};
 }
