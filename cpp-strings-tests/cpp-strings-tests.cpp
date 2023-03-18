@@ -38,5 +38,14 @@ namespace cppstringstests
 			for (wchar_t ch = 0; ch < L'\uffff'; ++ch)
 				Assert::AreEqual((const bool)std::iswdigit(ch), pcs::is_decimal(ch));
 		}
+
+		TEST_METHOD(is_id_continue)
+		{
+			for (int ch = 0; ch <= 255; ++ch)
+				Assert::AreEqual((const bool)std::isdigit(ch) || (const bool)std::isalpha(ch) || ch == '_', pcs::is_id_continue(char(ch)));
+			for (wchar_t ch = 0; ch < L'\uffff'; ++ch)
+				Assert::AreEqual((const bool)std::iswdigit(ch) || (const bool)std::iswalpha(ch) || ch == L'_', pcs::is_id_continue(ch));
+		}
+
 	};
 }
