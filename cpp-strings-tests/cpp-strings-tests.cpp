@@ -94,5 +94,29 @@ namespace cppstringstests
 			for (wchar_t ch = 0; ch < L'\uffff'; ++ch)
 				Assert::AreEqual((const bool)std::iswupper(ch), pcs::is_upper(ch));
 		}
+
+		TEST_METHOD(swap_case)
+		{
+			for (int ch = 0; ch <= 255; ++ch) {
+				const char sw_ch = pcs::swap_case(static_cast<char>(ch));
+				if (std::islower(ch))
+					Assert::IsTrue((const bool)std::isupper(static_cast<unsigned char>(sw_ch)));
+				else if (std::isupper(ch))
+					Assert::IsTrue((const bool)std::islower(static_cast<unsigned char>(sw_ch)), std::format(L"ch {}, sw_ch {}", ch, sw_ch).c_str());
+				else
+					Assert::AreEqual(sw_ch, static_cast<char>(ch));
+			}
+
+			for (wchar_t ch = 0; ch < L'\uffff'; ++ch) {
+				const wchar_t sw_ch = pcs::swap_case(ch);
+				if (std::islower(ch))
+					Assert::IsTrue((const bool)std::isupper(sw_ch));
+				else if (std::isupper(ch))
+					Assert::IsTrue((const bool)std::islower(sw_ch), std::format(L"ch {}, sw_ch {}", ch, sw_ch).c_str());
+				else
+					Assert::AreEqual(sw_ch, ch);
+			}
+		}
+
 	};
 }
