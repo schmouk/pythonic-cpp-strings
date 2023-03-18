@@ -165,5 +165,14 @@ namespace cppstringstests
 			Assert::AreEqual(wabcd.c_str(), CppWString(wabcd).c_str());
 		}
 
+		TEST_METHOD(_csv)
+		{
+			using namespace pcs;
+			auto abcd = "abcD"csv;
+			auto wabcd = L"abcD"csv;
+			Assert::AreEqual(abcd.c_str(), CppString(abcd).c_str());
+			Assert::AreEqual(wabcd.c_str(), CppWString(wabcd).c_str());
+		}
+
 	};
 }
