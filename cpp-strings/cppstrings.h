@@ -210,14 +210,12 @@ namespace pcs // i.e. "pythonic c++ strings"
             * contained  in  string  not_translated  are associated in the
             * translation table with the empty string.
             */
-            inline TransTable(const std::initializer_list<CppStringT> keys,
-                const std::initializer_list<CppStringT> values,
-                const CppStringT& not_translated)
+            inline TransTable(const CppStringT& keys, const std::initializer_list<CppStringT> values, const CppStringT& not_translated)
             {
                 assert(keys.size() == values.size());
-                auto val_it = values.cbegin();
+                auto val_it = values.begin();
                 for (const auto k : keys)
-                    m_table[(*k)[0]] = *val_it++;
+                    m_table[k] = *val_it++;
                 for (const auto k : not_translated)
                     m_table[k] = CppStringT();
             }
