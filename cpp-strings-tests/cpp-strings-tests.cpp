@@ -65,5 +65,21 @@ namespace cppstringstests
 			Assert::AreEqual(CppWString(L'f').c_str(), wt[L'f'].c_str());
 		}
 
+		TEST_METHOD(constructor_04)
+		{
+			pcs::CppString::TransTable t(CppString("abc"), { CppString("AA"), CppString("BBB"), CppString("C") });
+			Assert::AreEqual(CppString("AA").c_str(), t['a'].c_str());
+			Assert::AreEqual(CppString("BBB").c_str(), t['b'].c_str());
+			Assert::AreEqual(CppString('C').c_str(), t['c'].c_str());
+			Assert::AreEqual(CppString('z').c_str(), t['z'].c_str());
+
+			pcs::CppWString::TransTable wt(CppWString(L"abc"), { CppWString(L"AA"), CppWString(L"BBB"), CppWString(L"C") });
+			Assert::AreEqual(CppWString(L"AA").c_str(), wt[L'a'].c_str());
+			Assert::AreEqual(CppWString(L"BBB").c_str(), wt[L'b'].c_str());
+			Assert::AreEqual(CppWString(L"C").c_str(), wt[L'c'].c_str());
+			Assert::AreEqual(CppWString(L'9').c_str(), wt[L'9'].c_str());
+		}
+
+
 	};
 }

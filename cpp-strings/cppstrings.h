@@ -188,22 +188,21 @@ namespace pcs // i.e. "pythonic c++ strings"
                     m_table[k] = CppStringT();
             }
 
-            /** \brief Creates a TransTable from two initalization lists (#4).
+            /** \brief Creates a TransTable from a string and an initalization list (#4).
             *
             * Parameters keys and values must have the same size. The i-th
             * character in key is associated in the translation table with
             * the i-th character in values.
             */
-            inline TransTable(const std::initializer_list<CppStringT> keys,
-                const std::initializer_list<CppStringT> values)
+            inline TransTable(const CppStringT& keys, const std::initializer_list<CppStringT>& values)
             {
                 assert(keys.size() == values.size());
-                auto val_it = values.cbegin();
+                auto val_it = values.begin();
                 for (const auto k : keys)
-                    m_table[(*k)[0]] = *val_it++;
+                    m_table[k] = *val_it++;
             }
 
-            /** \brief Creates a TransTable from three initalization lists (#5).
+            /** \brief Creates a TransTable from a string, an initalization list and a string (#5).
             *
             * Parameters keys and values must have the same size. The i-th
             * character in key is associated in the translation table with
