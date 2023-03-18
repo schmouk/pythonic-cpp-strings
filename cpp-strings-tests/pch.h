@@ -8,5 +8,8 @@
 #define PCH_H
 
 // add headers that you want to pre-compile here
+#include "CppUnitTest.h"
+using namespace Microsoft::VisualStudio::CppUnitTestFramework;
+
 
 #endif //PCH_H
