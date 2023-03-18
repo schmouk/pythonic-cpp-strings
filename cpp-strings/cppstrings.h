@@ -168,7 +168,6 @@ namespace pcs // i.e. "pythonic c++ strings"
                 auto val_it = values.cbegin();
                 for (const auto k : keys)
                     m_table[k] = CppStringT(*val_it++);
-                    //m_table[k] = value_type(*val_it++);
             }
 
             /** \brief Creates a TransTable from three strings (#3).
@@ -184,7 +183,7 @@ namespace pcs // i.e. "pythonic c++ strings"
                 assert(keys.size() == values.size());
                 auto val_it = values.cbegin();
                 for (const auto k : keys)
-                    m_table[k] = value_type(*val_it++);
+                    m_table[k] = CppStringT(*val_it++);
                 for (const auto k : not_translated)
                     m_table[k] = CppStringT();
             }
@@ -343,11 +342,12 @@ namespace pcs // i.e. "pythonic c++ strings"
             /** \brief Indexing operator. */
             inline CppStringT operator[] (const key_type ch) noexcept
             {
-                try {
-                    return m_table[ch];
+                auto it = m_table.find(ch);
+                if (it != m_table.end()) {
+                    return it->second;
                 }
-                catch (...) {
-                    return CppStringT();
+                else {
+                    return CppStringT(ch);
                 }
             }
 
