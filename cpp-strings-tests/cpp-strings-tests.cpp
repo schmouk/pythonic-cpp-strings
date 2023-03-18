@@ -71,5 +71,13 @@ namespace cppstringstests
 				Assert::AreEqual((const bool)std::iswprint(ch), pcs::is_printable(ch));
 		}
 
+		TEST_METHOD(is_punctuation)
+		{
+			for (int ch = 0; ch <= 255; ++ch)
+				Assert::AreEqual((const bool)std::ispunct(static_cast<unsigned char>(ch)), pcs::is_punctuation(char(ch)));
+			for (wchar_t ch = 0; ch < L'\uffff'; ++ch)
+				Assert::AreEqual((const bool)std::iswpunct(ch), pcs::is_punctuation(ch));
+		}
+
 	};
 }
