@@ -288,7 +288,7 @@ namespace pcs // i.e. "pythonic c++ strings"
                     m_table[*key_it++] = CppStringT();
             }
 
-            /** \brief Creates a TransTable from two string views.
+            /** \brief Creates a TransTable from two string views (#10).
             *
             * Parameters keys and values must have the same size. The i-th
             * character in key is associated in the translation table with
@@ -303,7 +303,7 @@ namespace pcs // i.e. "pythonic c++ strings"
                     m_table[(*k)[0]] = value_type(*val_it++);
             }
 
-            /** \brief Creates a TransTable from three string views.
+            /** \brief Creates a TransTable from three string views (#11).
             *
             * Parameters keys and values must have the same size. The i-th
             * character in key is associated in the translation table with
@@ -353,31 +353,31 @@ namespace pcs // i.e. "pythonic c++ strings"
 
 
         //===   Constructors / Destructor   ===================
-        inline CppStringT()                                                                 : MyBaseClass() {}
-        inline CppStringT(const CppStringT& other)                                          : MyBaseClass(other) {}
-        inline CppStringT(const CppStringT& other, const AllocatorT& alloc)                 : MyBaseClass(other, alloc) {}
-        inline CppStringT(CppStringT&& other)                                               : MyBaseClass(other) {}
-        inline CppStringT(CppStringT&& other, const AllocatorT& alloc)                      : MyBaseClass(other, alloc) {}
-        inline CppStringT(MyBaseClass::size_type count, CharT ch)                           : MyBaseClass(count, ch) {}
-        inline CppStringT(const CppStringT& other, size_type pos)                           : MyBaseClass(other, pos) {}
-        inline CppStringT(const CppStringT& other, size_type pos, size_type count) noexcept : MyBaseClass(other, pos, count) {}
-        inline CppStringT(const CharT* s)                                                   : MyBaseClass(s) {}
-        inline CppStringT(const CharT* s, size_type count)                                  : MyBaseClass(s, count) {}
-        inline CppStringT(std::initializer_list<CharT> ilist)                               : MyBaseClass(ilist) {}
+        inline CppStringT()                                                                 : MyBaseClass() {}                      // #1
+        inline CppStringT(const CppStringT& other)                                          : MyBaseClass(other) {}                 // #2
+        inline CppStringT(const CppStringT& other, const AllocatorT& alloc)                 : MyBaseClass(other, alloc) {}          // #3
+        inline CppStringT(CppStringT&& other)                                               : MyBaseClass(other) {}                 // #4
+        inline CppStringT(CppStringT&& other, const AllocatorT& alloc)                      : MyBaseClass(other, alloc) {}          // #5
+        inline CppStringT(MyBaseClass::size_type count, CharT ch)                           : MyBaseClass(count, ch) {}             // #6
+        inline CppStringT(const CppStringT& other, size_type pos)                           : MyBaseClass(other, pos) {}            // #7
+        inline CppStringT(const CppStringT& other, size_type pos, size_type count) noexcept : MyBaseClass(other, pos, count) {}     // #8
+        inline CppStringT(const CharT* s)                                                   : MyBaseClass(s) {}                     // #9
+        inline CppStringT(const CharT* s, size_type count)                                  : MyBaseClass(s, count) {}              // #10
+        inline CppStringT(std::initializer_list<CharT> ilist)                               : MyBaseClass(ilist) {}                 // #11
 
-        inline CppStringT(const MyBaseClass& other)                                         : MyBaseClass(other) {}
-        inline CppStringT(const MyBaseClass& other, const AllocatorT& alloc)                : MyBaseClass(other, alloc) {}
-        inline CppStringT(MyBaseClass&& other)                                              : MyBaseClass(other) {}
-        inline CppStringT(MyBaseClass&& other, const AllocatorT& alloc)                     : MyBaseClass(other, alloc) {}
+        inline CppStringT(const MyBaseClass& other)                                         : MyBaseClass(other) {}                 // #12
+        inline CppStringT(const MyBaseClass& other, const AllocatorT& alloc)                : MyBaseClass(other, alloc) {}          // #13
+        inline CppStringT(MyBaseClass&& other)                                              : MyBaseClass(other) {}                 // #14
+        inline CppStringT(MyBaseClass&& other, const AllocatorT& alloc)                     : MyBaseClass(other, alloc) {}          // #15
 
         template<class InputIt>
-        inline CppStringT(InputIt first, InputIt last)                                      : MyBaseClass(first, last) {}
+        inline CppStringT(InputIt first, InputIt last)                                      : MyBaseClass(first, last) {}           // #16
 
         template<class StringViewLike>
-        explicit CppStringT(const StringViewLike& svl)                                      : MyBaseClass(svl) {}
+        explicit CppStringT(const StringViewLike& svl)                                      : MyBaseClass(svl) {}                   // #17
 
         template<class StringViewLike>
-        CppStringT(const StringViewLike& svl, size_type pos, size_type n)                   : MyBaseClass(svl, pos, n) {}
+        CppStringT(const StringViewLike& svl, size_type pos, size_type n)                   : MyBaseClass(svl, pos, n) {}           // #18
 
         inline ~CppStringT() = default;
 
