@@ -1719,12 +1719,12 @@ namespace pcs // i.e. "pythonic c++ strings"
     /** \brief Returns true if character ch is alphabetic, or false otherwise. Conforms to the current locale settings. */
     template<>
     inline const bool is_alpha<char>(const char ch) noexcept
-    { return (const bool)std::isalpha(static_cast<unsigned char>(ch)); }
+    { return static_cast<const bool>(std::isalpha(static_cast<unsigned char>(ch))); }
 
     /** \brief Returns true if character ch is alphabetic, or false otherwise. Conforms to the current locale settings. */
     template<>
     inline const bool is_alpha<wchar_t>(const wchar_t ch) noexcept
-    { return (const bool)std::iswalpha(ch); }
+    { return static_cast<const bool>(std::iswalpha(ch)); }
 
 
     //---   is_ascii()   ------------------------------------------
@@ -1743,12 +1743,12 @@ namespace pcs // i.e. "pythonic c++ strings"
     /** \brief Returns true if character is a decimal digit, or false otherwise. */
     template<>
     inline const bool is_decimal<char>(const char ch) noexcept
-    { return std::isdigit(static_cast<unsigned char>(ch)); }
+    { return static_cast<const bool>(std::isdigit(static_cast<unsigned char>(ch))); }
 
     /** \brief Returns true if character is a decimal digit, or false otherwise. */
     template<>
     inline const bool is_decimal<wchar_t>(const wchar_t ch) noexcept
-    { return std::iswdigit(ch); }
+    { return (const bool)std::iswdigit(ch); }
 
 
     //---   is_id_continue()   ------------------------------------

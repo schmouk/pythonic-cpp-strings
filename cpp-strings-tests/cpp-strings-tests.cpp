@@ -30,5 +30,13 @@ namespace cppstringstests
 			for (wchar_t ch = 0; ch < L'\uffff'; ++ch)
 				Assert::AreEqual(int(ch) < 128, pcs::is_ascii(ch));
 		}
+
+		TEST_METHOD(is_decimal)
+		{
+			for (int ch = 0; ch <= 255; ++ch)
+				Assert::AreEqual((const bool)std::isdigit(ch), pcs::is_decimal(char(ch)));
+			for (wchar_t ch = 0; ch < L'\uffff'; ++ch)
+				Assert::AreEqual((const bool)std::iswdigit(ch), pcs::is_decimal(ch));
+		}
 	};
 }
