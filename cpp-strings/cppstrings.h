@@ -1818,12 +1818,12 @@ namespace pcs // i.e. "pythonic c++ strings"
     /** \brief Returns true if character ch is punctuation, or false otherwise. Conforms to the current locale settings. */
     template<>
     inline const bool is_punctuation<char>(const char ch) noexcept
-    { return std::ispunct(static_cast<unsigned char>(ch)); }
+    { return static_cast<const bool>(std::ispunct(static_cast<unsigned char>(ch))); }
 
     /** \brief Returns true if character ch is punctuation, or false otherwise. Conforms to the current locale settings. */
     template<>
     inline const bool is_punctuation<wchar_t>(const wchar_t ch) noexcept
-    { return std::iswpunct(ch); }
+    { return static_cast<const bool>(std::iswpunct(ch)); }
 
 
     //---   is_space()   ------------------------------------------
@@ -1835,12 +1835,12 @@ namespace pcs // i.e. "pythonic c++ strings"
     /** \brief Returns true if character ch is alphabetic, or false otherwise. Conforms to the current locale settings. */
     template<>
     inline const bool is_space<char>(const char ch) noexcept
-    { return std::isspace(static_cast<unsigned char>(ch)); }
+    { return static_cast<const bool>(std::isspace(static_cast<unsigned char>(ch))); }
 
     /** \brief Returns true if character ch is alphabetic, or false otherwise. Conforms to the current locale settings. */
     template<>
     inline const bool is_space<wchar_t>(const wchar_t ch) noexcept
-    { return std::iswspace(ch); }
+    { return static_cast<const bool>(std::iswspace(ch)); }
 
 
     //---   is_upper()   ------------------------------------------
@@ -1855,14 +1855,14 @@ namespace pcs // i.e. "pythonic c++ strings"
     template<>
     inline const bool is_upper<char>(const char ch) noexcept
     {
-        return std::isupper(static_cast<unsigned char>(ch));
+        return static_cast<const bool>(std::isupper(static_cast<unsigned char>(ch)));
     }
 
     /** \brief Returns true if character ch is uppercase, or false otherwise. Conforms to the current locale settings. */
     template<>
     inline const bool is_upper<wchar_t>(const wchar_t ch) noexcept
     {
-        return std::iswupper(ch);
+        return static_cast<const bool>(std::iswupper(ch));
     }
 
 

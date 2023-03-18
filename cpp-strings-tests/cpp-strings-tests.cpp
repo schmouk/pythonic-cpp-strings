@@ -87,5 +87,12 @@ namespace cppstringstests
 				Assert::AreEqual((const bool)std::iswspace(ch), pcs::is_space(ch));
 		}
 
+		TEST_METHOD(is_upper)
+		{
+			for (int ch = 0; ch <= 255; ++ch)
+				Assert::AreEqual((const bool)std::isupper(static_cast<unsigned char>(ch)), pcs::is_upper(char(ch)));
+			for (wchar_t ch = 0; ch < L'\uffff'; ++ch)
+				Assert::AreEqual((const bool)std::iswupper(ch), pcs::is_upper(ch));
+		}
 	};
 }
