@@ -1719,12 +1719,12 @@ namespace pcs // i.e. "pythonic c++ strings"
     /** \brief Returns true if character ch is alphabetic, or false otherwise. Conforms to the current locale settings. */
     template<>
     inline const bool is_alpha<char>(const char ch) noexcept
-    { return std::isalpha(static_cast<unsigned char>(ch)); }
+    { return (const bool)std::isalpha(static_cast<unsigned char>(ch)); }
 
     /** \brief Returns true if character ch is alphabetic, or false otherwise. Conforms to the current locale settings. */
     template<>
     inline const bool is_alpha<wchar_t>(const wchar_t ch) noexcept
-    { return std::iswalpha(ch); }
+    { return (const bool)std::iswalpha(ch); }
 
 
     //---   is_ascii()   ------------------------------------------
