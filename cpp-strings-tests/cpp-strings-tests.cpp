@@ -118,5 +118,24 @@ namespace cppstringstests
 			}
 		}
 
+		TEST_METHOD(to_lower)
+		{
+			for (int ch = 0; ch <= 255; ++ch) {
+				const char l_ch = pcs::to_lower(static_cast<char>(ch));
+				if (std::isupper(ch))
+					Assert::IsTrue(std::islower(l_ch));
+				else
+					Assert::AreEqual(l_ch, static_cast<char>(ch));
+			}
+
+			for (wchar_t ch = 0; ch < L'\uffff'; ++ch) {
+				const wchar_t l_ch = pcs::to_lower(ch);
+				if (std::isupper(ch))
+					Assert::IsTrue(std::iswlower(l_ch));
+				else
+					Assert::AreEqual(l_ch, ch);
+			}
+		}
+
 	};
 }
