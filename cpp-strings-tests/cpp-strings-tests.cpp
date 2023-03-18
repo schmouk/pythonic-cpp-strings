@@ -25,5 +25,17 @@ namespace cppstringstests
 			Assert::AreEqual(L"a"cs.c_str(), wtable['b'].c_str());
 		}
 
+		TEST_METHOD(constructor_02)
+		{
+			CppString keys("abcdE");
+			CppString values("ABCDe");
+			pcs::CppString::TransTable t(keys, values);
+			Assert::AreEqual(CppString('A').c_str(), t['a'].c_str());
+			Assert::AreEqual(CppString('B').c_str(), t['b'].c_str());
+			Assert::AreEqual(CppString('C').c_str(), t['c'].c_str());
+			Assert::AreEqual(CppString('D').c_str(), t['d'].c_str());
+			Assert::AreEqual(CppString('e').c_str(), t['E'].c_str());
+		}
+
 	};
 }

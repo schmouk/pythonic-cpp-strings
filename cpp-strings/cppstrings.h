@@ -167,7 +167,8 @@ namespace pcs // i.e. "pythonic c++ strings"
                 assert(keys.size() == values.size());
                 auto val_it = values.cbegin();
                 for (const auto k : keys)
-                    m_table[k] = value_type(*val_it++);
+                    m_table[k] = CppStringT(*val_it++);
+                    //m_table[k] = value_type(*val_it++);
             }
 
             /** \brief Creates a TransTable from three strings (#3).
@@ -339,8 +340,8 @@ namespace pcs // i.e. "pythonic c++ strings"
                 return *this;
             }
 
-            /** \biref Indexing operator. */
-            inline CppStringT operator[] (const key_type ch) const noexcept
+            /** \brief Indexing operator. */
+            inline CppStringT operator[] (const key_type ch) noexcept
             {
                 try {
                     return m_table[ch];
@@ -349,10 +350,13 @@ namespace pcs // i.e. "pythonic c++ strings"
                     return CppStringT();
                 }
             }
+
+        private:
+            std::map<typename key_type, typename value_type> m_table{};  // the internal storage of the translation table. Access it via the indexing operator.
         };
 
 
-        //===   Constructors / Destructor   ===================
+        //===   Constructors / Destructor   =======================
         inline CppStringT()                                                                 : MyBaseClass() {}                      // #1
         inline CppStringT(const CppStringT& other)                                          : MyBaseClass(other) {}                 // #2
         inline CppStringT(const CppStringT& other, const AllocatorT& alloc)                 : MyBaseClass(other, alloc) {}          // #3
@@ -364,6 +368,8 @@ namespace pcs // i.e. "pythonic c++ strings"
         inline CppStringT(const CharT* s)                                                   : MyBaseClass(s) {}                     // #9
         inline CppStringT(const CharT* s, size_type count)                                  : MyBaseClass(s, count) {}              // #10
         inline CppStringT(std::initializer_list<CharT> ilist)                               : MyBaseClass(ilist) {}                 // #11
+
+        inline CppStringT(const CharT ch)                                                   : MyBaseClass(&ch, 1) {}                // #19
 
         inline CppStringT(const MyBaseClass& other)                                         : MyBaseClass(other) {}                 // #12
         inline CppStringT(const MyBaseClass& other, const AllocatorT& alloc)                : MyBaseClass(other, alloc) {}          // #13
@@ -379,7 +385,12 @@ namespace pcs // i.e. "pythonic c++ strings"
         template<class StringViewLike>
         CppStringT(const StringViewLike& svl, size_type pos, size_type n)                   : MyBaseClass(svl, pos, n) {}           // #18
 
-        inline ~CppStringT() = default;
+        inline ~CppStringT() noexcept = default;
+
+
+        //===   Assignment operators   ============================
+        CppStringT& operator= (const CppStringT&) noexcept = default;   //!< Default copy assignment
+        CppStringT& operator= (CppStringT&&) noexcept = default;        //!< Default move assignment
 
 
         //===   Exceptions   ======================================
@@ -1676,10 +1687,6 @@ namespace pcs // i.e. "pythonic c++ strings"
                 return this->ljust(padding_width, value_type('0'));
         }
 
-
-        private:
-            std::map<typename TransTable::key_type, typename TransTable::value_type> m_table{};  // the itnernal storage of the translation table. Access it via the indexing operator.
-
     };
 
 
@@ -1693,7 +1700,8 @@ namespace pcs // i.e. "pythonic c++ strings"
     /** \brief  Forms a CppString view literal. */
     inline const CppString operator""csv(const char* str, std::size_t len)
     {
-        return CppString(CppString::MyStringView(str, len));
+        //return CppString(CppString::MyStringView(str, len));
+        return CppString(str, len);
     }
 
     /** \brief Forms a CppWString literal. */
@@ -1705,7 +1713,8 @@ namespace pcs // i.e. "pythonic c++ strings"
     /** \brief Forms a CppWString view literal. */
     inline const CppWString operator""csv(const wchar_t* str, std::size_t len)
     {
-        return CppWString(CppWString::MyStringView(str, len));
+        //return CppWString(CppWString::MyStringView(str, len));
+        return CppWString(str, len);
     }
 
 
