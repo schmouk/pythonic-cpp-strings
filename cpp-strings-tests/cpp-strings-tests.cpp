@@ -79,5 +79,13 @@ namespace cppstringstests
 				Assert::AreEqual((const bool)std::iswpunct(ch), pcs::is_punctuation(ch));
 		}
 
+		TEST_METHOD(is_space)
+		{
+			for (int ch = 0; ch <= 255; ++ch)
+				Assert::AreEqual((const bool)std::isspace(static_cast<unsigned char>(ch)), pcs::is_space(char(ch)));
+			for (wchar_t ch = 0; ch < L'\uffff'; ++ch)
+				Assert::AreEqual((const bool)std::iswspace(ch), pcs::is_space(ch));
+		}
+
 	};
 }
