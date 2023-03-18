@@ -55,5 +55,12 @@ namespace cppstringstests
 				Assert::AreEqual((const bool)std::iswalpha(ch) || ch == L'_', pcs::is_id_start(ch));
 		}
 
+		TEST_METHOD(is_lower)
+		{
+			for (int ch = 0; ch <= 255; ++ch)
+				Assert::AreEqual((const bool)std::islower(static_cast<unsigned char>(ch)), pcs::is_lower(char(ch)));
+			for (wchar_t ch = 0; ch < L'\uffff'; ++ch)
+				Assert::AreEqual((const bool)std::iswlower(ch), pcs::is_lower(ch));
+		}
 	};
 }
