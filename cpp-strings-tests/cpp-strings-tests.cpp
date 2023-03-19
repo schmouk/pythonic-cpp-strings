@@ -44,5 +44,15 @@ namespace cppstringstests
 			Assert::AreEqual(pcs::CppWString(L"abcDE").c_str(), ws.c_str());
 		}
 
+		TEST_METHOD(constructor_06)
+		{
+			pcs::CppString s(10, '-');
+			Assert::AreEqual(std::size_t(10), s.size());
+			Assert::AreEqual(pcs::CppString("----------").c_str(), s.c_str());
+
+			pcs::CppWString ws(8, '=');
+			Assert::AreEqual(std::size_t(8), ws.size());
+			Assert::AreEqual(pcs::CppWString(L"========").c_str(), ws.c_str());
+		}
 	};
 }
