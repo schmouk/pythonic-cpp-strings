@@ -291,6 +291,7 @@ namespace pcs // i.e. "pythonic c++ strings"
             * character in key is associated in the translation table with
             * the i-th character in values.
             */
+            /** /
             template<class StringViewLike>
             explicit TransTable(const StringViewLike& keys, const StringViewLike& values)
             {
@@ -299,6 +300,7 @@ namespace pcs // i.e. "pythonic c++ strings"
                 for (const auto k : keys)
                     m_table[(*k)[0]] = value_type(*val_it++);
             }
+            /**/
 
             /** \brief Creates a TransTable from three string views (#11).
             *
@@ -308,6 +310,7 @@ namespace pcs // i.e. "pythonic c++ strings"
             * contained  in  string  not_translated  are associated in the
             * translation table with the empty string.
             */
+            /** /
             template<class StringViewLike>
             TransTable(const StringViewLike& keys, const StringViewLike& values, const StringViewLike& not_translated)
             {
@@ -318,6 +321,7 @@ namespace pcs // i.e. "pythonic c++ strings"
                 for (const auto k : not_translated)
                     m_table[k] = CppStringT();
             }
+            /**/
 
             inline TransTable() noexcept = default;                     //!< Default empty constructor.
             inline TransTable(const TransTable&) noexcept = default;    //!< Default copy constructor.
@@ -346,6 +350,11 @@ namespace pcs // i.e. "pythonic c++ strings"
                 else {
                     return CppStringT(ch);
                 }
+            }
+
+            inline std::map<typename key_type, typename value_type>& get_table() noexcept //!< for tests purposes
+            {
+                return m_table;
             }
 
         private:

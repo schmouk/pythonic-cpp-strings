@@ -177,6 +177,14 @@ namespace cppstringstests
 			Assert::AreEqual(CppWString(L'c').c_str(), wt[L'c'].c_str());
 		}
 
+		TEST_METHOD(constructor_empty)
+		{
+			pcs::CppString::TransTable t;
+			Assert::IsTrue(t.get_table().empty());
+			pcs::CppWString::TransTable wt;
+			Assert::IsTrue(wt.get_table().empty());
+		}
+
 
 	};
 }
