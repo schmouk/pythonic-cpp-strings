@@ -11,5 +11,6 @@
 #include "CppUnitTest.h"
 using namespace Microsoft::VisualStudio::CppUnitTestFramework;
 
+#include <utility>
 
 #endif //PCH_H
