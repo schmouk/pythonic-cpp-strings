@@ -33,5 +33,16 @@ namespace cppstringstests
 			Assert::AreEqual(wcs.c_str(), ws.c_str());
 		}
 
+		TEST_METHOD(constructor_move)
+		{
+			pcs::CppString cs("ABCde");
+			pcs::CppString s(std::move(cs));
+			Assert::AreEqual(pcs::CppString("ABCde").c_str(), s.c_str());
+
+			pcs::CppWString wcs(L"abcDE");
+			pcs::CppWString ws(std::move(wcs));
+			Assert::AreEqual(pcs::CppWString(L"abcDE").c_str(), ws.c_str());
+		}
+
 	};
 }
