@@ -140,5 +140,33 @@ namespace cppstringstests
 			Assert::AreEqual(pcs::CppWString(L"ABCdefGH").c_str(), ws.c_str());
 		}
 
+		TEST_METHOD(constructor_14)
+		{
+			std::string cs("abcDEfgh");
+			pcs::CppString s(std::move(cs));
+			Assert::AreEqual(std::size_t(8), s.size());
+			Assert::AreEqual(pcs::CppString("abcDEfgh").c_str(), s.c_str());
+
+			std::wstring wcs(L"ABCdefGH");
+			pcs::CppWString ws(std::move(wcs));
+			Assert::AreEqual(std::size_t(8), ws.size());
+			Assert::AreEqual(pcs::CppWString(L"ABCdefGH").c_str(), ws.c_str());
+		}
+
+		/** /
+		TEST_METHOD(constructor_15)
+		{
+			std::string cs("abcDEfgh");
+			pcs::CppString s(cs, cs.get_allocator());
+			Assert::AreEqual(std::size_t(8), s.size());
+			Assert::AreEqual(pcs::CppString("abcDEfgh").c_str(), s.c_str());
+
+			std::wstring wcs(L"ABCdefGH");
+			pcs::CppWString ws(wcs, wcs.get_allocator());
+			Assert::AreEqual(std::size_t(8), ws.size());
+			Assert::AreEqual(pcs::CppWString(L"ABCdefGH").c_str(), ws.c_str());
+		}
+		/**/
+
 	};
 }
