@@ -271,18 +271,18 @@ namespace pcs // i.e. "pythonic c++ strings"
             * contained  in  string  not_translated  are associated in the
             * translation table with the empty string.
             */
-            template<class KeyIt, class ValueIt>
-            inline TransTable(KeyIt first_key, KeyIt last_key,
-                ValueIt first_value, ValueIt last_value,
-                KeyIt first_not_translated, KeyIt last_not_translated)
+            template<class Key1It, class ValueIt, class Key2It>
+            inline TransTable(Key1It first_key, Key1It last_key,
+                              ValueIt first_value, ValueIt last_value,
+                              Key2It first_not_translated, Key2It last_not_translated)
             {
-                KeyIt key_it{ first_key };
+                Key1It key1_it{ first_key };
                 ValueIt val_it{ first_value };
-                while (key_it != last_key && val_it != last_value)
-                    m_table[*key_it++] = value_type(*val_it++);
-                key_it = first_not_translated;
-                while (key_it != last_not_translated)
-                    m_table[*key_it++] = CppStringT();
+                while (key1_it != last_key && val_it != last_value)
+                    m_table[*key1_it++] = value_type(*val_it++);
+                Key2It key2_it{ first_not_translated };
+                while (key2_it != last_not_translated)
+                    m_table[*key2_it++] = CppStringT();
             }
 
             /** \brief Creates a TransTable from two string views (#10).

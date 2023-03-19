@@ -152,6 +152,31 @@ namespace cppstringstests
 			Assert::AreEqual(CppWString(L'c').c_str(), wt[L'c'].c_str());
 		}
 
+		TEST_METHOD(constructor_09)
+		{
+			std::string keys("abC");
+			std::vector<std::string> values{ "AA", "BBB", "c" };
+			std::string not_translated("dE");
+			pcs::CppString::TransTable t(keys.begin(), keys.end(), values.begin(), values.end(), not_translated.cbegin(), not_translated.cend());
+			Assert::AreEqual(CppString("AA").c_str(), t['a'].c_str());
+			Assert::AreEqual(CppString("BBB").c_str(), t['b'].c_str());
+			Assert::AreEqual(CppString('c').c_str(), t['C'].c_str());
+			Assert::AreEqual(CppString().c_str(), t['d'].c_str());
+			Assert::AreEqual(CppString().c_str(), t['E'].c_str());
+			Assert::AreEqual(CppString('c').c_str(), t['c'].c_str());
+
+			std::wstring wkeys(L"abC");
+			std::vector<std::wstring> wvalues{ L"AA", L"BBB", L"c" };
+			std::wstring wnot_translated(L"dE");
+			pcs::CppWString::TransTable wt(wkeys.begin(), wkeys.end(), wvalues.begin(), wvalues.end(), wnot_translated.cbegin(), wnot_translated.cend());
+			Assert::AreEqual(CppWString(L"AA").c_str(), wt[L'a'].c_str());
+			Assert::AreEqual(CppWString(L"BBB").c_str(), wt[L'b'].c_str());
+			Assert::AreEqual(CppWString(L'c').c_str(), wt[L'C'].c_str());
+			Assert::AreEqual(CppWString().c_str(), wt[L'd'].c_str());
+			Assert::AreEqual(CppWString().c_str(), wt[L'E'].c_str());
+			Assert::AreEqual(CppWString(L'c').c_str(), wt[L'c'].c_str());
+		}
+
 
 	};
 }
