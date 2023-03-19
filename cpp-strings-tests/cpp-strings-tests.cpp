@@ -25,6 +25,25 @@ namespace cppstringstests
 			Assert::AreEqual(pcs::CppWString(L"123ahbl!").c_str(), ws.capitalize().c_str());
 		}
 
+		TEST_METHOD(center)
+		{
+			pcs::CppString s("zyxwvutsrqp");
+			Assert::AreEqual(pcs::CppString("  zyxwvutsrqp  ").c_str(), s.center(15).c_str(), L"--1--");
+			Assert::AreEqual(pcs::CppString(" zyxwvutsrqp  ").c_str(), s.center(14).c_str(), L"--2--");
+			Assert::AreEqual(pcs::CppString(" zyxwvutsrqp ").c_str(), s.center(13).c_str(), L"--3--");
+			Assert::AreEqual(pcs::CppString("zyxwvutsrqp ").c_str(), s.center(12).c_str(), L"--4--");
+			Assert::AreEqual(pcs::CppString("zyxwvutsrqp").c_str(), s.center(11).c_str(), L"--5--");
+			Assert::AreEqual(pcs::CppString("zyxwvutsrqp").c_str(), s.center(10).c_str(), L"--6--");
+
+			pcs::CppWString ws(L"zyxwvutsrqp");
+			Assert::AreEqual(pcs::CppWString(L"  zyxwvutsrqp  ").c_str(), ws.center(15).c_str(), L"--1--");
+			Assert::AreEqual(pcs::CppWString(L" zyxwvutsrqp  ").c_str(), ws.center(14).c_str(), L"--2--");
+			Assert::AreEqual(pcs::CppWString(L" zyxwvutsrqp ").c_str(), ws.center(13).c_str(), L"--3--");
+			Assert::AreEqual(pcs::CppWString(L"zyxwvutsrqp ").c_str(), ws.center(12).c_str(), L"--4--");
+			Assert::AreEqual(pcs::CppWString(L"zyxwvutsrqp").c_str(), ws.center(11).c_str(), L"--5--");
+			Assert::AreEqual(pcs::CppWString(L"zyxwvutsrqp").c_str(), ws.center(10).c_str(), L"--6--");
+		}
+
 
 	};
 }

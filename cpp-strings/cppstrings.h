@@ -375,7 +375,7 @@ namespace pcs // i.e. "pythonic c++ strings"
         inline CppStringT(const CharT* s, size_type count)                                  : MyBaseClass(s, count) {}              // #10
         inline CppStringT(std::initializer_list<CharT> ilist)                               : MyBaseClass(ilist) {}                 // #11
 
-        inline CppStringT(const CharT ch)                                                   : MyBaseClass(&ch, 1) {}                // #19
+        inline CppStringT(const CharT ch)                                                   : MyBaseClass(1, ch) {}                 // #19
 
         inline CppStringT(const MyBaseClass& other)                                         : MyBaseClass(other) {}                 // #12
         inline CppStringT(const MyBaseClass& other, const AllocatorT& alloc)                : MyBaseClass(other, alloc) {}          // #13
@@ -426,7 +426,7 @@ namespace pcs // i.e. "pythonic c++ strings"
 
 
         //---   center()   ----------------------------------------
-        /** \brief Returns the string centered in a string of length width.
+        /** \brief Returns a copy of the string centered in a string of length width.
         *
         * Padding is done using the specified fillchar (default is an ASCII space).
         * A copy of the original string is returned if width is less than or  equal
@@ -434,11 +434,12 @@ namespace pcs // i.e. "pythonic c++ strings"
         */
         inline CppStringT center(const size_type width, const value_type fillch = value_type(' ')) const noexcept
         {
-            const size_type l{ this->size() };
-            if (l <= width)
+            const size_type len{ this->size() };
+            if (width <= len)
                 return CppStringT(*this);
-            const size_type half{ (width - l) / 2 };
-            return CppStringT(fillch, half) + *this + CppStringT(fillch, width - half - l);
+
+            const size_type half{ (width - len) / 2 };
+            return CppStringT(half, fillch) + *this + CppStringT(width - half - len, fillch);
         }
 
 
