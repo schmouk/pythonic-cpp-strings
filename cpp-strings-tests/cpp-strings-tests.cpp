@@ -178,5 +178,17 @@ namespace cppstringstests
 			Assert::AreEqual(std::size_t(8), ws.size());
 			Assert::AreEqual(pcs::CppWString(L"ABCdefGH").c_str(), ws.c_str());
 		}
+
+		TEST_METHOD(constructor_19)
+		{
+			pcs::CppString s('z');
+			Assert::AreEqual(std::size_t(1), s.size());
+			Assert::AreEqual(pcs::CppString("z").c_str(), s.c_str());
+
+			pcs::CppWString ws(L'Z');
+			Assert::AreEqual(std::size_t(1), ws.size());
+			Assert::AreEqual(pcs::CppWString(L"Z").c_str(), ws.c_str());
+		}
+
 	};
 }
