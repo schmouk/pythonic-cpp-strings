@@ -483,19 +483,19 @@ namespace pcs // i.e. "pythonic c++ strings"
         /** Returns true if the string ends with the specified suffix, otherwise returns false. Test begins at start position and stops at end position. */
         inline const bool endswith(const CppStringT& suffix, const size_type start, const size_type end) const noexcept
         {
-            return endswith(std::span{ suffix }, start, end);
+            return this->substr(start, end).MyBaseClass::ends_with(suffix);
         }
 
-        /** Returns true if the string ends with the specified suffix, otherwise returns false. Test begins at start position and stops at end of string. */
-        inline const bool endswith(const CppStringT& suffix, const size_type start) const noexcept
+        /** Returns true if the string ends with the specified suffix, otherwise returns false. Test begins at start of string and stops at end position. */
+        inline const bool endswith(const CppStringT& suffix, const size_type end) const noexcept
         {
-            return endswith(std::span{ suffix }, start, this->size() - 1);
+            return this->substr(0, end).MyBaseClass::ends_with(suffix);
         }
 
         /** Returns true if the string ends with the specified suffix, otherwise returns false. Test runs on the whole string. */
         inline const bool endswith(const CppStringT& suffix) const noexcept
         {
-            return this->ends_with(suffix);
+            return static_cast<const bool>(MyBaseClass::ends_with(suffix));
         }
 
         /** Returns true if the string ends with any of the specified suffixes, otherwise returns false. Test begins at start position and stops at end of string. */
@@ -504,7 +504,7 @@ namespace pcs // i.e. "pythonic c++ strings"
             if (start > end)
                 return false;
             else
-                return std::any_of(suffixes.cbegin(), suffixes.cend(), this->substr(start, end).ends_with);
+                return std::any_of(suffixes.cbegin(), suffixes.cend(), this->substr(start, end).MyBaseClass::ends_with);
             /*
             for (auto& suffix : suffixes) {
                 if (this->substr(start, end).ends_with(suffix))

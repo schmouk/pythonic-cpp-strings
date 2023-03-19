@@ -96,6 +96,27 @@ namespace cppstringstests
 			Assert::AreEqual(0ULL, ws.count_n(L"A", 3, wlen + 4));
 		}
 
+		TEST_METHOD(endswith)
+		{
+			pcs::CppString s("abcabcabcdefabca bca bcabca");
+			const pcs::CppString::size_type len{ s.size() };
+			Assert::IsTrue(s.endswith("abca"));
+			Assert::IsFalse(s.endswith("abcabca"));
+			Assert::IsTrue(s.endswith("abc", len - 1));
+			Assert::IsFalse(s.endswith("bcabca", len - 1));
+			Assert::IsTrue(s.endswith("abca", len - 4, len));
+			Assert::IsFalse(s.endswith("abca", len - 4, 3));
+
+			pcs::CppWString ws(L"abcabcabcdefabca bca bcabca");
+			const pcs::CppWString::size_type wlen{ ws.size() };
+			Assert::IsTrue(ws.endswith(L"abca"));
+			Assert::IsFalse(ws.endswith(L"abcabca"));
+			Assert::IsTrue(ws.endswith(L"abc", wlen - 1));
+			Assert::IsFalse(ws.endswith(L"bcabca", wlen - 1));
+			Assert::IsTrue(ws.endswith(L"abca", wlen - 4, wlen));
+			Assert::IsFalse(ws.endswith(L"abca", wlen - 4, 3));
+		}
+
 
 	};
 }
