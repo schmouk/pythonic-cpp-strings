@@ -483,7 +483,7 @@ namespace pcs // i.e. "pythonic c++ strings"
         /** Returns true if the string ends with the specified suffix, otherwise returns false. Test begins at start position and stops at end position. */
         inline const bool endswith(const CppStringT& suffix, const size_type start, const size_type end) const noexcept
         {
-            return this->substr(start, end).MyBaseClass::ends_with(suffix);
+            return this->substr(start, end - start + 1).MyBaseClass::ends_with(suffix);
         }
 
         /** Returns true if the string ends with the specified suffix, otherwise returns false. Test begins at start of string and stops at end position. */
@@ -498,21 +498,18 @@ namespace pcs // i.e. "pythonic c++ strings"
             return static_cast<const bool>(MyBaseClass::ends_with(suffix));
         }
 
-        /** Returns true if the string ends with any of the specified suffixes, otherwise returns false. Test begins at start position and stops at end of string. */
-        inline const bool endswith(const std::span<CppStringT>& suffixes, const size_type start, const size_type end) const noexcept
+        /** Returns true if the string ends with any of the specified suffixes, otherwise returns false. Test begins at start position and stops at end position. */
+        const bool endswith(const std::initializer_list<CppStringT>& suffixes, const size_type start, const size_type end) const noexcept
         {
             if (start > end)
                 return false;
-            else
-                return std::any_of(suffixes.cbegin(), suffixes.cend(), this->substr(start, end).MyBaseClass::ends_with);
-            /*
+
+            CppStringT tmp(this->substr(start, end - start + 1));
             for (auto& suffix : suffixes) {
-                if (this->substr(start, end).ends_with(suffix))
+                if (tmp.ends_with(suffix))
                     return true;
             }
-
             return false;
-            */
         }
 
 
@@ -520,17 +517,17 @@ namespace pcs // i.e. "pythonic c++ strings"
         /** Returns true if the string ends with the specified suffix, otherwise returns false. Test begins at start position and stops after count positions. */
         inline const bool endswith_n(const CppStringT& suffix, const size_type start, const size_type count) const noexcept
         {
-            return endswith(std::span{ suffix }, start, start + count - 1);
+            return endswith(suffix, start, start + count - 1);
         }
 
         /** Returns true if the string ends with the specified suffix, otherwise returns false. Test begins at position 0 and stops after count positions. */
         inline const bool endswith_n(const CppStringT& suffix, const size_type count) const noexcept
         {
-            return endswith(std::span{ suffix }, 0, count - 1);
+            return endswith(suffix, 0, count - 1);
         }
 
         /** Returns true if the string ends with any of the specified suffixes, otherwise returns false. Test begins at start position and stops after count positions. */
-        inline const bool endswith_n(const std::span<CppStringT>& suffixes, const size_type start, const size_type count) const noexcept
+        inline const bool endswith_n(const std::initializer_list<CppStringT>& suffixes, const size_type start, const size_type count) const noexcept
         {
             return endswith(suffixes, start, start + count - 1);
         }

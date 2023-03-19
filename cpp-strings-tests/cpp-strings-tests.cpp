@@ -105,7 +105,10 @@ namespace cppstringstests
 			Assert::IsTrue(s.endswith("abc", len - 1));
 			Assert::IsFalse(s.endswith("bcabca", len - 1));
 			Assert::IsTrue(s.endswith("abca", len - 4, len));
-			Assert::IsFalse(s.endswith("abca", len - 4, 3));
+			Assert::IsFalse(s.endswith("abca", len - 4, len - 2));
+			Assert::IsTrue(s.endswith({ "def", "ghi", "abca" }, len - 4, len));
+			Assert::IsFalse(s.endswith({ "def", "ghi" }, len - 4, len));
+			Assert::IsFalse(s.endswith({ "def", "ghi", "abca" }, len - 4, len - 2));
 
 			pcs::CppWString ws(L"abcabcabcdefabca bca bcabca");
 			const pcs::CppWString::size_type wlen{ ws.size() };
@@ -114,7 +117,33 @@ namespace cppstringstests
 			Assert::IsTrue(ws.endswith(L"abc", wlen - 1));
 			Assert::IsFalse(ws.endswith(L"bcabca", wlen - 1));
 			Assert::IsTrue(ws.endswith(L"abca", wlen - 4, wlen));
-			Assert::IsFalse(ws.endswith(L"abca", wlen - 4, 3));
+			Assert::IsFalse(ws.endswith(L"abca", wlen - 4, wlen - 2));
+			Assert::IsTrue(ws.endswith({ L"def", L"ghi", L"abca" }, len - 4, len));
+			Assert::IsFalse(ws.endswith({ L"def", L"ghi" }, len - 4, len));
+			Assert::IsFalse(ws.endswith({ L"def", L"ghi", L"abca" }, len - 4, len - 2));
+		}
+
+		TEST_METHOD(endswith_n)
+		{
+			pcs::CppString s("abcabcabcdefabca bca bcabca");
+			const pcs::CppString::size_type len{ s.size() };
+			Assert::IsTrue(s.endswith_n("abc", len - 1));
+			Assert::IsFalse(s.endswith_n("bcabca", len - 1));
+			Assert::IsTrue(s.endswith_n("abca", len - 4, 4));
+			Assert::IsFalse(s.endswith_n("abca", len - 4, 3));
+			Assert::IsTrue(s.endswith_n({ "def", "ghi", "abca" }, len - 4, 4));
+			Assert::IsFalse(s.endswith_n({ "def", "ghi" }, len - 4, 4));
+			Assert::IsFalse(s.endswith_n({ "def", "ghi", "abca" }, len - 4, 3));
+
+			pcs::CppWString ws(L"abcabcabcdefabca bca bcabca");
+			const pcs::CppWString::size_type wlen{ ws.size() };
+			Assert::IsTrue(ws.endswith_n(L"abc", wlen - 1));
+			Assert::IsFalse(ws.endswith_n(L"bcabca", wlen - 1));
+			Assert::IsTrue(ws.endswith_n(L"abca", wlen - 4, 4));
+			Assert::IsFalse(ws.endswith_n(L"abca", wlen - 4, 3));
+			Assert::IsTrue(ws.endswith_n({ L"def", L"ghi", L"abca" }, len - 4, 4));
+			Assert::IsFalse(ws.endswith_n({ L"def", L"ghi" }, len - 4, 4));
+			Assert::IsFalse(ws.endswith_n({ L"def", L"ghi", L"abca" }, len - 4, 3));
 		}
 
 
