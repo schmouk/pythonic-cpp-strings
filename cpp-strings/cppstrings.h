@@ -236,9 +236,9 @@ namespace pcs // i.e. "pythonic c++ strings"
             *
             * Parameters keys and values must have the same size. The i-th
             * character in key is associated in the translation table with
-            * the i -th  character  in  values.  Finally,  the  characters
-            * contained  in  string  not_translated  are associated in the
-            * translation table with the empty string.
+            * the i -th entry in values. Finally, the characters contained
+            * in  string  not_translated are associated in the translation 
+            * table with the empty string.
             */
             inline TransTable(const CharT* keys, const CharT* values, const CharT* not_translated)
             {
@@ -250,9 +250,9 @@ namespace pcs // i.e. "pythonic c++ strings"
 
             /** \brief Creates a TransTable from two containers iterators (#8).
             *
-            * Both  containers  should  have  the  same  size.   The  i-th
-            * character in key is associated in the translation table with
-            * the i-th character in values.
+            * Both containers should have the same size. The i-th
+            * character in key is associated in  the  translation
+            * table with the i-th entry in values.
             */
             template<class KeyIt, class ValueIt>
             inline TransTable(KeyIt first_key, KeyIt last_key, ValueIt first_value, ValueIt last_value)
