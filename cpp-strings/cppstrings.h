@@ -413,14 +413,15 @@ namespace pcs // i.e. "pythonic c++ strings"
         //===   Methods   =========================================
 
         //---   capitalize()   ------------------------------------
-        /** \brief In-place modifies the string with its first character capitalized and the rest lowercased. Returns a reference to the string*/
-        inline CppStringT& capitalize() noexcept
+        /** \brief Returns a copy of the string with its first character capitalized and the rest lowercased. */
+        inline CppStringT capitalize() noexcept
         {
-            if (!this->empty()) {
-                this->lower();
-                (*this)[0] = pcs::to_upper((*this)[0]);
+            CppStringT res(*this);
+            if (!res.empty()) {
+                res.lower();
+                res[0] = pcs::to_upper(res[0]);
             }
-            return *this;
+            return res;
         }
 
 
@@ -863,7 +864,7 @@ namespace pcs // i.e. "pythonic c++ strings"
         {
             std::transform(this->begin(), this->end(),
                            this->begin(),
-                           [](value_type ch) { return this->lower(ch); });
+                           [&](value_type ch) { return this->lower(ch); });
             return *this;
         }
 
