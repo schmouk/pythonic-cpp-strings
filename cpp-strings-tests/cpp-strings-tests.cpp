@@ -22,6 +22,16 @@ namespace cppstringstests
 			Assert::IsTrue(ws.empty());
 		}
 
+		TEST_METHOD(constructor_copy)
+		{
+			pcs::CppString cs("ABCde");
+			pcs::CppString s(cs);
+			Assert::AreEqual(cs.c_str(), s.c_str());
+
+			pcs::CppWString wcs(L"abcDE");
+			pcs::CppWString ws(wcs);
+			Assert::AreEqual(wcs.c_str(), ws.c_str());
+		}
 
 	};
 }
