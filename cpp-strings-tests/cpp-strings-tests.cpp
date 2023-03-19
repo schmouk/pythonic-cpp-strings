@@ -153,20 +153,18 @@ namespace cppstringstests
 			Assert::AreEqual(pcs::CppWString(L"ABCdefGH").c_str(), ws.c_str());
 		}
 
-		/** /
 		TEST_METHOD(constructor_15)
 		{
 			std::string cs("abcDEfgh");
-			pcs::CppString s(cs, cs.get_allocator());
+			pcs::CppString s(std::move(cs), cs.get_allocator());
 			Assert::AreEqual(std::size_t(8), s.size());
 			Assert::AreEqual(pcs::CppString("abcDEfgh").c_str(), s.c_str());
 
 			std::wstring wcs(L"ABCdefGH");
-			pcs::CppWString ws(wcs, wcs.get_allocator());
+			pcs::CppWString ws(std::move(wcs), wcs.get_allocator());
 			Assert::AreEqual(std::size_t(8), ws.size());
 			Assert::AreEqual(pcs::CppWString(L"ABCdefGH").c_str(), ws.c_str());
 		}
-		/**/
 
 	};
 }
