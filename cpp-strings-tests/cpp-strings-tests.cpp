@@ -69,6 +69,33 @@ namespace cppstringstests
 			Assert::AreEqual(0ULL, ws.count(L"A", 3, s.size() + 4));
 		}
 
+		TEST_METHOD(count_n)
+		{
+			pcs::CppString s("abcabcabcdefabca bca bcabca");
+			const pcs::CppString::size_type len{ s.size() };
+			Assert::AreEqual(3ULL, s.count_n("abca", 0, len));
+			Assert::AreEqual(6ULL, s.count_n("bca", 0, len));
+			Assert::AreEqual(0ULL, s.count_n("A", 0, len));
+			Assert::AreEqual(2ULL, s.count_n("abca", 4, len - 4));
+			Assert::AreEqual(5ULL, s.count_n("bca", 2, len - 2));
+			Assert::AreEqual(0ULL, s.count_n("A", 3, len - 3));
+			Assert::AreEqual(1ULL, s.count_n("abca", 4, len - 5));
+			Assert::AreEqual(4ULL, s.count_n("bca", 2, len - 3));
+			Assert::AreEqual(0ULL, s.count_n("A", 3, len + 4));
+
+			pcs::CppWString ws(L"abcabcabcdefabca bca bcabca");
+			const pcs::CppWString::size_type wlen{ ws.size() };
+			Assert::AreEqual(3ULL, ws.count_n(L"abca", 0, wlen));
+			Assert::AreEqual(6ULL, ws.count_n(L"bca", 0, wlen));
+			Assert::AreEqual(0ULL, ws.count_n(L"A", 0, wlen));
+			Assert::AreEqual(2ULL, ws.count_n(L"abca", 4, wlen - 4));
+			Assert::AreEqual(5ULL, ws.count_n(L"bca", 2, wlen - 2));
+			Assert::AreEqual(0ULL, ws.count_n(L"A", 3, wlen - 3));
+			Assert::AreEqual(1ULL, ws.count_n(L"abca", 4, wlen - 5));
+			Assert::AreEqual(4ULL, ws.count_n(L"bca", 2, wlen - 3));
+			Assert::AreEqual(0ULL, ws.count_n(L"A", 3, wlen + 4));
+		}
+
 
 	};
 }
