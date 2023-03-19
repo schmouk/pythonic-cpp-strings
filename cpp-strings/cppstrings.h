@@ -366,8 +366,8 @@ namespace pcs // i.e. "pythonic c++ strings"
         inline CppStringT()                                                                 : MyBaseClass() {}                      // #1
         inline CppStringT(const CppStringT& other)                                          : MyBaseClass(other) {}                 // #2
         inline CppStringT(const CppStringT& other, const AllocatorT& alloc)                 : MyBaseClass(other, alloc) {}          // #3
-        inline CppStringT(CppStringT&& other)                                               : MyBaseClass(other) {}                 // #4
-        inline CppStringT(CppStringT&& other, const AllocatorT& alloc)                      : MyBaseClass(other, alloc) {}          // #5
+        inline CppStringT(CppStringT&& other) noexcept                                      : MyBaseClass(other) {}                 // #4
+        inline CppStringT(CppStringT&& other, const AllocatorT& alloc) noexcept             : MyBaseClass(other, alloc) {}          // #5
         inline CppStringT(MyBaseClass::size_type count, CharT ch)                           : MyBaseClass(count, ch) {}             // #6
         inline CppStringT(const CppStringT& other, size_type pos)                           : MyBaseClass(other, pos) {}            // #7
         inline CppStringT(const CppStringT& other, size_type pos, size_type count) noexcept : MyBaseClass(other, pos, count) {}     // #8
