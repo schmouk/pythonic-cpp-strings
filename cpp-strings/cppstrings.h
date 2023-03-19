@@ -432,7 +432,7 @@ namespace pcs // i.e. "pythonic c++ strings"
         * A copy of the original string is returned if width is less than or  equal
         * to the length of the string. The original string remains unchanged.
         */
-        inline CppStringT center(const size_type width, const value_type fillch = value_type(' ')) const noexcept
+        CppStringT center(const size_type width, const value_type fillch = value_type(' ')) const noexcept
         {
             const size_type len{ this->size() };
             if (width <= len)
@@ -445,15 +445,21 @@ namespace pcs // i.e. "pythonic c++ strings"
 
         //---   count()   -----------------------------------------
         /** \brief Returns the number of non-overlapping occurrences of substring sub in the range [start, end]. */
-        inline constexpr size_type count(const CppStringT& sub, const size_type start = 0, const size_type end = 0) const noexcept
+        constexpr size_type count(const CppStringT& sub, const size_type start = 0, const size_type end = -1) const noexcept
         {
-            const size_type length{ this->size() };
-            const size_type end_{ (end == 0) ? length : end };
-
             size_type n = 0;
-            size_type start_ = start;
-            while ((start_ = find(sub, start_, end_)) != CppStringT::npos)
+            CppStringT tmp{ this->substr(start, std::min(this->size(), end) - start + 1) };
+
+            size_type start_{ 0 };
+            size_type end_{ tmp.size() };
+
+            while ((start_ = tmp.find(sub, start_, end_)) != CppStringT::npos) {
+                start_ += sub.size();
+                end_ -= start_;
+                tmp = tmp.substr(start_, std::min(tmp.size(), end_) + 1);
+                start_ = 0;
                 n++;
+            }
 
             return n;
         }
@@ -568,12 +574,15 @@ namespace pcs // i.e. "pythonic c++ strings"
         * \see find_n(), rfind() and rfind_n().
         * \see index(), index_n(), rindex() and rindex_n().
         */
-        inline constexpr size_type find(const CppStringT& sub, const size_type start, const size_type end) const noexcept
+        inline constexpr size_type find(const CppStringT& sub, const size_type start = 0, const size_type end = -1) const noexcept
         {
-            if (start > end)
+            size_type start_{ start };
+            const size_type end_{ (end == -1) ? this->size() : end };
+
+            if (start_ > end_)
                 return CppStringT::npos;
             else
-                return find_n(sub, start, end - start + 1);
+                return find_n(sub, start_, end_ - start_ + 1);
         }
 
 
@@ -589,7 +598,8 @@ namespace pcs // i.e. "pythonic c++ strings"
         inline constexpr size_type find_n(const CppStringT& sub, const size_type start, const size_type count) const noexcept
         {
             try {
-                return this->substr(start, count).find(sub);
+                CppStringT part{ this->substr(start, count) };
+                return part.MyBaseClass::find(sub);
             }
             catch (...) {
                 return CppStringT::npos;
@@ -1584,7 +1594,7 @@ namespace pcs // i.e. "pythonic c++ strings"
         {
             if (start > this->size())
                 return *this;
-            const size_type width = std::min(count, this->size() - start);
+            const size_type width = std::min(count, this->size() - start + 1);
             return CppStringT(MyBaseClass::substr(start, width));
         }
 

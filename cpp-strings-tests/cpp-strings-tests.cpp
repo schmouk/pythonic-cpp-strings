@@ -36,12 +36,37 @@ namespace cppstringstests
 			Assert::AreEqual(pcs::CppString("zyxwvutsrqp").c_str(), s.center(10).c_str(), L"--6--");
 
 			pcs::CppWString ws(L"zyxwvutsrqp");
-			Assert::AreEqual(pcs::CppWString(L"  zyxwvutsrqp  ").c_str(), ws.center(15).c_str(), L"--1--");
-			Assert::AreEqual(pcs::CppWString(L" zyxwvutsrqp  ").c_str(), ws.center(14).c_str(), L"--2--");
-			Assert::AreEqual(pcs::CppWString(L" zyxwvutsrqp ").c_str(), ws.center(13).c_str(), L"--3--");
-			Assert::AreEqual(pcs::CppWString(L"zyxwvutsrqp ").c_str(), ws.center(12).c_str(), L"--4--");
-			Assert::AreEqual(pcs::CppWString(L"zyxwvutsrqp").c_str(), ws.center(11).c_str(), L"--5--");
-			Assert::AreEqual(pcs::CppWString(L"zyxwvutsrqp").c_str(), ws.center(10).c_str(), L"--6--");
+			Assert::AreEqual(pcs::CppWString(L"##zyxwvutsrqp##").c_str(), ws.center(15, L'#').c_str(), L"--11--");
+			Assert::AreEqual(pcs::CppWString(L"#zyxwvutsrqp##").c_str(), ws.center(14, L'#').c_str(), L"--12--");
+			Assert::AreEqual(pcs::CppWString(L"#zyxwvutsrqp#").c_str(), ws.center(13, L'#').c_str(), L"--13--");
+			Assert::AreEqual(pcs::CppWString(L"zyxwvutsrqp#").c_str(), ws.center(12, L'#').c_str(), L"--14--");
+			Assert::AreEqual(pcs::CppWString(L"zyxwvutsrqp").c_str(), ws.center(11, L'#').c_str(), L"--15--");
+			Assert::AreEqual(pcs::CppWString(L"zyxwvutsrqp").c_str(), ws.center(10, L'#').c_str(), L"--16--");
+		}
+
+		TEST_METHOD(count)
+		{
+			pcs::CppString s("abcabcabcdefabca bca bcabca");
+			Assert::AreEqual(3ULL, s.count("abca"));
+			Assert::AreEqual(6ULL, s.count("bca"));
+			Assert::AreEqual(0ULL, s.count("A"));
+			Assert::AreEqual(2ULL, s.count("abca", 4));
+			Assert::AreEqual(5ULL, s.count("bca", 2));
+			Assert::AreEqual(0ULL, s.count("A", 3));
+			Assert::AreEqual(1ULL, s.count("abca", 4, s.size() - 5));
+			Assert::AreEqual(4ULL, s.count("bca", 2, s.size() - 2));
+			Assert::AreEqual(0ULL, s.count("A", 3, s.size() + 4));
+
+			pcs::CppWString ws(L"abcabcabcdefabca bca bcabca");
+			Assert::AreEqual(3ULL, ws.count(L"abca"));
+			Assert::AreEqual(6ULL, ws.count(L"bca"));
+			Assert::AreEqual(0ULL, ws.count(L"A"));
+			Assert::AreEqual(2ULL, ws.count(L"abca", 4));
+			Assert::AreEqual(5ULL, ws.count(L"bca", 2));
+			Assert::AreEqual(0ULL, ws.count(L"A", 3));
+			Assert::AreEqual(1ULL, ws.count(L"abca", 4, s.size() - 5));
+			Assert::AreEqual(4ULL, ws.count(L"bca", 2, s.size() - 2));
+			Assert::AreEqual(0ULL, ws.count(L"A", 3, s.size() + 4));
 		}
 
 
