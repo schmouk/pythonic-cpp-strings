@@ -207,5 +207,26 @@ namespace cppstringstests
 			Assert::AreEqual(CppWString(L'f').c_str(), wt[L'f'].c_str());
 		}
 
+		TEST_METHOD(constructor_move)
+		{
+			pcs::CppString::TransTable ct(CppString("abc"), CppString("ABC"), CppString("dE"));
+			pcs::CppString::TransTable t(std::move(ct));
+			Assert::AreEqual(CppString('A').c_str(), t['a'].c_str());
+			Assert::AreEqual(CppString('B').c_str(), t['b'].c_str());
+			Assert::AreEqual(CppString('C').c_str(), t['c'].c_str());
+			Assert::AreEqual(CppString().c_str(), t['d'].c_str());
+			Assert::AreEqual(CppString().c_str(), t['E'].c_str());
+			Assert::AreEqual(CppString('f').c_str(), t['f'].c_str());
+
+			pcs::CppWString::TransTable wct(CppWString(L"abc"), CppWString(L"ABC"), CppWString(L"dE"));
+			pcs::CppWString::TransTable wt(std::move(wct));
+			Assert::AreEqual(CppWString(L'A').c_str(), wt[L'a'].c_str());
+			Assert::AreEqual(CppWString(L'B').c_str(), wt[L'b'].c_str());
+			Assert::AreEqual(CppWString(L'C').c_str(), wt[L'c'].c_str());
+			Assert::AreEqual(CppWString().c_str(), wt[L'd'].c_str());
+			Assert::AreEqual(CppWString().c_str(), wt[L'E'].c_str());
+			Assert::AreEqual(CppWString(L'f').c_str(), wt[L'f'].c_str());
+		}
+
 	};
 }
