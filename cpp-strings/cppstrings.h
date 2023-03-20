@@ -568,6 +568,9 @@ namespace pcs // i.e. "pythonic c++ strings"
         * Note: this method should be used only if you need to know the position of
         * sub.  To check if sub is a substring or not, use the method contains().
         *
+        * CAUTION: empty substrings are considered to be in the string if start and
+        * end positions are both less then the string size and if start <= end.
+        *
         * \see find_n(), rfind() and rfind_n().
         * \see index(), index_n(), rindex() and rindex_n().
         */
@@ -587,6 +590,9 @@ namespace pcs // i.e. "pythonic c++ strings"
         * Note: this method should be used only if you need to know the position of
         * sub.  To check if sub is a substring or not, use the method contains().
         *
+        * CAUTION: empty substrings are considered to be in the string if start and
+        * end positions are both less then the string size and if start <= end.
+        *
         * \see find_n(), rfind() and rfind_n().
         * \see index(), index_n(), rindex() and rindex_n().
         */
@@ -599,6 +605,9 @@ namespace pcs // i.e. "pythonic c++ strings"
         *
         * Note: this method should be used only if you need to know the position of
         * sub.  To check if sub is a substring or not, use the method contains().
+        * 
+        * CAUTION: empty substrings are considered to be in the string if start and
+        * end positions are both less then the string size and if start <= end.
         *
         * \see find_n(), rfind() and rfind_n().
         * \see index(), index_n(), rindex() and rindex_n().
@@ -617,6 +626,9 @@ namespace pcs // i.e. "pythonic c++ strings"
         *
         * Note: this method should be used only if you need to know the position of
         * sub.  To check if sub is a substring or not, use the method contains_n().
+        *
+        * CAUTION: empty substrings are considered to be in the string if start and
+        * end positions are both less then the string size and if start <= end.
         *
         * \see find(), rfind() and rfind_n().
         * \see index(), index_n(), rindex() and rindex_n().
@@ -637,6 +649,9 @@ namespace pcs // i.e. "pythonic c++ strings"
         * Note: this method should be used only if you need to know the position of
         * sub.  To check if sub is a substring or not, use the method contains_n().
         *
+        * CAUTION: empty substrings are considered to be in the string if start and
+        * end positions are both less then the string size and if start <= end.
+        *
         * \see find(), rfind() and rfind_n().
         * \see index(), index_n(), rindex() and rindex_n().
         */
@@ -649,6 +664,9 @@ namespace pcs // i.e. "pythonic c++ strings"
         *
         * Note: this method should be used only if you need to know the position of
         * sub.  To check if sub is a substring or not, use the method contains_n().
+        *
+        * CAUTION: empty substrings are considered to be in the string if start and
+        * end positions are both less then the string size and if start <= end.
         *
         * \see find(), rfind() and rfind_n().
         * \see index(), index_n(), rindex() and rindex_n().
@@ -1670,8 +1688,8 @@ namespace pcs // i.e. "pythonic c++ strings"
 
 
         //---   substr()   ----------------------------------------
-        /** \brief Returns acopy of the string, starting at index start and ending after count characters. */
-        inline CppStringT substr(const size_type start, const size_type count) const noexcept
+        /** \brief Returns a copy of the string, starting at index start and ending after count characters. */
+        inline CppStringT substr(const size_type start, const size_type count=-1) const noexcept
         {
             if (start > this->size())
                 return *this;
