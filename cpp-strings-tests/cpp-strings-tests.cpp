@@ -208,5 +208,43 @@ namespace cppstringstests
 			}
 		}
 
+		TEST_METHOD(find_n)
+		{
+			pcs::CppString test{ "ABC0123456789." };
+			for (int c = 0; c <= 255; ++c) {
+				char ch{ char(c) };
+				Assert::AreEqual(test.substr(2).MyBaseClass::find(ch), test.find_n(ch, 2, -1));
+				Assert::AreEqual(test.substr(0, 2).MyBaseClass::find(ch), test.find_n(ch, 2));
+				Assert::AreEqual(test.substr(2, 5).MyBaseClass::find(ch), test.find_n(ch, 2, 5));
+
+				CppString s(ch);
+				Assert::AreEqual(test.substr(2).MyBaseClass::find(s), test.find_n(s, 2, -1));
+				Assert::AreEqual(test.substr(0, 2).MyBaseClass::find(s), test.find_n(s, 2));
+				Assert::AreEqual(test.substr(3, 5).MyBaseClass::find(s), test.find_n(s, 3, 5));
+
+				char str[2]{ ch, 0 };
+				Assert::AreEqual(test.substr(2).MyBaseClass::find(str), test.find_n(str, 2, -1));
+				Assert::AreEqual(test.substr(0, 2).MyBaseClass::find(str), test.find_n(str, 2));
+				Assert::AreEqual(test.substr(3, 5).MyBaseClass::find(str), test.find_n(str, 3, 5));
+			}
+
+			pcs::CppWString wtest{ L"ABC0123456789." };
+			for (int wc = 0; wc <= 0xffff; ++wc) {
+				wchar_t wch{ wchar_t(wc) };
+				Assert::AreEqual(wtest.substr(2).MyBaseClass::find(wch), wtest.find_n(wch, 2, -1));
+				Assert::AreEqual(wtest.substr(0, 2).MyBaseClass::find(wch), wtest.find_n(wch, 2));
+				Assert::AreEqual(wtest.substr(2, 5).MyBaseClass::find(wch), wtest.find_n(wch, 2, 5));
+
+				CppWString ws(wch);
+				Assert::AreEqual(wtest.substr(2).MyBaseClass::find(ws), wtest.find_n(ws, 2, -1));
+				Assert::AreEqual(wtest.substr(0, 2).MyBaseClass::find(ws), wtest.find_n(ws, 2));
+				Assert::AreEqual(wtest.substr(3, 5).MyBaseClass::find(ws), wtest.find_n(ws, 3, 5));
+
+				wchar_t wstr[2]{ wch, 0 };
+				Assert::AreEqual(wtest.substr(2).MyBaseClass::find(wstr), wtest.find_n(wstr, 2, -1));
+				Assert::AreEqual(wtest.substr(0, 2).MyBaseClass::find(wstr), wtest.find_n(wstr, 2));
+				Assert::AreEqual(wtest.substr(3, 5).MyBaseClass::find(wstr), wtest.find_n(wstr, 3, 5));
+			}
+		}
 	};
 }
