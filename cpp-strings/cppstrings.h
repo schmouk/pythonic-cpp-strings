@@ -566,12 +566,12 @@ namespace pcs // i.e. "pythonic c++ strings"
         /** Returns the lowest index in the string where substring sub is found within the slice str[start:end], or -1 (i.e. 'npos') if sub is not found.
         *
         * Note: this method should be used only if you need to know the position of
-        * sub.  To check if sub is a substring or not, use the method contains_n().
+        * sub.  To check if sub is a substring or not, use the method contains().
         *
         * \see find_n(), rfind() and rfind_n().
         * \see index(), index_n(), rindex() and rindex_n().
         */
-        inline constexpr size_type find(const CppStringT& sub, const size_type start = 0, const size_type end = -1) const noexcept
+        constexpr size_type find(const CppStringT& sub, const size_type start = 0, const size_type end = -1) const noexcept
         {
             size_type start_{ start };
             const size_type end_{ (end == -1) ? this->size() : end };
@@ -580,6 +580,35 @@ namespace pcs // i.e. "pythonic c++ strings"
                 return CppStringT::npos;
             else
                 return find_n(sub, start_, end_ - start_ + 1);
+        }
+
+        /** Returns the lowest index in the string where character ch is found within the slice str[start:end], or -1 (i.e. 'npos') if ch is not found.
+        *
+        * Note: this method should be used only if you need to know the position of
+        * sub.  To check if sub is a substring or not, use the method contains().
+        *
+        * \see find_n(), rfind() and rfind_n().
+        * \see index(), index_n(), rindex() and rindex_n().
+        */
+        inline constexpr size_type find(const CharT ch, const size_type start = 0, const size_type end = -1) const noexcept
+        {
+            return find(CppStringT(ch), start, end);
+        }
+
+        /** Returns the lowest index in the string where null-terminated string sub is found within the slice str[start:end], or -1 (i.e. 'npos') if sub is not found.
+        *
+        * Note: this method should be used only if you need to know the position of
+        * sub.  To check if sub is a substring or not, use the method contains().
+        *
+        * \see find_n(), rfind() and rfind_n().
+        * \see index(), index_n(), rindex() and rindex_n().
+        */
+        inline constexpr size_type find(const CharT* sub, const size_type start = 0, const size_type end = -1) const noexcept
+        {
+            if (sub == nullptr)
+                return CppStringT::npos;
+            else
+                return find(CppStringT(sub), start, end);
         }
 
 
