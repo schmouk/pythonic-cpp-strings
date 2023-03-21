@@ -482,7 +482,7 @@ namespace cppstringstests
 			catch (const string_type::NotFoundException e) { /* ok case! */ }
 		}
 
-		TEST_METHOD(is_alnum)
+		TEST_METHOD(isalnum)
 		{
 			Assert::IsTrue(pcs::CppString("aA25").isalnum());
 			Assert::IsFalse(pcs::CppString("0123456789az,").isalnum());
@@ -490,7 +490,7 @@ namespace cppstringstests
 			Assert::IsFalse(pcs::CppWString(L"0123456789az,").isalnum());
 		}
 
-		TEST_METHOD(is_alpha)
+		TEST_METHOD(isalpha)
 		{
 			Assert::IsFalse(CppString().isalpha());
 			for (int c = 0; c <= 255; ++c) {
@@ -504,6 +504,23 @@ namespace cppstringstests
 				const wchar_t wch{ wchar_t(c) };
 				pcs::CppWString ws(3, wch);
 				Assert::AreEqual(pcs::is_alpha(wch), ws.isalpha());
+			}
+		}
+
+		TEST_METHOD(isascii)
+		{
+			Assert::IsTrue(CppString().isascii());
+			for (int c = 0; c <= 255; ++c) {
+				const char ch{ char(c) };
+				pcs::CppString s(3, ch);
+				Assert::AreEqual(pcs::is_ascii(ch), s.isascii());
+			}
+
+			Assert::IsTrue(CppWString().isascii());
+			for (int c = 0; c <= 0xffff; ++c) {
+				const wchar_t wch{ wchar_t(c) };
+				pcs::CppWString ws(3, wch);
+				Assert::AreEqual(pcs::is_ascii(wch), ws.isascii());
 			}
 		}
 
