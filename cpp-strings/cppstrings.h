@@ -728,8 +728,9 @@ namespace pcs // i.e. "pythonic c++ strings"
         inline constexpr size_type index(const CppStringT& sub, const size_type start = 0, const size_type end = -1) const
         {
             const size_type ret_value = find(sub, start, end);
-            if (size_type == CppStringT::npos)
-                throw NotFoundException(std::format("substring \"{}\" not found in string \"{}\"", sub, this->c_str()));
+            if (ret_value == CppStringT::npos)
+                throw NotFoundException("substring not found in string.");
+                //throw NotFoundException(CppStringT(std::format("substring \"{}\" not found in string \"{}\"", sub.c_str(), this->c_str()).c_str()));
             else
                 return ret_value;
         }
@@ -742,8 +743,9 @@ namespace pcs // i.e. "pythonic c++ strings"
         inline constexpr size_type index(const CharT ch, const size_type start = 0, const size_type end = -1) const
         {
             const size_type ret_value = find(ch, start, end);
-            if (size_type == CppStringT::npos)
-                throw NotFoundException(std::format("character \"{}\" not found in string \"{}\"", ch, this->c_str()));
+            if (ret_value == CppStringT::npos)
+                throw NotFoundException("char not found in string.");
+                //throw NotFoundException(CppStringT(std::format("character \"{}\" not found in string \"{}\"", CppStringT(ch).c_str(), this->c_str()).c_str()));
             else
                 return ret_value;
         }
@@ -756,8 +758,9 @@ namespace pcs // i.e. "pythonic c++ strings"
         inline constexpr size_type index(const CharT* sub, const size_type start = 0, const size_type end = -1) const
         {
             const size_type ret_value = find(sub, start, end);
-            if (size_type == CppStringT::npos)
-                throw NotFoundException(std::format("character \"{}\" not found in string \"{}\"", sub, this->c_str()));
+            if (ret_value == CppStringT::npos)
+                throw NotFoundException("substring not found in string");
+                //throw NotFoundException(CppStringT(std::format("substring \"{}\" not found in string \"{}\"", CppStringT(sub).c_str(), this->c_str()).c_str()));
             else
                 return ret_value;
         }
