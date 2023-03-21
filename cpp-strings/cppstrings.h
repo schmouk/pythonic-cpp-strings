@@ -840,14 +840,8 @@ namespace pcs // i.e. "pythonic c++ strings"
         {
             if (this->empty())
                 return false;
-            /*
-            for (auto ch : *this)
-                if (!(pcs::is_alpha(ch) || pcs::is_decimal(ch) || pcs::is_digit(ch) || pcs::is_numeric(ch)))
-                    return false;
-            return true;
-            */
             return std::all_of(this->cbegin(), this->cend(),
-                [](const CharT ch) { return pcs::is_alpha(ch) || pcs::is_decimal(ch) || pcs::is_digit(ch) || pcs::is_numeric(ch); });
+                               [](const value_type ch) { return pcs::is_alpha(ch) || pcs::is_decimal(ch) || pcs::is_digit(ch) || pcs::is_numeric(ch); });
         }
 
 
@@ -855,7 +849,7 @@ namespace pcs // i.e. "pythonic c++ strings"
         /** \brief Returns true if all characters in the string are alphabetic and there is at least one character, or false otherwise. */
         inline const bool isalpha() const noexcept
         {
-            return !this->empty()  &&  std::all_of(this->cbegin(), this->cend(), [](const value_type ch) { return pcs::is_alpha<CharT>(ch); });
+            return !this->empty() && std::all_of(this->cbegin(), this->cend(), pcs::is_alpha<value_type>);
         }
 
 
@@ -866,7 +860,7 @@ namespace pcs // i.e. "pythonic c++ strings"
         #endif
         inline const bool isascii() const noexcept
         {
-            return this->empty()  ||  std::all_of(this->cbegin(), this->cend(), pcs::is_ascii<CharT>);
+            return this->empty()  ||  std::all_of(this->cbegin(), this->cend(), pcs::is_ascii<value_type>);
         }
 
 
@@ -879,7 +873,7 @@ namespace pcs // i.e. "pythonic c++ strings"
         */
         inline const bool isdecimal() const noexcept
         {
-            return !this->empty()  &&  std::all_of(this->cbegin(), this->cend(), pcs::is_decimal<CharT>);
+            return !this->empty()  &&  std::all_of(this->cbegin(), this->cend(), pcs::is_decimal<value_type>);
         }
 
 
@@ -925,7 +919,7 @@ namespace pcs // i.e. "pythonic c++ strings"
         */
         inline const bool isidentifier() const noexcept
         {
-            return !this->empty() && pcs::is_id_start((*this)[0]) && (this->size() == 1 || std::all_of(this->cbegin() + 1, this->cend(), pcs::is_id_continue));
+            return !this->empty() && pcs::is_id_start((*this)[0]) && (this->size() == 1 || std::all_of(this->cbegin() + 1, this->cend(), pcs::is_id_continue<value_type>));
         }
 
 
@@ -933,7 +927,7 @@ namespace pcs // i.e. "pythonic c++ strings"
         /** \brief Returns true if all cased characters in the string are lowercase and there is at least one cased character, or false otherwise. */
         inline const bool islower() const noexcept
         {
-            return !this->empty() && std::all_of(this->cbegin(), this->cend(), pcs::is_lower<CharT>);
+            return !this->empty() && std::all_of(this->cbegin(), this->cend(), pcs::is_lower<value_type>);
         }
 
 
@@ -962,7 +956,7 @@ namespace pcs // i.e. "pythonic c++ strings"
         */
         inline const bool isprintable() const noexcept
         {
-            return this->empty() || std::all_of(this->cbegin(), this->cend(), pcs::is_printable<CharT>);
+            return this->empty() || std::all_of(this->cbegin(), this->cend(), pcs::is_printable<value_type>);
         }
 
 
@@ -978,7 +972,7 @@ namespace pcs // i.e. "pythonic c++ strings"
         /** \brief Returns true if there are only whitespace characters in the string and there is at least one character, or false otherwise. */
         inline const bool isspace() const noexcept
         {
-            return !this->empty() && std::all_of(this->cbegin(), this->cend(), pcs::is_space<CharT>);
+            return !this->empty() && std::all_of(this->cbegin(), this->cend(), pcs::is_space<value_type>);
         }
 
 
@@ -998,7 +992,7 @@ namespace pcs // i.e. "pythonic c++ strings"
         /** \brief Returns true if all cased characters in the string are uppercase and there is at least one cased character, or false otherwise. */
         inline const bool isupper() const noexcept
         {
-            return !this->empty() && std::all_of(this->cbegin(), this->cend(), pcs::is_upper<CharT>);
+            return !this->empty() && std::all_of(this->cbegin(), this->cend(), pcs::is_upper<value_type>);
         }
 
 

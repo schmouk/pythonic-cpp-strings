@@ -490,5 +490,22 @@ namespace cppstringstests
 			Assert::IsFalse(pcs::CppWString(L"0123456789az,").isalnum());
 		}
 
+		TEST_METHOD(is_alpha)
+		{
+			Assert::IsFalse(CppString().isalpha());
+			for (int c = 0; c <= 255; ++c) {
+				const char ch{ char(c) };
+				pcs::CppString s(3, ch);
+				Assert::AreEqual(pcs::is_alpha(ch), s.isalpha());
+			}
+
+			Assert::IsFalse(CppWString().isalpha());
+			for (int c = 0; c <= 0xffff; ++c) {
+				const wchar_t wch{ wchar_t(c) };
+				pcs::CppWString ws(3, wch);
+				Assert::AreEqual(pcs::is_alpha(wch), ws.isalpha());
+			}
+		}
+
 	};
 }
