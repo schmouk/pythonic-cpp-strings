@@ -720,16 +720,44 @@ namespace pcs // i.e. "pythonic c++ strings"
 
 
         //---   index()   -----------------------------------------
-        /** Like find(), but raises NotFoundException when the substring is not found.
+        /** Like find(const CppStringT&), but raises NotFoundException when the substring sub is not found.
         *
         * \see index_n(), rindex() and rindex_n().
         * \see find(), find_n(), rfind() and rfind_n().
         */
-        inline constexpr size_type index(const CppStringT& sub, const size_type start, const size_type end) const
+        inline constexpr size_type index(const CppStringT& sub, const size_type start = 0, const size_type end = -1) const
         {
             const size_type ret_value = find(sub, start, end);
             if (size_type == CppStringT::npos)
                 throw NotFoundException(std::format("substring \"{}\" not found in string \"{}\"", sub, this->c_str()));
+            else
+                return ret_value;
+        }
+
+        /** Like find(const CharT), but raises NotFoundException when character ch is not found.
+        *
+        * \see index_n(), rindex() and rindex_n().
+        * \see find(), find_n(), rfind() and rfind_n().
+        */
+        inline constexpr size_type index(const CharT ch, const size_type start = 0, const size_type end = -1) const
+        {
+            const size_type ret_value = find(ch, start, end);
+            if (size_type == CppStringT::npos)
+                throw NotFoundException(std::format("character \"{}\" not found in string \"{}\"", ch, this->c_str()));
+            else
+                return ret_value;
+        }
+
+        /** Like find(const CharT*), but raises NotFoundException when the substring sub is not found.
+        *
+        * \see index_n(), rindex() and rindex_n().
+        * \see find(), find_n(), rfind() and rfind_n().
+        */
+        inline constexpr size_type index(const CharT* sub, const size_type start = 0, const size_type end = -1) const
+        {
+            const size_type ret_value = find(sub, start, end);
+            if (size_type == CppStringT::npos)
+                throw NotFoundException(std::format("character \"{}\" not found in string \"{}\"", sub, this->c_str()));
             else
                 return ret_value;
         }
