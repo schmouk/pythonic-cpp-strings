@@ -787,6 +787,46 @@ namespace pcs // i.e. "pythonic c++ strings"
             return index(sub, 0, count);
         }
 
+        /** Like find_n(sub, start, count), but raises NotFoundException when the character is not found.
+        *
+        * \see index_n(), rindex() and rindex_n().
+        * \see find(), find_n(), rfind() and rfind_n().
+        */
+        inline constexpr size_type index_n(const CharT ch, const size_type start, const size_type count) const
+        {
+            return index(ch, start, start + count - 1);
+        }
+
+        /** Like find_n(sub, count), but raises NotFoundException when the character is not found.
+        *
+        * \see index_n(), rindex() and rindex_n().
+        * \see find(), find_n(), rfind() and rfind_n().
+        */
+        inline constexpr size_type index_n(const CharT ch, const size_type count) const
+        {
+            return index(ch, 0, count);
+        }
+
+        /** Like find_n(sub, start, count), but raises NotFoundException when the null-terminated substring is not found.
+        *
+        * \see index_n(), rindex() and rindex_n().
+        * \see find(), find_n(), rfind() and rfind_n().
+        */
+        inline constexpr size_type index_n(const CharT* sub, const size_type start, const size_type count) const
+        {
+            return index(sub, start, start + count - 1);
+        }
+
+        /** Like find_n(sub, count), but raises NotFoundException when the null-terminated substring is not found.
+        *
+        * \see index_n(), rindex() and rindex_n().
+        * \see find(), find_n(), rfind() and rfind_n().
+        */
+        inline constexpr size_type index_n(const CharT* sub, const size_type count) const
+        {
+            return index(sub, 0, count);
+        }
+
 
         //---   isalnum()   ---------------------------------------
         /** \brief Returns true if all characters in the string are alphanumeric and there is at least one character, or false otherwise. */
