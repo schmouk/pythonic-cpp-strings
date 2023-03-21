@@ -69,6 +69,9 @@ namespace pcs // i.e. "pythonic c++ strings"
     inline const bool is_decimal(const CharT ch) noexcept;      //!< Returns true if character is a decimal digit, or false otherwise.
 
     template<class CharT>
+    inline const bool is_digit(const CharT ch) noexcept;        //!< Returns true if character is a decimal digit, or false otherwise.
+
+    template<class CharT>
     inline const bool is_id_continue(const CharT ch) noexcept;  //!< Returns true if character is a continuing char for identifiers, or false otherwise.
 
     template<class CharT>
@@ -76,6 +79,9 @@ namespace pcs // i.e. "pythonic c++ strings"
 
     template<class CharT>
     inline const bool is_lower(const CharT ch) noexcept;        //!< Returns true if character is lowercase, or false otherwise.
+
+    template<class CharT>
+    inline const bool is_numeric(const CharT ch) noexcept;      //!< Returns true if character is a decimal digit, or false otherwise.
 
     template<class CharT>
     inline const bool is_printable(const CharT ch) noexcept;    //!< Returns true if character ch is printable, or false otherwise.
@@ -832,7 +838,16 @@ namespace pcs // i.e. "pythonic c++ strings"
         /** \brief Returns true if all characters in the string are alphanumeric and there is at least one character, or false otherwise. */
         inline const bool isalnum() const noexcept
         {
-            return this->isalpha() || this->isdecimal() || this->isdigit() || this->isnumeric();
+            if (this->empty())
+                return false;
+            /*
+            for (auto ch : *this)
+                if (!(pcs::is_alpha(ch) || pcs::is_decimal(ch) || pcs::is_digit(ch) || pcs::is_numeric(ch)))
+                    return false;
+            return true;
+            */
+            return std::all_of(this->cbegin(), this->cend(),
+                [](const CharT ch) { return pcs::is_alpha(ch) || pcs::is_decimal(ch) || pcs::is_digit(ch) || pcs::is_numeric(ch); });
         }
 
 
@@ -1948,6 +1963,29 @@ namespace pcs // i.e. "pythonic c++ strings"
     { return (const bool)std::iswdigit(ch); }
 
 
+    //---   is_digit()   ------------------------------------------
+    /** \brief SHOULD NEVER BE USED. Use next specializations instead. */
+    template<class CharT>
+    inline const bool is_digit(const CharT ch) noexcept
+    {
+        return pcs::is_decimal(ch);
+    }
+
+    /** \brief Returns true if character is a decimal digit, or false otherwise. */
+    template<>
+    inline const bool is_digit<char>(const char ch) noexcept
+    {
+        return pcs::is_decimal(ch);
+    }
+
+    /** \brief Returns true if character is a decimal digit, or false otherwise. */
+    template<>
+    inline const bool is_digit<wchar_t>(const wchar_t ch) noexcept
+    {
+        return pcs::is_decimal(ch);
+    }
+
+
     //---   is_id_continue()   ------------------------------------
     /** \brief Returns true if character is a continuing char for identifiers, or false otherwise. */
     template<class CharT>
@@ -1982,6 +2020,29 @@ namespace pcs // i.e. "pythonic c++ strings"
     inline const bool is_lower<wchar_t>(const wchar_t ch) noexcept
     {
         return std::iswlower(ch);
+    }
+
+
+    //---   is_numeric()   ----------------------------------------
+    /** \brief SHOULD NEVER BE USED. Use next specializations instead. */
+    template<class CharT>
+    inline const bool is_numeric(const CharT ch) noexcept
+    {
+        return pcs::is_decimal(ch);
+    }
+
+    /** \brief Returns true if character is a decimal digit, or false otherwise. */
+    template<>
+    inline const bool is_numeric<char>(const char ch) noexcept
+    {
+        return pcs::is_decimal(ch);
+    }
+
+    /** \brief Returns true if character is a decimal digit, or false otherwise. */
+    template<>
+    inline const bool is_numeric<wchar_t>(const wchar_t ch) noexcept
+    {
+        return pcs::is_decimal(ch);
     }
 
 

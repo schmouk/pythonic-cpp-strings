@@ -433,7 +433,6 @@ namespace cppstringstests
 			catch (const string_type::NotFoundException e) { /* ok case! */ }
 		}
 
-
 		TEST_METHOD(index_n_wchar_t)
 		{
 			using string_type = pcs::CppWString;
@@ -481,6 +480,14 @@ namespace cppstringstests
 				Assert::IsTrue(pos != string_type::npos);
 			}
 			catch (const string_type::NotFoundException e) { /* ok case! */ }
+		}
+
+		TEST_METHOD(is_alnum)
+		{
+			Assert::IsTrue(pcs::CppString("aA25").isalnum());
+			Assert::IsFalse(pcs::CppString("0123456789az,").isalnum());
+			Assert::IsTrue(pcs::CppWString(L"aA25").isalnum());
+			Assert::IsFalse(pcs::CppWString(L"0123456789az,").isalnum());
 		}
 
 	};
