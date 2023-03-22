@@ -581,6 +581,23 @@ namespace cppstringstests
 			Assert::IsFalse(pcs::CppWString(L"9z").isidentifier());
 		}
 
+		TEST_METHOD(islower)
+		{
+			Assert::IsFalse(CppString().islower());
+			for (int c = 0; c <= 255; ++c) {
+				const char ch{ char(c) };
+				pcs::CppString s(5, ch);
+				Assert::AreEqual(pcs::is_lower(ch), s.islower());
+			}
+
+			Assert::IsFalse(CppWString().islower());
+			for (int c = 0; c <= 0xffff; ++c) {
+				const wchar_t wch{ wchar_t(c) };
+				pcs::CppWString ws(5, wch);
+				Assert::AreEqual(pcs::is_lower(wch), ws.islower());
+			}
+		}
+
 		TEST_METHOD(isnumeric)
 		{
 			Assert::IsFalse(CppString().isnumeric());
