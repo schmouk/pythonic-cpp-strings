@@ -558,6 +558,29 @@ namespace cppstringstests
 			}
 		}
 
+		TEST_METHOD(isidentifier)
+		{
+			Assert::IsTrue(pcs::CppString("_").isidentifier());
+			Assert::IsTrue(pcs::CppString("A").isidentifier());
+			Assert::IsTrue(pcs::CppString("b").isidentifier());
+			Assert::IsTrue(pcs::CppString("_abcdefghijklmnopqrstuvwxyz0123456789_").isidentifier());
+			Assert::IsTrue(pcs::CppString("abcdefghijklmnopqrstuvwxyz0123456789_").isidentifier());
+			Assert::IsTrue(pcs::CppString("_0123456789").isidentifier());
+			Assert::IsTrue(pcs::CppString("__").isidentifier());
+			Assert::IsFalse(pcs::CppString("_abcdefghijklmnopqrstuvwxyz0123456789.").isidentifier());
+			Assert::IsFalse(pcs::CppString("0a").isidentifier());
+
+			Assert::IsTrue(pcs::CppWString(L"_").isidentifier());
+			Assert::IsTrue(pcs::CppWString(L"A").isidentifier());
+			Assert::IsTrue(pcs::CppWString(L"b").isidentifier());
+			Assert::IsTrue(pcs::CppWString(L"_0123456789abcdefghijklmnopqrstuvwxyz_").isidentifier());
+			Assert::IsTrue(pcs::CppWString(L"abcdefghijk0123456789lmnopqrstuvwxyz_").isidentifier());
+			Assert::IsTrue(pcs::CppWString(L"_0123456789").isidentifier());
+			Assert::IsTrue(pcs::CppWString(L"__").isidentifier());
+			Assert::IsFalse(pcs::CppWString(L"_0123456789abcdefghijklmnopqrstuvwxyz.").isidentifier());
+			Assert::IsFalse(pcs::CppWString(L"9z").isidentifier());
+		}
+
 		TEST_METHOD(isnumeric)
 		{
 			Assert::IsFalse(CppString().isnumeric());
