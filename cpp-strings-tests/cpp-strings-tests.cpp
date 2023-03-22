@@ -615,5 +615,23 @@ namespace cppstringstests
 			}
 		}
 
+		TEST_METHOD(isprintable)
+		{
+			Assert::IsTrue(CppString().isprintable());
+			for (int c = 0; c <= 255; ++c) {
+				const char ch{ char(c) };
+				pcs::CppString s(5, ch);
+				Assert::AreEqual(pcs::is_printable(ch), s.isprintable());
+			}
+
+			Assert::IsTrue(CppWString().isprintable());
+			for (int c = 0; c <= 0xffff; ++c) {
+				const wchar_t wch{ wchar_t(c) };
+				pcs::CppWString ws(5, wch);
+				Assert::AreEqual(pcs::is_printable(wch), ws.isprintable());
+			}
+		}
+
+
 	};
 }
