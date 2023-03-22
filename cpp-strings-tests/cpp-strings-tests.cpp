@@ -651,5 +651,21 @@ namespace cppstringstests
 			}
 		}
 
+		TEST_METHOD(isspace)
+		{
+			Assert::IsFalse(CppString().isspace());
+			for (int c = 0; c <= 255; ++c) {
+				const char ch{ char(c) };
+				pcs::CppString s(5, ch);
+				Assert::AreEqual(pcs::is_space(ch), s.isspace());
+			}
+
+			Assert::IsFalse(CppWString().isspace());
+			for (int c = 0; c <= 0xffff; ++c) {
+				const wchar_t wch{ wchar_t(c) };
+				pcs::CppWString ws(5, wch);
+				Assert::AreEqual(pcs::is_space(wch), ws.isspace());
+			}
+		}
 	};
 }
