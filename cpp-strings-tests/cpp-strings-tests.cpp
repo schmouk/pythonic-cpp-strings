@@ -632,6 +632,24 @@ namespace cppstringstests
 			}
 		}
 
+		TEST_METHOD(ispunctuation)
+		{
+			Assert::IsFalse(CppString().ispunctuation());
+			for (int c = 0; c <= 255; ++c) {
+				const char ch{ char(c) };
+				pcs::CppString s(3, ch);
+				Assert::IsFalse(s.ispunctuation());
+				Assert::AreEqual(pcs::is_punctuation(ch), CppString(ch).ispunctuation());
+			}
+
+			Assert::IsFalse(CppWString().ispunctuation());
+			for (int c = 0; c <= 0xffff; ++c) {
+				const wchar_t wch{ wchar_t(c) };
+				pcs::CppWString ws(3, wch);
+				Assert::IsFalse(ws.ispunctuation());
+				Assert::AreEqual(pcs::is_punctuation(wch), CppWString(wch).ispunctuation());
+			}
+		}
 
 	};
 }
