@@ -1005,7 +1005,8 @@ namespace pcs // i.e. "pythonic c++ strings"
         /** \brief Returns true if there are only whitespace and punctuation characters in the string and there is at least one character, or false otherwise. */
         inline const bool is_words_sep() const noexcept
         {
-            return isspace() || ispunctuation();
+            return !this->empty() && std::all_of(this->cbegin(), this->cend(),
+                                                 [](const value_type ch){ return pcs::is_space(ch) || pcs::is_punctuation(ch); });
         }
 
 

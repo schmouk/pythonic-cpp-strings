@@ -696,5 +696,24 @@ namespace cppstringstests
 			}
 		}
 
+		TEST_METHOD(is_words_sep)
+		{
+			Assert::IsFalse(CppString().is_words_sep());
+			for (int c = 32; c <= 255; ++c) {
+				const char ch{ char(c) };
+				pcs::CppString s(5, ch);
+				Assert::AreEqual(pcs::is_space(ch) || pcs::is_punctuation(ch), s.is_words_sep());
+			}
+
+			Assert::IsFalse(CppWString().is_words_sep());
+			for (int c = 0; c <= 0xffff; ++c) {
+				const wchar_t wch{ wchar_t(c) };
+				pcs::CppWString ws(5, wch);
+				Assert::AreEqual(pcs::is_space(wch) || pcs::is_punctuation(wch), ws.is_words_sep());
+			}
+		}
+
+
+
 	};
 }
