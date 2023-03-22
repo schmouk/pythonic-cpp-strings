@@ -22,6 +22,7 @@
 
 //=============================================================
 #include <algorithm>
+#include <array>
 #include <cassert>
 #include <cctype>
 #include <cwctype>
@@ -392,10 +393,10 @@ namespace pcs // i.e. "pythonic c++ strings"
         inline CppStringT(InputIt first, InputIt last)                                      : MyBaseClass(first, last) {}           // #16
 
         template<class StringViewLike>
-        explicit CppStringT(const StringViewLike& svl)                                      : MyBaseClass(svl) {}                   // #17
+        explicit CppStringT(StringViewLike& svl)                                            : MyBaseClass(svl) {}                   // #17
 
         template<class StringViewLike>
-        CppStringT(const StringViewLike& svl, size_type pos, size_type n)                   : MyBaseClass(svl, pos, n) {}           // #18
+        CppStringT(StringViewLike& svl, size_type pos, size_type n)                         : MyBaseClass(svl, pos, n) {}           // #18
 
         inline ~CppStringT() noexcept = default;
 
@@ -981,10 +982,14 @@ namespace pcs // i.e. "pythonic c++ strings"
         *
         * For instance uppercase characters may only follow uncased 
         * characters and lowercase characters only cased ones.
+        * 
+        * CAUTION:  current implementation only tests for uppercase
+        * characters following whitespaces and lowercase characters
+        * anywhere else.
         */
         inline const bool istitle() const noexcept
         {
-            return !this->empty && this->title() == *this;
+            return !this->empty() && this->title() == *this;
         }
 
 
@@ -1005,6 +1010,39 @@ namespace pcs // i.e. "pythonic c++ strings"
 
 
         //---   join()   ------------------------------------------
+        /** \brief Returns a string which is the concatenation of the strings in the array parameter.
+        *
+        * The separator between elements is the string to which this method is applied.
+        */
+        template<const std::size_t N>
+        inline CppStringT join(const std::array<CppStringT, N>& strs) const noexcept
+        {
+            auto str_it = strs.cbegin();
+            if (str_it == strs.cend())
+                return CppStringT();
+
+            CppStringT res{ *str_it++ };
+            while (str_it != strs.cend())
+                res += *this + *str_it++;
+            return res;
+        }
+
+        /** \brief Returns a string which is the concatenation of the strings in the vector parameter.
+        *
+        * The separator between elements is the string to which this method is applied.
+        */
+        CppStringT join(const std::vector<CppStringT>& strs) const noexcept
+        {
+            auto str_it = strs.cbegin();
+            if (str_it == strs.cend())
+                return CppStringT();
+
+            CppStringT res{ *str_it++ };
+            while (str_it != strs.cend())
+                res += *this + *str_it++;
+            return res;
+        }
+
         /** \brief Returns a string which is the concatenation of the strings in the parameters list. 
         *
         * The separator between elements is the string to which this method is applied.
@@ -1537,7 +1575,7 @@ namespace pcs // i.e. "pythonic c++ strings"
         */
         inline std::vector<CppStringT> split(const CppStringT& sep) const noexcept
         {
-            std::vector<std::string> res;
+            std::vector<CppStringT> res;
             for (const auto& word : *this | std::views::split(sep))
                 res.push_back(CppStringT(word.begin(), word.end()));
             return res;
@@ -1800,13 +1838,13 @@ namespace pcs // i.e. "pythonic c++ strings"
         /** \brief Returns a titlecased copy of the string where words start with an uppercase character and the remaining characters are lowercase. */
         CppStringT title() const noexcept
         {
-            constexpr CppStringT whitespace(value_type(' '));
+            const CppStringT whitespace(value_type(' '));
 
             CppStringT res(*this);
             std::vector<CppStringT> words = res.split(whitespace);
 
             for (CppStringT& word : words)
-                word.capitalize();
+                word = word.capitalize();
 
             return whitespace.join(words);
         }

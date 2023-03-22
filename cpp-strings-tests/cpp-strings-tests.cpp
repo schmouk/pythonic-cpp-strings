@@ -667,5 +667,18 @@ namespace cppstringstests
 				Assert::AreEqual(pcs::is_space(wch), ws.isspace());
 			}
 		}
+
+		TEST_METHOD(istitle)
+		{
+			pcs::CppString s("abc, defgh ijklm nop. qrs 1 tuvwx2345 = yz!");
+			Assert::IsFalse(s.istitle());
+			Assert::IsTrue(s.title().istitle());
+
+			pcs::CppWString ws(L"abc, defgh ijklm nop. qrs 1 tuvwx2345 = yz!");
+			Assert::IsFalse(ws.istitle());
+			Assert::IsTrue(ws.title().istitle());
+		}
+
+
 	};
 }
