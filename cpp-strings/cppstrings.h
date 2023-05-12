@@ -54,10 +54,10 @@ namespace pcs // i.e. "pythonic c++ strings"
 
     // litteral operators
 #pragma warning(disable: 4455)
-    inline const CppString operator""cs(const char* str, std::size_t len);          //!< Forms a CppString literal. 
-    inline const CppString operator""csv(const char* str, std::size_t len);         //!< Forms a CppString view literal. 
-    inline const CppWString operator""cs(const wchar_t* str, std::size_t len);      //!< Forms a CppWString literal. 
-    inline const CppWString operator""csv(const wchar_t* str, std::size_t len);     //!< Forms a CppWString view literal.
+    inline CppString operator""cs(const char* str, std::size_t len);          //!< Forms a CppString literal. 
+    inline CppString operator""csv(const char* str, std::size_t len);         //!< Forms a CppString view literal. 
+    inline CppWString operator""cs(const wchar_t* str, std::size_t len);      //!< Forms a CppWString literal. 
+    inline CppWString operator""csv(const wchar_t* str, std::size_t len);     //!< Forms a CppWString view literal.
 
     // chars classifications -- not to be directly called, see respective specializations at the very end of this module.
     template<class CharT>
@@ -1016,12 +1016,12 @@ namespace pcs // i.e. "pythonic c++ strings"
         * The separator between elements is the string to which this method is applied.
         */
         template<const std::size_t N>
-        inline CppStringT join(const std::array<CppStringT, N>& strs) const noexcept
+        CppStringT join(const std::array<CppStringT, N>& strs) const noexcept
         {
-            auto str_it = strs.cbegin();
-            if (str_it == strs.cend())
+            if (strs.empty())
                 return CppStringT();
 
+            auto str_it = strs.cbegin();
             CppStringT res{ *str_it++ };
             while (str_it != strs.cend())
                 res += *this + *str_it++;
@@ -1034,10 +1034,10 @@ namespace pcs // i.e. "pythonic c++ strings"
         */
         CppStringT join(const std::vector<CppStringT>& strs) const noexcept
         {
-            auto str_it = strs.cbegin();
-            if (str_it == strs.cend())
+            if (strs.empty())
                 return CppStringT();
 
+            auto str_it = strs.cbegin();
             CppStringT res{ *str_it++ };
             while (str_it != strs.cend())
                 res += *this + *str_it++;
@@ -1056,7 +1056,7 @@ namespace pcs // i.e. "pythonic c++ strings"
         }
 
         /** \brief Single parameter signature. Returns a copy of this parameter. */
-        inline const CppStringT join(const CppStringT& s) const noexcept
+        inline CppStringT join(const CppStringT& s) const noexcept
         {
             return s;
         }
@@ -1928,26 +1928,26 @@ namespace pcs // i.e. "pythonic c++ strings"
 
     //=====   litteral operators   ============================
     /** \brief  Forms a CppString literal. */
-    inline const CppString operator""cs(const char* str, std::size_t len)
+    inline CppString operator""cs(const char* str, std::size_t len)
     {
         return CppString(CppString::MyBaseClass(str, len));
     }
 
     /** \brief  Forms a CppString view literal. */
-    inline const CppString operator""csv(const char* str, std::size_t len)
+    inline CppString operator""csv(const char* str, std::size_t len)
     {
         //return CppString(CppString::MyStringView(str, len));
         return CppString(str, len);
     }
 
     /** \brief Forms a CppWString literal. */
-    inline const CppWString operator""cs(const wchar_t* str, std::size_t len)
+    inline CppWString operator""cs(const wchar_t* str, std::size_t len)
     {
         return CppWString(CppWString::MyBaseClass(str, len));
     }
 
     /** \brief Forms a CppWString view literal. */
-    inline const CppWString operator""csv(const wchar_t* str, std::size_t len)
+    inline CppWString operator""csv(const wchar_t* str, std::size_t len)
     {
         //return CppWString(CppWString::MyStringView(str, len));
         return CppWString(str, len);

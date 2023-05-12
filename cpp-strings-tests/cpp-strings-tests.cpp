@@ -713,6 +713,46 @@ namespace cppstringstests
 			}
 		}
 
+		TEST_METHOD(join)
+		{
+			pcs::CppString s("##");
+			std::array<CppString, 2> arr{ "abcd", "efg" };
+			Assert::AreEqual(pcs::CppString("abcd##efg").c_str(), s.join(arr).c_str());
+			Assert::AreEqual(pcs::CppString("abcd##efg##123456789").c_str(), s.join(std::array<CppString, 3>{ "abcd", "efg", "123456789" }).c_str());
+
+			pcs::CppWString ws(L"##");
+			std::array<CppWString, 2> warr{ L"abcd", L"efg" };
+			Assert::AreEqual(pcs::CppWString(L"abcd##efg").c_str(), ws.join(warr).c_str());
+			Assert::AreEqual(pcs::CppWString(L"abcd##efg##123456789").c_str(), ws.join(std::array<CppWString, 3>{ L"abcd", L"efg", L"123456789" }).c_str());
+
+			std::vector<CppString> vec{ "abcd", "efg" };
+			Assert::AreEqual(pcs::CppString("abcd##efg").c_str(), s.join(vec).c_str());
+			vec.push_back("123456789");
+			Assert::AreEqual(pcs::CppString("abcd##efg##123456789").c_str(), s.join(vec).c_str());
+
+			std::vector<CppWString> wvec{ L"abcd", L"efg" };
+			Assert::AreEqual(pcs::CppWString(L"abcd##efg").c_str(), ws.join(wvec).c_str());
+			wvec.push_back(L"123456789");
+			Assert::AreEqual(pcs::CppWString(L"abcd##efg##123456789").c_str(), ws.join(wvec).c_str());
+
+			Assert::AreEqual(pcs::CppString("abcd##efg").c_str(), s.join(pcs::CppString("abcd"), pcs::CppString("efg")).c_str());
+			Assert::AreEqual(pcs::CppString("abcd##efg##123456789").c_str(), s.join(pcs::CppString("abcd"), pcs::CppString("efg"), pcs::CppString("123456789")).c_str());
+			Assert::AreEqual(pcs::CppString("abcd##efg##123456789##0").c_str(), s.join("abcd", "efg", "123456789", "0").c_str());
+			Assert::AreEqual(pcs::CppString("abcd# #efg# #123456789# #0").c_str(), "# #"cs.join("abcd", "efg", "123456789", "0").c_str());
+			Assert::AreEqual("abcdE", "##"cs.join("abcdE").c_str());
+			Assert::AreEqual("##", "##"cs.join().c_str());
+			Assert::AreEqual("", "##"cs.join("").c_str());
+
+			Assert::AreEqual(pcs::CppWString(L"abcd##efg").c_str(), ws.join(pcs::CppWString(L"abcd"), pcs::CppWString(L"efg")).c_str());
+			Assert::AreEqual(pcs::CppWString(L"abcd##efg##123456789").c_str(), ws.join(pcs::CppWString(L"abcd"), pcs::CppWString(L"efg"), pcs::CppWString(L"123456789")).c_str());
+			Assert::AreEqual(pcs::CppWString(L"abcd##efg##123456789##0").c_str(), ws.join(L"abcd"cs, L"efg"cs, L"123456789"cs, L"0"cs).c_str());
+			Assert::AreEqual(pcs::CppWString(L"abcd# #efg# #123456789# #0").c_str(), L"# #"csv.join(L"abcd", L"efg"cs, L"123456789"cs, L"0"cs).c_str());
+			Assert::AreEqual(pcs::CppWString(L"abcdE").c_str(), L"##"cs.join(L"abcdE").c_str());
+			Assert::AreEqual(pcs::CppWString(L"##").c_str(), L"##"cs.join().c_str());
+			Assert::AreEqual(pcs::CppWString(L"").c_str(), L"##"cs.join(L"").c_str());
+
+		}
+
 
 
 	};
