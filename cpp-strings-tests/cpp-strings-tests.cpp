@@ -750,9 +750,34 @@ namespace cppstringstests
 			Assert::AreEqual(pcs::CppWString(L"abcdE").c_str(), L"##"cs.join(L"abcdE").c_str());
 			Assert::AreEqual(pcs::CppWString(L"##").c_str(), L"##"cs.join().c_str());
 			Assert::AreEqual(pcs::CppWString(L"").c_str(), L"##"cs.join(L"").c_str());
-
 		}
 
+		TEST_METHOD(ljust)
+		{
+			pcs::CppString s("abc");
+			Assert::AreEqual("abc", s.ljust(1).c_str());
+			Assert::AreEqual("abc", s.ljust(2).c_str());
+			Assert::AreEqual("abc", s.ljust(3).c_str());
+			Assert::AreEqual("abc ", s.ljust(4).c_str());
+			Assert::AreEqual("abc  ", s.ljust(5).c_str());
+			Assert::AreEqual("abc", s.ljust(1).c_str());
+			Assert::AreEqual("abc", s.ljust(2).c_str());
+			Assert::AreEqual("abc", s.ljust(3).c_str());
+			Assert::AreEqual("abc.", s.ljust(4, '.').c_str());
+			Assert::AreEqual("abc..", s.ljust(5, '.').c_str());
+
+			pcs::CppWString ws(L"abc");
+			Assert::AreEqual(L"abc", ws.ljust(1).c_str());
+			Assert::AreEqual(L"abc", ws.ljust(2).c_str());
+			Assert::AreEqual(L"abc", ws.ljust(3).c_str());
+			Assert::AreEqual(L"abc ", ws.ljust(4).c_str());
+			Assert::AreEqual(L"abc  ", ws.ljust(5).c_str());
+			Assert::AreEqual(L"abc", ws.ljust(1).c_str());
+			Assert::AreEqual(L"abc", ws.ljust(2).c_str());
+			Assert::AreEqual(L"abc", ws.ljust(3).c_str());
+			Assert::AreEqual(L"abc.", ws.ljust(4, '.').c_str());
+			Assert::AreEqual(L"abc..", ws.ljust(5, '.').c_str());
+		}
 
 
 	};
