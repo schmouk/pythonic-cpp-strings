@@ -779,6 +779,27 @@ namespace cppstringstests
 			Assert::AreEqual(L"abc..", ws.ljust(5, '.').c_str());
 		}
 
+		TEST_METHOD(lower)
+		{
+			for (int c = 0; c <= 255; ++c) {
+				const char ch{ char(c) };
+				constexpr int N{ 5 };
+				pcs::CppString s(N, ch);
+				s.lower();
+				for (int i=0; i < N; ++i)
+					Assert::AreEqual(pcs::to_lower(ch), s[i]);
+			}
+
+			for (int c = 0; c <= 0xffff; ++c) {
+				const wchar_t wch{ wchar_t(c) };
+				constexpr int N{ 5 };
+				pcs::CppWString ws(N, wch);
+				ws.lower();
+				for (int i = 0; i < N; ++i)
+					Assert::AreEqual(pcs::to_lower(wch), ws[i]);
+			}
+		}
+
 
 	};
 }
