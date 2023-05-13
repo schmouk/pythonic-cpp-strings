@@ -1135,7 +1135,7 @@ namespace pcs // i.e. "pythonic c++ strings"
 
 
         //---   partition()   -------------------------------------
-        /** Split the string at the first occurrence of sep, and returns a 3-items vector containing the part before the separator, the separator itself, and the part after the separator.
+        /** Splits the string at the first occurrence of sep, and returns a 3-items vector containing the part before the separator, the separator itself, and the part after the separator.
         *
         * If the separator is not  found,  returns  a  3-items  vector
         * containing the string itself, followed by two empty strings. 
