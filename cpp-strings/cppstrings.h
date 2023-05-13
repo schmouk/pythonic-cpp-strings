@@ -1119,7 +1119,7 @@ namespace pcs // i.e. "pythonic c++ strings"
         inline CppStringT lstrip(const CppStringT& prefix) const noexcept
         {
             for (auto it = this->cbegin(); it != this->cend(); ++it)
-                if (std::none_of(prefix.cbegin(), prefix.cend(), [it](const value_type ch) { *it == ch; }))
+                if (std::none_of(prefix.cbegin(), prefix.cend(), [it](const value_type ch) { return *it == ch; }))
                     return CppStringT(it, this->cend());
             return CppStringT();
         }

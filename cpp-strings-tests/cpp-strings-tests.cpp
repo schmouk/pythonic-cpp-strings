@@ -788,6 +788,7 @@ namespace cppstringstests
 				s.lower();
 				for (int i=0; i < N; ++i)
 					Assert::AreEqual(pcs::to_lower(ch), s[i]);
+				Assert::AreEqual(char(std::tolower(ch)), pcs::CppString::lower(ch));
 			}
 
 			for (int c = 0; c <= 0xffff; ++c) {
@@ -797,9 +798,36 @@ namespace cppstringstests
 				ws.lower();
 				for (int i = 0; i < N; ++i)
 					Assert::AreEqual(pcs::to_lower(wch), ws[i]);
+				Assert::AreEqual(wchar_t(std::tolower(wch)), pcs::CppWString::lower(wch));
 			}
 		}
 
+		TEST_METHOD(lstrip)
+		{
+			pcs::CppString s("abcd");
+			Assert::AreEqual("cd", s.lstrip("baCD").c_str());
+			Assert::AreEqual("abcd", s.lstrip("xyz").c_str());
+			Assert::AreEqual("abcd", s.lstrip("").c_str());
+			Assert::AreEqual("cd", "abbabaabcd"cs.lstrip("baCD").c_str());
+			Assert::AreEqual("cdab", "abbabaabcdab"cs.lstrip("baCD").c_str());
+			Assert::AreEqual("abcd", " abcd"cs.lstrip().c_str());
+			Assert::AreEqual("abcd", "  abcd"cs.lstrip().c_str());
+			Assert::AreEqual("abcd", "       abcd"cs.lstrip().c_str());
+			Assert::AreEqual("a  bcd", "         a  bcd"cs.lstrip().c_str());
+			Assert::AreEqual("a  bcd   ", "         a  bcd   "cs.lstrip().c_str());
+
+			pcs::CppWString ws(L"abcd");
+			Assert::AreEqual(L"cd", ws.lstrip(L"baCD").c_str());
+			Assert::AreEqual(L"abcd", ws.lstrip(L"xyz").c_str());
+			Assert::AreEqual(L"abcd", ws.lstrip(L"").c_str());
+			Assert::AreEqual(L"cd", L"abbabaabcd"cs.lstrip(L"baCD").c_str());
+			Assert::AreEqual(L"cdab", L"abbabaabcdab"cs.lstrip(L"baCD").c_str());
+			Assert::AreEqual(L"abcd", L" abcd"cs.lstrip().c_str());
+			Assert::AreEqual(L"abcd", L"  abcd"cs.lstrip().c_str());
+			Assert::AreEqual(L"abcd", L"       abcd"cs.lstrip().c_str());
+			Assert::AreEqual(L"a  bcd", L"         a  bcd"cs.lstrip().c_str());
+			Assert::AreEqual(L"a  bcd   ", L"         a  bcd   "cs.lstrip().c_str());
+		}
 
 	};
 }
