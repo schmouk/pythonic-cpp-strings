@@ -1174,7 +1174,7 @@ namespace pcs // i.e. "pythonic c++ strings"
         {
             if (this->endswith(suffix)) {
                 const size_type suffix_length = suffix.size();
-                return this->substr(0, this->size() - suffix_length + 1);
+                return this->substr(0, this->size() - suffix_length);
             }
             else
                 return *this;

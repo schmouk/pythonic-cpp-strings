@@ -893,5 +893,22 @@ namespace cppstringstests
 			Assert::AreEqual(L"cdab", L"abcdab"cs.removeprefix(L"ab").c_str());
 		}
 
+
+		TEST_METHOD(removesuffix)
+		{
+			pcs::CppString s("abcd");
+			Assert::AreEqual("ab", s.removesuffix("cd").c_str());
+			Assert::AreEqual("abcd", s.removesuffix("dc").c_str());
+			Assert::AreEqual("abcd", s.removesuffix("").c_str());
+			Assert::AreEqual("abbaba", "abbabaabcd"cs.removesuffix("abcd").c_str());
+			Assert::AreEqual("abcd", "abcdab"cs.removesuffix("ab").c_str());
+
+			pcs::CppWString ws(L"abcd");
+			Assert::AreEqual(L"ab", ws.removesuffix(L"cd").c_str());
+			Assert::AreEqual(L"abcd", ws.removesuffix(L"dc").c_str());
+			Assert::AreEqual(L"abcd", ws.removesuffix(L"").c_str());
+			Assert::AreEqual(L"abbaba", L"abbabaabcd"cs.removesuffix(L"abcd").c_str());
+			Assert::AreEqual(L"abcd", L"abcdab"cs.removesuffix(L"ab").c_str());
+		}
 	};
 }
