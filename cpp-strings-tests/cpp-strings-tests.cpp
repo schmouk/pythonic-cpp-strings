@@ -171,45 +171,119 @@ namespace cppstringstests
 
 		TEST_METHOD(find)
 		{
+			size_t found_pos;
+
 			pcs::CppString test{ "ABC0123456789." };
 			for (int c = 0; c <= 255; ++c) {
 				char ch{ char(c) };
 				Assert::AreEqual(test.MyBaseClass::find(ch), test.find(ch));
-				Assert::AreEqual(test.substr(2).MyBaseClass::find(ch), test.find(ch, 2));
-				Assert::AreEqual(test.substr(2,5).MyBaseClass::find(ch), test.find(ch, 2, 5+2-1));
+
+				found_pos = test.substr(2).MyBaseClass::find(ch);
+				if (found_pos == pcs::CppString::npos)
+					Assert::AreEqual(found_pos, test.find(ch, 2));
+				else
+					Assert::AreEqual(found_pos, test.find(ch, 2) - 2);
+				
+				found_pos = test.substr(2, 5).MyBaseClass::find(ch);
+				if (found_pos == pcs::CppString::npos)
+					Assert::AreEqual(found_pos, test.find(ch, 2, pcs::CppString::size_type(5 + 2 - 1)));
+				else
+					Assert::AreEqual(found_pos, test.find(ch, 2, pcs::CppString::size_type(5 + 2 - 1)) - 2);
 
 				CppString s(ch);
 				Assert::AreEqual(test.MyBaseClass::find(s), test.find(s));
-				Assert::AreEqual(test.substr(2).MyBaseClass::find(s), test.find(s,2));
-				Assert::AreEqual(test.substr(3, 5).MyBaseClass::find(s), test.find(s, 3, 5+3-1));
+				found_pos = test.substr(2).MyBaseClass::find(s);
+				if (found_pos == pcs::CppString::npos)
+					Assert::AreEqual(found_pos, test.find(s, 2));
+				else
+					Assert::AreEqual(found_pos, test.find(s, 2) - 2);
 
-				char str[2]{ ch, 0 };
-				Assert::AreEqual(test.MyBaseClass::find(str), test.find(str));
-				Assert::AreEqual(test.substr(2).MyBaseClass::find(str), test.find(str, 2));
-				Assert::AreEqual(test.substr(3, 5).MyBaseClass::find(str), test.find(str, 3, 5+3-1));
+				found_pos = test.substr(2, 5).MyBaseClass::find(s);
+				if (found_pos == pcs::CppString::npos)
+					Assert::AreEqual(found_pos, test.find(s, 2, pcs::CppString::size_type(5 + 2 - 1)));
+				else
+					Assert::AreEqual(found_pos, test.find(s, 2, pcs::CppString::size_type(5 + 2 - 1)) - 2);
+
+				if (c > 0) {
+					char str[2]{ ch, 0 };
+					Assert::AreEqual(test.MyBaseClass::find(str), test.find(str));
+
+					found_pos = test.substr(2).MyBaseClass::find(str);
+					if (found_pos == pcs::CppString::npos)
+						Assert::AreEqual(found_pos, test.find(str, 2));
+					else
+						Assert::AreEqual(found_pos, test.find(str, 2) - 2);
+
+					found_pos = test.substr(2, 5).MyBaseClass::find(str);
+					if (found_pos == pcs::CppString::npos)
+						Assert::AreEqual(found_pos, test.find(str, 2, pcs::CppString::size_type(5 + 2 - 1)));
+					else
+						Assert::AreEqual(found_pos, test.find(str, 2, pcs::CppString::size_type(5 + 2 - 1)) - 2);
+				}
 			}
+			Assert::AreEqual(pcs::CppString::npos, test.find("A", 1));
+			Assert::AreEqual(size_t(0), test.find(""));
+			Assert::AreEqual(pcs::CppString::npos, test.find(".", 14));
+			Assert::AreEqual(size_t(13), test.find(".", 13));
 
 			pcs::CppWString wtest{ L"ABC0123456789." };
 			for (int wc = 0; wc <=0xffff; ++wc) {
 				wchar_t wch{ wchar_t(wc) };
-				Assert::AreEqual(wtest.MyBaseClass::find(wch), wtest.find(wch));
-				Assert::AreEqual(wtest.substr(2).MyBaseClass::find(wch), wtest.find(wch, 2));
-				Assert::AreEqual(wtest.substr(2, 5).MyBaseClass::find(wch), wtest.find(wch, 2, 5 + 2 - 1));
+
+				found_pos = wtest.substr(2).MyBaseClass::find(wch);
+				if (found_pos == pcs::CppString::npos)
+					Assert::AreEqual(found_pos, wtest.find(wch, 2));
+				else
+					Assert::AreEqual(found_pos, wtest.find(wch, 2) - 2);
+
+				found_pos = wtest.substr(2, 5).MyBaseClass::find(wch);
+				if (found_pos == pcs::CppString::npos)
+					Assert::AreEqual(found_pos, wtest.find(wch, 2, pcs::CppWString::size_type(5 + 2 - 1)));
+				else
+					Assert::AreEqual(found_pos, wtest.find(wch, 2, pcs::CppWString::size_type(5 + 2 - 1)) - 2);
 
 				CppWString ws(wch);
 				Assert::AreEqual(wtest.MyBaseClass::find(ws), wtest.find(ws));
-				Assert::AreEqual(wtest.substr(2).MyBaseClass::find(ws), wtest.find(ws, 2));
-				Assert::AreEqual(wtest.substr(3, 5).MyBaseClass::find(ws), wtest.find(ws, 3, 5 + 3 - 1));
 
-				wchar_t wstr[2]{ wch, 0 };
-				Assert::AreEqual(wtest.MyBaseClass::find(wstr), wtest.find(wstr));
-				Assert::AreEqual(wtest.substr(2).MyBaseClass::find(wstr), wtest.find(wstr, 2));
-				Assert::AreEqual(wtest.substr(3, 5).MyBaseClass::find(wstr), wtest.find(wstr, 3, 5 + 3 - 1));
+				found_pos = wtest.substr(2).MyBaseClass::find(ws);
+				if (found_pos == pcs::CppString::npos)
+					Assert::AreEqual(found_pos, wtest.find(ws, 2));
+				else
+					Assert::AreEqual(found_pos, wtest.find(ws, 2) - 2);
+
+				found_pos = wtest.substr(2, 5).MyBaseClass::find(ws);
+				if (found_pos == pcs::CppString::npos)
+					Assert::AreEqual(found_pos, wtest.find(ws, 2, pcs::CppString::size_type(5 + 2 - 1)));
+				else
+					Assert::AreEqual(found_pos, wtest.find(ws, 2, pcs::CppString::size_type(5 + 2 - 1)) - 2);
+
+
+				if (wc > 0) {
+					wchar_t wstr[2]{ wch, 0 };
+					Assert::AreEqual(wtest.MyBaseClass::find(wstr), wtest.find(wstr));
+
+					found_pos = wtest.substr(2).MyBaseClass::find(wstr);
+					if (found_pos == pcs::CppString::npos)
+						Assert::AreEqual(found_pos, wtest.find(wstr, 2));
+					else
+						Assert::AreEqual(found_pos, wtest.find(wstr, 2) - 2);
+
+					found_pos = wtest.substr(2, 5).MyBaseClass::find(wstr);
+					if (found_pos == pcs::CppString::npos)
+						Assert::AreEqual(found_pos, wtest.find(wstr, 2, pcs::CppString::size_type(5 + 2 - 1)));
+					else
+						Assert::AreEqual(found_pos, wtest.find(wstr, 2, pcs::CppString::size_type(5 + 2 - 1)) - 2);
+				}
 			}
+			Assert::AreEqual(pcs::CppString::npos, wtest.find(L"A", 1));
+			Assert::AreEqual(size_t(0), wtest.find(L""));
+			Assert::AreEqual(pcs::CppString::npos, wtest.find(L".", 14));
+			Assert::AreEqual(size_t(13), wtest.find(L".", 13));
 		}
 
 		TEST_METHOD(find_n)
 		{
+			// notice: find_n() is fully tested via TEST_METHOD(find)
 			pcs::CppString test{ "ABC0123456789." };
 			for (int c = 0; c <= 255; ++c) {
 				char ch{ char(c) };
@@ -909,6 +983,44 @@ namespace cppstringstests
 			Assert::AreEqual(L"abcd", ws.removesuffix(L"").c_str());
 			Assert::AreEqual(L"abbaba", L"abbabaabcd"cs.removesuffix(L"abcd").c_str());
 			Assert::AreEqual(L"abcd", L"abcdab"cs.removesuffix(L"ab").c_str());
+		}
+
+
+		TEST_METHOD(replace)
+		{
+			pcs::CppString s("abbaa");
+			Assert::AreEqual("abbaa", s.replace("e", "fff").c_str());
+			Assert::AreEqual("AAbbAAAA", s.replace("a", "AA").c_str());
+			Assert::AreEqual("aBBaa", s.replace("b", "B").c_str());
+
+			Assert::AreEqual("abbaa", s.replace("e", "fff", 0).c_str());
+			Assert::AreEqual("abbaa", s.replace("a", "AA", 0).c_str());
+			Assert::AreEqual("abbaa", s.replace("b", "B", 0).c_str());
+
+			Assert::AreEqual("abbaa", s.replace("e", "fff", 1).c_str());
+			Assert::AreEqual("AAbbaa", s.replace("a", "AA", 1).c_str());
+			Assert::AreEqual("aBbaa", s.replace("b", "B", 1).c_str());
+
+			Assert::AreEqual("abbaa", s.replace("e", "fff", 2).c_str());
+			Assert::AreEqual("AAbbAAAA", s.replace("a", "AA", 3).c_str());
+			Assert::AreEqual("aBBaa", s.replace("b", "B", 5).c_str());
+
+			pcs::CppWString ws(L"abbaa");
+			Assert::AreEqual(L"abbaa", ws.replace(L"e", L"fff").c_str());
+			Assert::AreEqual(L"AAbbAAAA", ws.replace(L"a", L"AA").c_str());
+			Assert::AreEqual(L"aBBaa", ws.replace(L"b", L"B").c_str());
+
+			Assert::AreEqual(L"abbaa", ws.replace(L"e", L"fff", 0).c_str());
+			Assert::AreEqual(L"abbaa", ws.replace(L"a", L"AA", 0).c_str());
+			Assert::AreEqual(L"abbaa", ws.replace(L"b", L"B", 0).c_str());
+
+			Assert::AreEqual(L"abbaa", ws.replace(L"e", L"fff", 1).c_str());
+			Assert::AreEqual(L"AAbbaa", ws.replace(L"a", L"AA", 1).c_str());
+			Assert::AreEqual(L"aBbaa", ws.replace(L"b", L"B", 1).c_str());
+
+			Assert::AreEqual(L"abbaa", ws.replace(L"e", L"fff", 2).c_str());
+			Assert::AreEqual(L"AAbbAAAA", ws.replace(L"a", L"AA", 3).c_str());
+			Assert::AreEqual(L"aBBaa", ws.replace(L"b", L"B", 5).c_str());
 		}
 	};
 }

@@ -583,13 +583,12 @@ namespace pcs // i.e. "pythonic c++ strings"
         */
         constexpr size_type find(const CppStringT& sub, const size_type start = 0, const size_type end = -1) const noexcept
         {
-            size_type start_{ start };
             const size_type end_{ (end == -1) ? this->size() : end };
 
-            if (start_ > end_)
+            if (start > end_)
                 return CppStringT::npos;
             else
-                return find_n(sub, start_, end_ - start_ + 1);
+                return find_n(sub, start, end_ - start + 1);
         }
 
         /** Returns the lowest index in the string where character ch is found within the slice str[start:end], or -1 (i.e. 'npos') if ch is not found.
@@ -642,12 +641,16 @@ namespace pcs // i.e. "pythonic c++ strings"
         */
         inline constexpr size_type find_n(const CppStringT& sub, const size_type start, const size_type count) const noexcept
         {
+            constexpr size_type npos{ CppStringT::npos };
+
             try {
-                CppStringT part{ this->substr(start, count) };
-                return part.MyBaseClass::find(sub);
+                const CppStringT sub_str{ this->substr(start, count) };
+                const size_type found_pos{ sub_str.MyBaseClass::find(sub) };
+
+                return (found_pos == npos) ? npos : found_pos + start;
             }
             catch (...) {
-                return CppStringT::npos;
+                return npos;
             }
         }
 
@@ -1049,7 +1052,7 @@ namespace pcs // i.e. "pythonic c++ strings"
         * The separator between elements is the string to which this method is applied.
         */
         template<class... NextCppStringsT>
-        inline CppStringT join(const CppStringT& first, const NextCppStringsT... others) const noexcept
+        inline CppStringT join(const CppStringT& first, const NextCppStringsT&... others) const noexcept
             requires (sizeof...(others) > 0)
         {
             return first + *this + this->join(others...);
@@ -1182,43 +1185,23 @@ namespace pcs // i.e. "pythonic c++ strings"
 
 
         //---   replace()   ---------------------------------------
-        /** \brief Returns a copy of the string with all occurrences of substring old replaced by new. */
-        CppStringT replace(const CppStringT& old, const CppStringT& new_) const noexcept
+        /** \brief Returns a copy of the string with first count occurrences of substring 'old' replaced by 'new_'. */
+        CppStringT replace(const CppStringT& old, const CppStringT& new_, size_type count = -1) const noexcept
         {
-            if (!this->contains(old))
+            if (old == new_ || old.empty())
                 return *this;
 
             CppStringT res{};
-            size_type last_index = 0;
+            size_type prev_index = 0;
             size_type current_index = 0;
-            while ((current_index = this->find(old)) != CppStringT::npos) {
-                res += this->substr(last_index, current_index - last_index) + new_;
-                last_index = current_index;
-            }
-
-            if (last_index != this->size())
-                res += this->substr(last_index, this->size - last_index);
-            
-            return res;
-        }
-
-        /** \brief Returns a copy of the string with first count occurrences of substring old replaced by new. */
-        CppStringT replace(const CppStringT& old, const CppStringT& new_, size_type count) const noexcept
-        {
-            if (!this->contains(old) || count == 0)
-                return *this;
-
-            CppStringT res{};
-            size_type last_index = 0;
-            size_type current_index = 0;
-            while (count > 0 && (current_index = this->find(old)) != CppStringT::npos) {
-                res += this->substr(last_index, current_index - last_index) + new_;
-                last_index = current_index;
+            while (count > 0 && (current_index = this->find(old, prev_index)) != CppStringT::npos) {
+                res += this->substr(prev_index, current_index - prev_index) + new_;
+                prev_index = current_index + 1;
                 --count;
             }
 
-            if (last_index != this->size())
-                res += this->substr(last_index, this->size - last_index);
+            if (prev_index < this->size())
+                res += this->substr(prev_index, this->size() - prev_index);
 
             return res;
         }
