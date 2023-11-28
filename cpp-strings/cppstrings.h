@@ -576,7 +576,7 @@ namespace pcs // i.e. "pythonic c++ strings"
         * sub.  To check if sub is a substring or not, use the method contains().
         *
         * CAUTION: empty substrings are considered to be in the string if start and
-        * end positions are both less then the string size and if start <= end.
+        * end positions are both less than the string size and if start <= end.
         *
         * \see find_n(), rfind() and rfind_n().
         * \see index(), index_n(), rindex() and rindex_n().
@@ -597,7 +597,7 @@ namespace pcs // i.e. "pythonic c++ strings"
         * sub.  To check if sub is a substring or not, use the method contains().
         *
         * CAUTION: empty substrings are considered to be in the string if start and
-        * end positions are both less then the string size and if start <= end.
+        * end positions are both less than the string size and if start <= end.
         *
         * \see find_n(), rfind() and rfind_n().
         * \see index(), index_n(), rindex() and rindex_n().
@@ -613,7 +613,8 @@ namespace pcs // i.e. "pythonic c++ strings"
         * sub.  To check if sub is a substring or not, use the method contains().
         * 
         * CAUTION: empty substrings are considered to be in the string if start and
-        * end positions are both less then the string size and if start <= end.
+        * end positions are both less than the string size and if start <= end. The
+        * returned position is 0.
         *
         * \see find_n(), rfind() and rfind_n().
         * \see index(), index_n(), rindex() and rindex_n().
@@ -634,7 +635,8 @@ namespace pcs // i.e. "pythonic c++ strings"
         * sub.  To check if sub is a substring or not, use the method contains_n().
         *
         * CAUTION: empty substrings are considered to be in the string if start and
-        * end positions are both less then the string size and if start <= end.
+        * end positions are both less than the string size and if start <= end. The
+        * returned position is 0.
         *
         * \see find(), rfind() and rfind_n().
         * \see index(), index_n(), rindex() and rindex_n().
@@ -660,7 +662,8 @@ namespace pcs // i.e. "pythonic c++ strings"
         * sub.  To check if sub is a substring or not, use the method contains_n().
         *
         * CAUTION: empty substrings are considered to be in the string if start and
-        * end positions are both less then the string size and if start <= end.
+        * end positions are both less than the string size and if start <= end. The
+        * returned position is 0.
         *
         * \see find(), rfind() and rfind_n().
         * \see index(), index_n(), rindex() and rindex_n().
@@ -676,7 +679,7 @@ namespace pcs // i.e. "pythonic c++ strings"
         * sub.  To check if sub is a substring or not, use the method contains_n().
         *
         * CAUTION: empty substrings are considered to be in the string if start and
-        * end positions are both less then the string size and if start <= end.
+        * end positions are both less than the string size and if start <= end.
         *
         * \see find(), rfind() and rfind_n().
         * \see index(), index_n(), rindex() and rindex_n().
@@ -1215,6 +1218,10 @@ namespace pcs // i.e. "pythonic c++ strings"
         * Note: this method should be used only if you need to  know  the  position
         * of sub. To check if sub is a substring or not, use the method contains().
         *
+        * CAUTION: empty substrings are considered to be in the string if start and
+        * end positions are both less than the string size and if start <= end. The
+        * returned position is the size of the string.
+        *
         * \see find(), find_n() and rfind_n().
         * \see index(), index_n(), rindex() and rindex_n().
         */
@@ -1222,9 +1229,12 @@ namespace pcs // i.e. "pythonic c++ strings"
         {
             if (start > end)
                 return CppStringT::npos;
-            else
-                return this->substr(start, end - start + 1).rfind(sub);
+            else {
+                const size_type found_pos{ this->substr(start, end - start + 1).rfind(sub) };
+                return (found_pos == CppStringT::npos) ? CppStringT::npos : found_pos + start;
+            }
         }
+
 
         /** Returns the highest index in the string where substring sub is found starting at start position in string, or -1 (i.e. 'npos') if sub is not found.
         *
@@ -1233,12 +1243,16 @@ namespace pcs // i.e. "pythonic c++ strings"
         * Note: this method should be used only if you need to  know  the  position
         * of sub. To check if sub is a substring or not, use the method contains().
         *
+        * CAUTION: empty substrings are considered to be in the string if start and
+        * end positions are both less than the string size and if start <= end. The
+        * returned position is the size of the string.
+        *
         * \see find(), find_n() and rfind_n().
         * \see index(), index_n(), rindex() and rindex_n().
         */
         inline constexpr size_type rfind(const CppStringT& sub, const size_type start) const noexcept
         {
-            return rfind(sub, start, this->size() - start + 1);
+            return rfind(sub, start, this->size() - 1);
         }
 
         /** Returns the highest index in the string where substring sub is found in the whole string, or -1 (i.e. 'npos') if sub is not found.
@@ -1247,6 +1261,10 @@ namespace pcs // i.e. "pythonic c++ strings"
         *
         * Note: this method should be used only if you need to  know  the  position
         * of sub. To check if sub is a substring or not, use the method contains().
+        *
+        * CAUTION: empty substrings are considered to be in the string if start and
+        * end positions are both less than the string size and if start <= end. The
+        * returned position is the size of the string.
         *
         * \see find(), find_n() and rfind_n().
         * \see index(), index_n(), rindex() and rindex_n().
