@@ -1312,7 +1312,7 @@ namespace pcs // i.e. "pythonic c++ strings"
         inline constexpr size_type rindex(const CppStringT& sub, const size_type start, const size_type end) const
         {
             const size_type ret_value = rfind(sub, start, end);
-            if (size_type == CppStringT::npos)
+            if (ret_value == CppStringT::npos)
                 throw NotFoundException(std::format("substring \"{}\" not found in string \"{}\"", sub, this->c_str()));
             else
                 return ret_value;
