@@ -1229,6 +1229,8 @@ namespace pcs // i.e. "pythonic c++ strings"
         {
             if (start > end)
                 return CppStringT::npos;
+            else if (sub.empty())
+                return 0;
             else {
                 const size_type found_pos{ this->substr(start, end - start + 1).rfind(sub) };
                 return (found_pos == CppStringT::npos) ? CppStringT::npos : found_pos + start;
@@ -1299,7 +1301,10 @@ namespace pcs // i.e. "pythonic c++ strings"
          */
         inline constexpr size_type rfind_n(const CppStringT& sub, const size_type count) const noexcept
         {
-            return rfind(sub, 0, count);
+            if (count == 0)
+                return CppStringT::npos;
+            else
+                return rfind(sub, 0, count - 1);
         }
 
 
