@@ -2243,5 +2243,32 @@ namespace cppstringstests
 			catch (const string_type::NotFoundException e) { /* ok case! */ }
 		}
 
+		TEST_METHOD(rjust)
+		{
+			pcs::CppString s("abc");
+			Assert::AreEqual("abc", s.rjust(1).c_str());
+			Assert::AreEqual("abc", s.rjust(2).c_str());
+			Assert::AreEqual("abc", s.rjust(3).c_str());
+			Assert::AreEqual(" abc", s.rjust(4).c_str());
+			Assert::AreEqual("  abc", s.rjust(5).c_str());
+			Assert::AreEqual("abc", s.rjust(1).c_str());
+			Assert::AreEqual("abc", s.rjust(2).c_str());
+			Assert::AreEqual("abc", s.rjust(3).c_str());
+			Assert::AreEqual(".abc", s.rjust(4, '.').c_str());
+			Assert::AreEqual("..abc", s.rjust(5, '.').c_str());
+
+			pcs::CppWString ws(L"abc");
+			Assert::AreEqual(L"abc", ws.rjust(1).c_str());
+			Assert::AreEqual(L"abc", ws.rjust(2).c_str());
+			Assert::AreEqual(L"abc", ws.rjust(3).c_str());
+			Assert::AreEqual(L" abc", ws.rjust(4).c_str());
+			Assert::AreEqual(L"  abc", ws.rjust(5).c_str());
+			Assert::AreEqual(L"abc", ws.rjust(1).c_str());
+			Assert::AreEqual(L"abc", ws.rjust(2).c_str());
+			Assert::AreEqual(L"abc", ws.rjust(3).c_str());
+			Assert::AreEqual(L".abc", ws.rjust(4, '.').c_str());
+			Assert::AreEqual(L"..abc", ws.rjust(5, '.').c_str());
+		}
+
 	};
 }
