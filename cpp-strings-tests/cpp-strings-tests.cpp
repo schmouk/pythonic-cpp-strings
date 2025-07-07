@@ -2270,5 +2270,52 @@ namespace cppstringstests
 			Assert::AreEqual(L"..abc", ws.rjust(5, '.').c_str());
 		}
 
+		TEST_METHOD(rpartition)
+		{
+			pcs::CppString s("abcd#123efg#123hij");
+			std::vector<CppString> res{ s.rpartition("#123") };
+			Assert::AreEqual("abcd#123efg", res[0].c_str());
+			Assert::AreEqual("#123", res[1].c_str());
+			Assert::AreEqual("hij", res[2].c_str());
+
+			s = "abcd#123fgh#123";
+			res = s.rpartition("#123");
+			Assert::AreEqual("abcd#123fgh", res[0].c_str());
+			Assert::AreEqual("#123", res[1].c_str());
+			Assert::AreEqual("", res[2].c_str());
+
+			res = s.rpartition("XYZ");
+			Assert::AreEqual("abcd#123fgh#123", res[0].c_str());
+			Assert::AreEqual("", res[1].c_str());
+			Assert::AreEqual("", res[2].c_str());
+
+			res = ""cs.rpartition("A");
+			Assert::AreEqual("", res[0].c_str());
+			Assert::AreEqual("", res[1].c_str());
+			Assert::AreEqual("", res[2].c_str());
+
+			pcs::CppWString ws(L"abcd#123efg#123hij");
+			std::vector<CppWString> wres{ ws.rpartition(L"#123") };
+			Assert::AreEqual(L"abcd#123efg", wres[0].c_str());
+			Assert::AreEqual(L"#123", wres[1].c_str());
+			Assert::AreEqual(L"hij", wres[2].c_str());
+
+			ws = L"abcd#123fgh#123";
+			wres = ws.rpartition(L"#123");
+			Assert::AreEqual(L"abcd#123fgh", wres[0].c_str());
+			Assert::AreEqual(L"#123", wres[1].c_str());
+			Assert::AreEqual(L"", wres[2].c_str());
+
+			wres = ws.rpartition(L"XYZ");
+			Assert::AreEqual(L"abcd#123fgh#123", wres[0].c_str());
+			Assert::AreEqual(L"", wres[1].c_str());
+			Assert::AreEqual(L"", wres[2].c_str());
+
+			wres = L""cs.rpartition(L"A");
+			Assert::AreEqual(L"", wres[0].c_str());
+			Assert::AreEqual(L"", wres[1].c_str());
+			Assert::AreEqual(L"", wres[2].c_str());
+		}
+
 	};
 }
