@@ -1318,7 +1318,8 @@ namespace pcs // i.e. "pythonic c++ strings"
         {
             const size_type ret_value = rfind(sub, start, end);
             if (ret_value == CppStringT::npos)
-                throw NotFoundException(std::format("substring \"{}\" not found in string \"{}\"", sub, this->c_str()));
+                throw NotFoundException("substring not found in string");
+                //throw NotFoundException(std::format("substring \"{}\" not found in string \"{}\"", sub, this->c_str()));
             else
                 return ret_value;
         }
