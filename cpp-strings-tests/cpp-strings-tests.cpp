@@ -1,4 +1,3 @@
-#include "pch.h"
 #include "CppUnitTest.h"
 
 using namespace Microsoft::VisualStudio::CppUnitTestFramework;
@@ -9,10 +8,665 @@ using namespace pcs;
 
 namespace cppstringstests
 {
+
+	//=====   PART 1   ============================================
+	TEST_CLASS(cppstringstests_PART_1)
+	{
+	public:
+
+		TEST_METHOD(_cs)
+		{
+			using namespace pcs;
+			auto abcd = "abcD"cs;
+			auto wabcd = L"abcD"cs;
+			Assert::AreEqual(abcd.c_str(), CppString(abcd).c_str());
+			Assert::AreEqual(wabcd.c_str(), CppWString(wabcd).c_str());
+		}
+
+		TEST_METHOD(_csv)
+		{
+			using namespace pcs;
+			auto abcd = "abcD"csv;
+			auto wabcd = L"abcD"csv;
+			Assert::AreEqual(abcd.c_str(), CppString(abcd).c_str());
+			Assert::AreEqual(wabcd.c_str(), CppWString(wabcd).c_str());
+		}
+
+		TEST_METHOD(is_alpha)
+		{
+			for (int ch = 0; ch <= 255; ++ch)
+				Assert::AreEqual((const bool)std::isalpha(ch), pcs::is_alpha(char(ch)));
+			for (wchar_t ch = 0; ch < L'\uffff'; ++ch)
+				Assert::AreEqual((const bool)std::iswalpha(ch), pcs::is_alpha(ch));
+		}
+
+		TEST_METHOD(is_ascii)
+		{
+			for (int ch = 0; ch <= 255; ++ch)
+				Assert::AreEqual(ch < 128, pcs::is_ascii(char(ch)));
+			for (wchar_t ch = 0; ch < L'\uffff'; ++ch)
+				Assert::AreEqual(int(ch) < 128, pcs::is_ascii(ch));
+		}
+
+		TEST_METHOD(is_decimal)
+		{
+			for (int ch = 0; ch <= 255; ++ch)
+				Assert::AreEqual((const bool)std::isdigit(ch), pcs::is_decimal(char(ch)));
+			for (wchar_t ch = 0; ch < L'\uffff'; ++ch)
+				Assert::AreEqual((const bool)std::iswdigit(ch), pcs::is_decimal(ch));
+		}
+
+		TEST_METHOD(is_id_continue)
+		{
+			for (int ch = 0; ch <= 255; ++ch)
+				Assert::AreEqual((const bool)std::isdigit(ch) || (const bool)std::isalpha(ch) || ch == '_', pcs::is_id_continue(char(ch)));
+			for (wchar_t ch = 0; ch < L'\uffff'; ++ch)
+				Assert::AreEqual((const bool)std::iswdigit(ch) || (const bool)std::iswalpha(ch) || ch == L'_', pcs::is_id_continue(ch));
+		}
+
+		TEST_METHOD(is_id_start)
+		{
+			for (int ch = 0; ch <= 255; ++ch)
+				Assert::AreEqual((const bool)std::isalpha(ch) || ch == '_', pcs::is_id_start(char(ch)));
+			for (wchar_t ch = 0; ch < L'\uffff'; ++ch)
+				Assert::AreEqual((const bool)std::iswalpha(ch) || ch == L'_', pcs::is_id_start(ch));
+		}
+
+		TEST_METHOD(is_lower)
+		{
+			for (int ch = 0; ch <= 255; ++ch)
+				Assert::AreEqual((const bool)std::islower(static_cast<unsigned char>(ch)), pcs::is_lower(char(ch)));
+			for (wchar_t ch = 0; ch < L'\uffff'; ++ch)
+				Assert::AreEqual((const bool)std::iswlower(ch), pcs::is_lower(ch));
+		}
+
+		TEST_METHOD(is_printable)
+		{
+			for (int ch = 0; ch <= 255; ++ch)
+				Assert::AreEqual((const bool)std::isprint(static_cast<unsigned char>(ch)), pcs::is_printable(char(ch)));
+			for (wchar_t ch = 0; ch < L'\uffff'; ++ch)
+				Assert::AreEqual((const bool)std::iswprint(ch), pcs::is_printable(ch));
+		}
+
+		TEST_METHOD(is_punctuation)
+		{
+			for (int ch = 0; ch <= 255; ++ch)
+				Assert::AreEqual((const bool)std::ispunct(static_cast<unsigned char>(ch)), pcs::is_punctuation(char(ch)));
+			for (wchar_t ch = 0; ch < L'\uffff'; ++ch)
+				Assert::AreEqual((const bool)std::iswpunct(ch), pcs::is_punctuation(ch));
+		}
+
+		TEST_METHOD(is_space)
+		{
+			for (int ch = 0; ch <= 255; ++ch)
+				Assert::AreEqual((const bool)std::isspace(static_cast<unsigned char>(ch)), pcs::is_space(char(ch)));
+			for (wchar_t ch = 0; ch < L'\uffff'; ++ch)
+				Assert::AreEqual((const bool)std::iswspace(ch), pcs::is_space(ch));
+		}
+
+		TEST_METHOD(is_upper)
+		{
+			for (int ch = 0; ch <= 255; ++ch)
+				Assert::AreEqual((const bool)std::isupper(static_cast<unsigned char>(ch)), pcs::is_upper(char(ch)));
+			for (wchar_t ch = 0; ch < L'\uffff'; ++ch)
+				Assert::AreEqual((const bool)std::iswupper(ch), pcs::is_upper(ch));
+		}
+
+		TEST_METHOD(swap_case)
+		{
+			for (int ch = 0; ch <= 255; ++ch) {
+				const char sw_ch = pcs::swap_case(static_cast<char>(ch));
+				if (std::islower(ch))
+					Assert::IsTrue((const bool)std::isupper(static_cast<unsigned char>(sw_ch)));
+				else if (std::isupper(ch))
+					Assert::IsTrue((const bool)std::islower(static_cast<unsigned char>(sw_ch)), std::format(L"ch {}, sw_ch {}", ch, sw_ch).c_str());
+				else
+					Assert::AreEqual(sw_ch, static_cast<char>(ch));
+			}
+
+			for (wchar_t ch = 0; ch < L'\uffff'; ++ch) {
+				const wchar_t sw_ch = pcs::swap_case(ch);
+				if (std::islower(ch))
+					Assert::IsTrue((const bool)std::isupper(sw_ch));
+				else if (std::isupper(ch))
+					Assert::IsTrue((const bool)std::islower(sw_ch), std::format(L"ch {}, sw_ch {}", ch, sw_ch).c_str());
+				else
+					Assert::AreEqual(sw_ch, ch);
+			}
+		}
+
+		TEST_METHOD(to_lower)
+		{
+			for (int ch = 0; ch <= 255; ++ch) {
+				const char l_ch = pcs::to_lower(static_cast<char>(ch));
+				if (std::isupper(ch))
+					Assert::IsTrue(std::islower(l_ch));
+				else
+					Assert::AreEqual(l_ch, static_cast<char>(ch));
+			}
+
+			for (wchar_t ch = 0; ch < L'\uffff'; ++ch) {
+				const wchar_t l_ch = pcs::to_lower(ch);
+				if (std::isupper(ch))
+					Assert::IsTrue(std::iswlower(l_ch));
+				else
+					Assert::AreEqual(l_ch, ch);
+			}
+		}
+
+		TEST_METHOD(to_upper)
+		{
+			for (int ch = 0; ch <= 255; ++ch) {
+				const char l_ch = pcs::to_upper(static_cast<char>(ch));
+				if (std::islower(ch))
+					Assert::IsTrue(std::isupper(l_ch));
+				else
+					Assert::AreEqual(l_ch, static_cast<char>(ch));
+			}
+
+			for (wchar_t ch = 0; ch < L'\uffff'; ++ch) {
+				const wchar_t l_ch = pcs::to_upper(ch);
+				if (std::islower(ch))
+					Assert::IsTrue(std::iswupper(l_ch));
+				else
+					Assert::AreEqual(l_ch, ch);
+			}
+		}
+	};
+
+
+	//=====   PART 2   ============================================
+	TEST_CLASS(cppstringstests_PART_2)
+	{
+	public:
+
+		TEST_METHOD(constructor_01)
+		{
+			std::map<char, pcs::CppString> table{ {'a', "b"cs}, {'b', "a"cs} };
+			Assert::AreEqual("b"cs.c_str(), table['a'].c_str());
+			Assert::AreEqual("a"cs.c_str(), table['b'].c_str());
+
+			std::map<wchar_t, pcs::CppWString> wtable{ {L'a', L"b"cs}, {L'b', L"a"cs} };
+			Assert::AreEqual(L"b"cs.c_str(), wtable['a'].c_str());
+			Assert::AreEqual(L"a"cs.c_str(), wtable['b'].c_str());
+		}
+
+		TEST_METHOD(constructor_02)
+		{
+			CppString keys("abcdE");
+			CppString values("ABCDe");
+			pcs::CppString::TransTable t(keys, values);
+			Assert::AreEqual(CppString('A').c_str(), t['a'].c_str());
+			Assert::AreEqual(CppString('B').c_str(), t['b'].c_str());
+			Assert::AreEqual(CppString('C').c_str(), t['c'].c_str());
+			Assert::AreEqual(CppString('D').c_str(), t['d'].c_str());
+			Assert::AreEqual(CppString('e').c_str(), t['E'].c_str());
+			Assert::AreEqual(CppString('f').c_str(), t['f'].c_str());
+
+			pcs::CppWString::TransTable wt(CppWString(L"abcdE"), CppWString(L"ABCDe"));
+			Assert::AreEqual(CppWString(L'A').c_str(), wt[L'a'].c_str());
+			Assert::AreEqual(CppWString(L'B').c_str(), wt[L'b'].c_str());
+			Assert::AreEqual(CppWString(L'C').c_str(), wt[L'c'].c_str());
+			Assert::AreEqual(CppWString(L'D').c_str(), wt[L'd'].c_str());
+			Assert::AreEqual(CppWString(L'e').c_str(), wt[L'E'].c_str());
+			Assert::AreEqual(CppWString(L'f').c_str(), wt[L'f'].c_str());
+		}
+
+		TEST_METHOD(constructor_03)
+		{
+			pcs::CppString::TransTable t(CppString("abc"), CppString("ABC"), CppString("dE"));
+			Assert::AreEqual(CppString('A').c_str(), t['a'].c_str());
+			Assert::AreEqual(CppString('B').c_str(), t['b'].c_str());
+			Assert::AreEqual(CppString('C').c_str(), t['c'].c_str());
+			Assert::AreEqual(CppString().c_str(), t['d'].c_str());
+			Assert::AreEqual(CppString().c_str(), t['E'].c_str());
+			Assert::AreEqual(CppString('f').c_str(), t['f'].c_str());
+
+			pcs::CppWString::TransTable wt(CppWString(L"abc"), CppWString(L"ABC"), CppWString(L"dE"));
+			Assert::AreEqual(CppWString(L'A').c_str(), wt[L'a'].c_str());
+			Assert::AreEqual(CppWString(L'B').c_str(), wt[L'b'].c_str());
+			Assert::AreEqual(CppWString(L'C').c_str(), wt[L'c'].c_str());
+			Assert::AreEqual(CppWString().c_str(), wt[L'd'].c_str());
+			Assert::AreEqual(CppWString().c_str(), wt[L'E'].c_str());
+			Assert::AreEqual(CppWString(L'f').c_str(), wt[L'f'].c_str());
+		}
+
+		TEST_METHOD(constructor_04)
+		{
+			pcs::CppString::TransTable t(CppString("abc"), { CppString("AA"), CppString("BBB"), CppString("C") });
+			Assert::AreEqual(CppString("AA").c_str(), t['a'].c_str());
+			Assert::AreEqual(CppString("BBB").c_str(), t['b'].c_str());
+			Assert::AreEqual(CppString('C').c_str(), t['c'].c_str());
+			Assert::AreEqual(CppString('z').c_str(), t['z'].c_str());
+
+			pcs::CppWString::TransTable wt(CppWString(L"abc"), { CppWString(L"AA"), CppWString(L"BBB"), CppWString(L"C") });
+			Assert::AreEqual(CppWString(L"AA").c_str(), wt[L'a'].c_str());
+			Assert::AreEqual(CppWString(L"BBB").c_str(), wt[L'b'].c_str());
+			Assert::AreEqual(CppWString(L"C").c_str(), wt[L'c'].c_str());
+			Assert::AreEqual(CppWString(L'9').c_str(), wt[L'9'].c_str());
+		}
+
+		TEST_METHOD(constructor_05)
+		{
+			pcs::CppString::TransTable t(CppString("abc"), { CppString("AA"), CppString("BBB"), CppString("C") }, "dE"cs);
+			Assert::AreEqual(CppString("AA").c_str(), t['a'].c_str());
+			Assert::AreEqual(CppString("BBB").c_str(), t['b'].c_str());
+			Assert::AreEqual(CppString('C').c_str(), t['c'].c_str());
+			Assert::AreEqual(CppString().c_str(), t['d'].c_str());
+			Assert::AreEqual(CppString().c_str(), t['E'].c_str());
+			Assert::AreEqual(CppString('z').c_str(), t['z'].c_str());
+
+			pcs::CppWString::TransTable wt(CppWString(L"abc"), { CppWString(L"AA"), CppWString(L"BBB"), CppWString(L"C") }, L"dE"cs);
+			Assert::AreEqual(CppWString(L"AA").c_str(), wt[L'a'].c_str());
+			Assert::AreEqual(CppWString(L"BBB").c_str(), wt[L'b'].c_str());
+			Assert::AreEqual(CppWString(L"C").c_str(), wt[L'c'].c_str());
+			Assert::AreEqual(CppWString().c_str(), wt[L'd'].c_str());
+			Assert::AreEqual(CppWString().c_str(), wt[L'E'].c_str());
+			Assert::AreEqual(CppWString(L'e').c_str(), wt[L'e'].c_str());
+		}
+
+		TEST_METHOD(constructor_06)
+		{
+			pcs::CppString::TransTable t("abC", "ABc");
+			Assert::AreEqual(CppString('A').c_str(), t['a'].c_str());
+			Assert::AreEqual(CppString('B').c_str(), t['b'].c_str());
+			Assert::AreEqual(CppString('c').c_str(), t['C'].c_str());
+			Assert::AreEqual(CppString('c').c_str(), t['c'].c_str());
+
+			pcs::CppWString::TransTable wt(L"abC", L"ABc");
+			Assert::AreEqual(CppWString(L'A').c_str(), wt[L'a'].c_str());
+			Assert::AreEqual(CppWString(L'B').c_str(), wt[L'b'].c_str());
+			Assert::AreEqual(CppWString(L'c').c_str(), wt[L'C'].c_str());
+			Assert::AreEqual(CppWString(L'c').c_str(), wt[L'c'].c_str());
+		}
+
+		TEST_METHOD(constructor_07)
+		{
+			pcs::CppString::TransTable t("abc", "ABC", "dE");
+			Assert::AreEqual(CppString('A').c_str(), t['a'].c_str());
+			Assert::AreEqual(CppString('B').c_str(), t['b'].c_str());
+			Assert::AreEqual(CppString('C').c_str(), t['c'].c_str());
+			Assert::AreEqual(CppString().c_str(), t['d'].c_str());
+			Assert::AreEqual(CppString().c_str(), t['E'].c_str());
+			Assert::AreEqual(CppString('e').c_str(), t['e'].c_str());
+
+			pcs::CppWString::TransTable wt(L"abc", L"ABC", L"dE");
+			Assert::AreEqual(CppWString(L'A').c_str(), wt[L'a'].c_str());
+			Assert::AreEqual(CppWString(L'B').c_str(), wt[L'b'].c_str());
+			Assert::AreEqual(CppWString(L'C').c_str(), wt[L'c'].c_str());
+			Assert::AreEqual(CppWString().c_str(), wt[L'd'].c_str());
+			Assert::AreEqual(CppWString().c_str(), wt[L'E'].c_str());
+			Assert::AreEqual(CppWString(L'A').c_str(), wt[L'A'].c_str());
+		}
+
+		TEST_METHOD(constructor_08)
+		{
+			std::string keys("abC");
+			std::vector<std::string> values{ "AA", "BBB", "c" };
+			pcs::CppString::TransTable t(keys.begin(), keys.end(), values.begin(), values.end());
+			Assert::AreEqual(CppString("AA").c_str(), t['a'].c_str());
+			Assert::AreEqual(CppString("BBB").c_str(), t['b'].c_str());
+			Assert::AreEqual(CppString('c').c_str(), t['C'].c_str());
+			Assert::AreEqual(CppString('c').c_str(), t['c'].c_str());
+
+			std::wstring wkeys(L"abC");
+			std::vector<std::wstring> wvalues{ L"AA", L"BBB", L"c" };
+			pcs::CppWString::TransTable wt(wkeys.begin(), wkeys.end(), wvalues.begin(), wvalues.end());
+			Assert::AreEqual(CppWString(L"AA").c_str(), wt[L'a'].c_str());
+			Assert::AreEqual(CppWString(L"BBB").c_str(), wt[L'b'].c_str());
+			Assert::AreEqual(CppWString(L'c').c_str(), wt[L'C'].c_str());
+			Assert::AreEqual(CppWString(L'c').c_str(), wt[L'c'].c_str());
+		}
+
+		TEST_METHOD(constructor_09)
+		{
+			std::string keys("abC");
+			std::vector<std::string> values{ "AA", "BBB", "c" };
+			std::string not_translated("dE");
+			pcs::CppString::TransTable t(keys.begin(), keys.end(), values.begin(), values.end(), not_translated.cbegin(), not_translated.cend());
+			Assert::AreEqual(CppString("AA").c_str(), t['a'].c_str());
+			Assert::AreEqual(CppString("BBB").c_str(), t['b'].c_str());
+			Assert::AreEqual(CppString('c').c_str(), t['C'].c_str());
+			Assert::AreEqual(CppString().c_str(), t['d'].c_str());
+			Assert::AreEqual(CppString().c_str(), t['E'].c_str());
+			Assert::AreEqual(CppString('c').c_str(), t['c'].c_str());
+
+			std::wstring wkeys(L"abC");
+			std::vector<std::wstring> wvalues{ L"AA", L"BBB", L"c" };
+			std::wstring wnot_translated(L"dE");
+			pcs::CppWString::TransTable wt(wkeys.begin(), wkeys.end(), wvalues.begin(), wvalues.end(), wnot_translated.cbegin(), wnot_translated.cend());
+			Assert::AreEqual(CppWString(L"AA").c_str(), wt[L'a'].c_str());
+			Assert::AreEqual(CppWString(L"BBB").c_str(), wt[L'b'].c_str());
+			Assert::AreEqual(CppWString(L'c').c_str(), wt[L'C'].c_str());
+			Assert::AreEqual(CppWString().c_str(), wt[L'd'].c_str());
+			Assert::AreEqual(CppWString().c_str(), wt[L'E'].c_str());
+			Assert::AreEqual(CppWString(L'c').c_str(), wt[L'c'].c_str());
+		}
+
+		TEST_METHOD(constructor_empty)
+		{
+			pcs::CppString::TransTable t;
+			Assert::IsTrue(t.get_table().empty());
+
+			pcs::CppWString::TransTable wt;
+			Assert::IsTrue(wt.get_table().empty());
+		}
+
+		TEST_METHOD(constructor_copy)
+		{
+			pcs::CppString::TransTable ct(CppString("abc"), CppString("ABC"), CppString("dE"));
+			pcs::CppString::TransTable t(ct);
+			Assert::AreEqual(CppString('A').c_str(), t['a'].c_str());
+			Assert::AreEqual(CppString('B').c_str(), t['b'].c_str());
+			Assert::AreEqual(CppString('C').c_str(), t['c'].c_str());
+			Assert::AreEqual(CppString().c_str(), t['d'].c_str());
+			Assert::AreEqual(CppString().c_str(), t['E'].c_str());
+			Assert::AreEqual(CppString('f').c_str(), t['f'].c_str());
+
+			pcs::CppWString::TransTable wct(CppWString(L"abc"), CppWString(L"ABC"), CppWString(L"dE"));
+			pcs::CppWString::TransTable wt(wct);
+			Assert::AreEqual(CppWString(L'A').c_str(), wt[L'a'].c_str());
+			Assert::AreEqual(CppWString(L'B').c_str(), wt[L'b'].c_str());
+			Assert::AreEqual(CppWString(L'C').c_str(), wt[L'c'].c_str());
+			Assert::AreEqual(CppWString().c_str(), wt[L'd'].c_str());
+			Assert::AreEqual(CppWString().c_str(), wt[L'E'].c_str());
+			Assert::AreEqual(CppWString(L'f').c_str(), wt[L'f'].c_str());
+		}
+
+		TEST_METHOD(constructor_move)
+		{
+			pcs::CppString::TransTable mt(CppString("abc"), CppString("ABC"), CppString("dE"));
+			pcs::CppString::TransTable t(std::move(mt));
+			Assert::AreEqual(CppString('A').c_str(), t['a'].c_str());
+			Assert::AreEqual(CppString('B').c_str(), t['b'].c_str());
+			Assert::AreEqual(CppString('C').c_str(), t['c'].c_str());
+			Assert::AreEqual(CppString().c_str(), t['d'].c_str());
+			Assert::AreEqual(CppString().c_str(), t['E'].c_str());
+			Assert::AreEqual(CppString('f').c_str(), t['f'].c_str());
+
+			pcs::CppWString::TransTable wmt(CppWString(L"abc"), CppWString(L"ABC"), CppWString(L"dE"));
+			pcs::CppWString::TransTable wt(std::move(wmt));
+			Assert::AreEqual(CppWString(L'A').c_str(), wt[L'a'].c_str());
+			Assert::AreEqual(CppWString(L'B').c_str(), wt[L'b'].c_str());
+			Assert::AreEqual(CppWString(L'C').c_str(), wt[L'c'].c_str());
+			Assert::AreEqual(CppWString().c_str(), wt[L'd'].c_str());
+			Assert::AreEqual(CppWString().c_str(), wt[L'E'].c_str());
+			Assert::AreEqual(CppWString(L'f').c_str(), wt[L'f'].c_str());
+		}
+
+		TEST_METHOD(assign_copy)
+		{
+			pcs::CppString::TransTable ct(CppString("abc"), CppString("ABC"), CppString("dE"));
+			pcs::CppString::TransTable t = ct;
+			Assert::AreEqual(CppString('A').c_str(), t['a'].c_str());
+			Assert::AreEqual(CppString('B').c_str(), t['b'].c_str());
+			Assert::AreEqual(CppString('C').c_str(), t['c'].c_str());
+			Assert::AreEqual(CppString().c_str(), t['d'].c_str());
+			Assert::AreEqual(CppString().c_str(), t['E'].c_str());
+			Assert::AreEqual(CppString('f').c_str(), t['f'].c_str());
+
+			pcs::CppWString::TransTable wct(CppWString(L"abc"), CppWString(L"ABC"), CppWString(L"dE"));
+			pcs::CppWString::TransTable wt = wct;
+			Assert::AreEqual(CppWString(L'A').c_str(), wt[L'a'].c_str());
+			Assert::AreEqual(CppWString(L'B').c_str(), wt[L'b'].c_str());
+			Assert::AreEqual(CppWString(L'C').c_str(), wt[L'c'].c_str());
+			Assert::AreEqual(CppWString().c_str(), wt[L'd'].c_str());
+			Assert::AreEqual(CppWString().c_str(), wt[L'E'].c_str());
+			Assert::AreEqual(CppWString(L'f').c_str(), wt[L'f'].c_str());
+		}
+
+		TEST_METHOD(assign_move)
+		{
+			pcs::CppString::TransTable mt(CppString("abc"), CppString("ABC"), CppString("dE"));
+			pcs::CppString::TransTable t = std::move(mt);
+			Assert::AreEqual(CppString('A').c_str(), t['a'].c_str());
+			Assert::AreEqual(CppString('B').c_str(), t['b'].c_str());
+			Assert::AreEqual(CppString('C').c_str(), t['c'].c_str());
+			Assert::AreEqual(CppString().c_str(), t['d'].c_str());
+			Assert::AreEqual(CppString().c_str(), t['E'].c_str());
+			Assert::AreEqual(CppString('f').c_str(), t['f'].c_str());
+
+			pcs::CppWString::TransTable wmt(CppWString(L"abc"), CppWString(L"ABC"), CppWString(L"dE"));
+			pcs::CppWString::TransTable wt = std::move(wmt);
+			Assert::AreEqual(CppWString(L'A').c_str(), wt[L'a'].c_str());
+			Assert::AreEqual(CppWString(L'B').c_str(), wt[L'b'].c_str());
+			Assert::AreEqual(CppWString(L'C').c_str(), wt[L'c'].c_str());
+			Assert::AreEqual(CppWString().c_str(), wt[L'd'].c_str());
+			Assert::AreEqual(CppWString().c_str(), wt[L'E'].c_str());
+			Assert::AreEqual(CppWString(L'f').c_str(), wt[L'f'].c_str());
+		}
+
+		TEST_METHOD(assign_map)
+		{
+			pcs::CppString::TransTable ct(CppString("abc"), CppString("ABC"), CppString("dE"));
+			pcs::CppString::TransTable t = ct.get_table();
+			Assert::AreEqual(CppString('A').c_str(), t['a'].c_str());
+			Assert::AreEqual(CppString('B').c_str(), t['b'].c_str());
+			Assert::AreEqual(CppString('C').c_str(), t['c'].c_str());
+			Assert::AreEqual(CppString().c_str(), t['d'].c_str());
+			Assert::AreEqual(CppString().c_str(), t['E'].c_str());
+			Assert::AreEqual(CppString('f').c_str(), t['f'].c_str());
+
+			pcs::CppWString::TransTable wct(CppWString(L"abc"), CppWString(L"ABC"), CppWString(L"dE"));
+			pcs::CppWString::TransTable wt = wct.get_table();
+			Assert::AreEqual(CppWString(L'A').c_str(), wt[L'a'].c_str());
+			Assert::AreEqual(CppWString(L'B').c_str(), wt[L'b'].c_str());
+			Assert::AreEqual(CppWString(L'C').c_str(), wt[L'c'].c_str());
+			Assert::AreEqual(CppWString().c_str(), wt[L'd'].c_str());
+			Assert::AreEqual(CppWString().c_str(), wt[L'E'].c_str());
+			Assert::AreEqual(CppWString(L'f').c_str(), wt[L'f'].c_str());
+		}
+
+		TEST_METHOD(indexing)
+		{
+			pcs::CppString::TransTable t(CppString("abc"), CppString("ABC"), CppString("dE"));
+			Assert::AreEqual(CppString('A').c_str(), t['a'].c_str());
+			Assert::AreEqual(CppString('B').c_str(), t['b'].c_str());
+			Assert::AreEqual(CppString('C').c_str(), t['c'].c_str());
+			Assert::AreEqual(CppString().c_str(), t['d'].c_str());
+			Assert::AreEqual(CppString().c_str(), t['E'].c_str());
+			Assert::AreEqual(CppString(',').c_str(), t[','].c_str());
+
+			pcs::CppWString::TransTable wt(CppWString(L"abc"), CppWString(L"ABC"), CppWString(L"dE"));
+			Assert::AreEqual(CppWString(L'A').c_str(), wt[L'a'].c_str());
+			Assert::AreEqual(CppWString(L'B').c_str(), wt[L'b'].c_str());
+			Assert::AreEqual(CppWString(L'C').c_str(), wt[L'c'].c_str());
+			Assert::AreEqual(CppWString().c_str(), wt[L'd'].c_str());
+			Assert::AreEqual(CppWString().c_str(), wt[L'E'].c_str());
+			Assert::AreEqual(CppWString(L'\n').c_str(), wt[L'\n'].c_str());
+		}
+	};
+
+
+	//=====   PART 3   ============================================
+	TEST_CLASS(cppstringstests_PART_3)
+	{
+	public:
+
+		TEST_METHOD(constructor_empty)
+		{
+			pcs::CppString s;
+			Assert::IsTrue(s.empty());
+
+			pcs::CppWString ws;
+			Assert::IsTrue(ws.empty());
+		}
+
+		TEST_METHOD(constructor_copy)
+		{
+			pcs::CppString cs("ABCde");
+			pcs::CppString s(cs);
+			Assert::AreEqual(cs.c_str(), s.c_str());
+
+			pcs::CppWString wcs(L"abcDE");
+			pcs::CppWString ws(wcs);
+			Assert::AreEqual(wcs.c_str(), ws.c_str());
+		}
+
+		TEST_METHOD(constructor_move)
+		{
+			pcs::CppString cs("ABCde");
+			pcs::CppString s(std::move(cs));
+			Assert::AreEqual(pcs::CppString("ABCde").c_str(), s.c_str());
+
+			pcs::CppWString wcs(L"abcDE");
+			pcs::CppWString ws(std::move(wcs));
+			Assert::AreEqual(pcs::CppWString(L"abcDE").c_str(), ws.c_str());
+		}
+
+		TEST_METHOD(constructor_06)
+		{
+			pcs::CppString s(10, '-');
+			Assert::AreEqual(std::size_t(10), s.size());
+			Assert::AreEqual(pcs::CppString("----------").c_str(), s.c_str());
+
+			pcs::CppWString ws(8, '=');
+			Assert::AreEqual(std::size_t(8), ws.size());
+			Assert::AreEqual(pcs::CppWString(L"========").c_str(), ws.c_str());
+		}
+
+		TEST_METHOD(constructor_07)
+		{
+			pcs::CppString cs("abcDEfgh");
+			pcs::CppString s(cs, 3);
+			Assert::AreEqual(std::size_t(5), s.size());
+			Assert::AreEqual(pcs::CppString("DEfgh").c_str(), s.c_str());
+
+			pcs::CppWString wcs(L"ABCdefGH");
+			pcs::CppWString ws(wcs, 4);
+			Assert::AreEqual(std::size_t(4), ws.size());
+			Assert::AreEqual(pcs::CppWString(L"efGH").c_str(), ws.c_str());
+		}
+
+		TEST_METHOD(constructor_08)
+		{
+			pcs::CppString cs("abcDEfgh");
+			pcs::CppString s(cs, 3, 2);
+			Assert::AreEqual(std::size_t(2), s.size());
+			Assert::AreEqual(pcs::CppString("DE").c_str(), s.c_str());
+
+			pcs::CppWString wcs(L"ABCdefGH");
+			pcs::CppWString ws(wcs, 4, 6);
+			Assert::AreEqual(std::size_t(4), ws.size());
+			Assert::AreEqual(pcs::CppWString(L"efGH").c_str(), ws.c_str());
+		}
+
+		TEST_METHOD(constructor_09)
+		{
+			pcs::CppString s("abcDEfgh");
+			Assert::AreEqual(std::size_t(8), s.size());
+			Assert::AreEqual(pcs::CppString("abcDEfgh").c_str(), s.c_str());
+
+			pcs::CppWString ws(L"ABCdefGH");
+			Assert::AreEqual(std::size_t(8), ws.size());
+			Assert::AreEqual(pcs::CppWString(L"ABCdefGH").c_str(), ws.c_str());
+		}
+
+		TEST_METHOD(constructor_10)
+		{
+			pcs::CppString s("abcDEfgh", 5);
+			Assert::AreEqual(std::size_t(5), s.size());
+			Assert::AreEqual(pcs::CppString("abcDE").c_str(), s.c_str());
+
+			pcs::CppWString ws(L"ABCdefGH", 7);
+			Assert::AreEqual(std::size_t(7), ws.size());
+			Assert::AreEqual(pcs::CppWString(L"ABCdefG").c_str(), ws.c_str());
+		}
+
+		TEST_METHOD(constructor_11)
+		{
+			pcs::CppString s({ 'a', 'b', 'c', 'D' });
+			Assert::AreEqual(std::size_t(4), s.size());
+			Assert::AreEqual(pcs::CppString("abcD").c_str(), s.c_str());
+
+			pcs::CppWString ws({ L'A', L'B', L'C', L'd', L'e' });
+			Assert::AreEqual(std::size_t(5), ws.size());
+			Assert::AreEqual(pcs::CppWString(L"ABCde").c_str(), ws.c_str());
+		}
+
+		TEST_METHOD(constructor_12)
+		{
+			std::string cs("abcDEfgh");
+			pcs::CppString s(cs);
+			Assert::AreEqual(std::size_t(8), s.size());
+			Assert::AreEqual(pcs::CppString("abcDEfgh").c_str(), s.c_str());
+
+			std::wstring wcs(L"ABCdefGH");
+			pcs::CppWString ws(wcs);
+			Assert::AreEqual(std::size_t(8), ws.size());
+			Assert::AreEqual(pcs::CppWString(L"ABCdefGH").c_str(), ws.c_str());
+		}
+
+		TEST_METHOD(constructor_13)
+		{
+			std::string cs("abcDEfgh");
+			pcs::CppString s(cs, cs.get_allocator());
+			Assert::AreEqual(std::size_t(8), s.size());
+			Assert::AreEqual(pcs::CppString("abcDEfgh").c_str(), s.c_str());
+
+			std::wstring wcs(L"ABCdefGH");
+			pcs::CppWString ws(wcs, wcs.get_allocator());
+			Assert::AreEqual(std::size_t(8), ws.size());
+			Assert::AreEqual(pcs::CppWString(L"ABCdefGH").c_str(), ws.c_str());
+		}
+
+		TEST_METHOD(constructor_14)
+		{
+			std::string cs("abcDEfgh");
+			pcs::CppString s(std::move(cs));
+			Assert::AreEqual(std::size_t(8), s.size());
+			Assert::AreEqual(pcs::CppString("abcDEfgh").c_str(), s.c_str());
+
+			std::wstring wcs(L"ABCdefGH");
+			pcs::CppWString ws(std::move(wcs));
+			Assert::AreEqual(std::size_t(8), ws.size());
+			Assert::AreEqual(pcs::CppWString(L"ABCdefGH").c_str(), ws.c_str());
+		}
+
+		TEST_METHOD(constructor_15)
+		{
+			std::string cs("abcDEfgh");
+			pcs::CppString s(std::move(cs), cs.get_allocator());
+			Assert::AreEqual(std::size_t(8), s.size());
+			Assert::AreEqual(pcs::CppString("abcDEfgh").c_str(), s.c_str());
+
+			std::wstring wcs(L"ABCdefGH");
+			pcs::CppWString ws(std::move(wcs), wcs.get_allocator());
+			Assert::AreEqual(std::size_t(8), ws.size());
+			Assert::AreEqual(pcs::CppWString(L"ABCdefGH").c_str(), ws.c_str());
+		}
+
+		TEST_METHOD(constructor_16)
+		{
+			std::string cs("abcDEfgh");
+			pcs::CppString s(cs.cbegin(), cs.cend());
+			Assert::AreEqual(std::size_t(8), s.size());
+			Assert::AreEqual(pcs::CppString("abcDEfgh").c_str(), s.c_str());
+
+			std::wstring wcs(L"ABCdefGH");
+			pcs::CppWString ws(wcs.begin(), wcs.end());
+			Assert::AreEqual(std::size_t(8), ws.size());
+			Assert::AreEqual(pcs::CppWString(L"ABCdefGH").c_str(), ws.c_str());
+		}
+
+		TEST_METHOD(constructor_19)
+		{
+			pcs::CppString s('z');
+			Assert::AreEqual(std::size_t(1), s.size());
+			Assert::AreEqual(pcs::CppString("z").c_str(), s.c_str());
+
+			pcs::CppWString ws(L'Z');
+			Assert::AreEqual(std::size_t(1), ws.size());
+			Assert::AreEqual(pcs::CppWString(L"Z").c_str(), ws.c_str());
+		}
+	};
+
+
+	//=====   PART 4   ========================================
 	TEST_CLASS(cppstringstests_PART_4)
 	{
 	public:
-		
+
 		TEST_METHOD(capitalize)
 		{
 			pcs::CppString s("abc def GHi jKl 032, JHGF/");
@@ -173,60 +827,60 @@ namespace cppstringstests
 		{
 			size_t found_pos;
 
-			pcs::CppString test{ "ABC0123456789.ABC0123456789." };
+			pcs::CppString test_str{ "ABC0123456789.ABC0123456789." };
 			for (int c = 0; c <= 255; ++c) {
 				char ch{ char(c) };
-				Assert::AreEqual(test.MyBaseClass::find(ch), test.find(ch));
+				Assert::AreEqual(test_str.MyBaseClass::find(ch), test_str.find(ch));
 
-				found_pos = test.substr(2).MyBaseClass::find(ch);
+				found_pos = test_str.substr(2).MyBaseClass::find(ch);
 				if (found_pos == pcs::CppString::npos)
-					Assert::AreEqual(found_pos, test.find(ch, 2));
+					Assert::AreEqual(found_pos, test_str.find(ch, 2));
 				else
-					Assert::AreEqual(found_pos, test.find(ch, 2) - 2);
+					Assert::AreEqual(found_pos, test_str.find(ch, 2) - 2);
 				
-				found_pos = test.substr(2, 5).MyBaseClass::find(ch);
+				found_pos = test_str.substr(2, 5).MyBaseClass::find(ch);
 				if (found_pos == pcs::CppString::npos)
-					Assert::AreEqual(found_pos, test.find(ch, 2, pcs::CppString::size_type(5 + 2 - 1)));
+					Assert::AreEqual(found_pos, test_str.find(ch, 2, pcs::CppString::size_type(5 + 2 - 1)));
 				else
-					Assert::AreEqual(found_pos, test.find(ch, 2, pcs::CppString::size_type(5 + 2 - 1)) - 2);
+					Assert::AreEqual(found_pos, test_str.find(ch, 2, pcs::CppString::size_type(5 + 2 - 1)) - 2);
 
 				CppString s(ch);
-				Assert::AreEqual(test.MyBaseClass::find(s), test.find(s));
-				found_pos = test.substr(2).MyBaseClass::find(s);
+				Assert::AreEqual(test_str.MyBaseClass::find(s), test_str.find(s));
+				found_pos = test_str.substr(2).MyBaseClass::find(s);
 				if (found_pos == pcs::CppString::npos)
-					Assert::AreEqual(found_pos, test.find(s, 2));
+					Assert::AreEqual(found_pos, test_str.find(s, 2));
 				else
-					Assert::AreEqual(found_pos, test.find(s, 2) - 2);
+					Assert::AreEqual(found_pos, test_str.find(s, 2) - 2);
 
-				found_pos = test.substr(2, 5).MyBaseClass::find(s);
+				found_pos = test_str.substr(2, 5).MyBaseClass::find(s);
 				if (found_pos == pcs::CppString::npos)
-					Assert::AreEqual(found_pos, test.find(s, 2, pcs::CppString::size_type(5 + 2 - 1)));
+					Assert::AreEqual(found_pos, test_str.find(s, 2, pcs::CppString::size_type(5 + 2 - 1)));
 				else
-					Assert::AreEqual(found_pos, test.find(s, 2, pcs::CppString::size_type(5 + 2 - 1)) - 2);
+					Assert::AreEqual(found_pos, test_str.find(s, 2, pcs::CppString::size_type(5 + 2 - 1)) - 2);
 
 				if (c > 0) {
 					char str[2]{ ch, 0 };
-					Assert::AreEqual(test.MyBaseClass::find(str), test.find(str));
+					Assert::AreEqual(test_str.MyBaseClass::find(str), test_str.find(str));
 
-					found_pos = test.substr(2).MyBaseClass::find(str);
+					found_pos = test_str.substr(2).MyBaseClass::find(str);
 					if (found_pos == pcs::CppString::npos)
-						Assert::AreEqual(found_pos, test.find(str, 2));
+						Assert::AreEqual(found_pos, test_str.find(str, 2));
 					else
-						Assert::AreEqual(found_pos, test.find(str, 2) - 2);
+						Assert::AreEqual(found_pos, test_str.find(str, 2) - 2);
 
-					found_pos = test.substr(2, 5).MyBaseClass::find(str);
+					found_pos = test_str.substr(2, 5).MyBaseClass::find(str);
 					if (found_pos == pcs::CppString::npos)
-						Assert::AreEqual(found_pos, test.find(str, 2, pcs::CppString::size_type(5 + 2 - 1)));
+						Assert::AreEqual(found_pos, test_str.find(str, 2, pcs::CppString::size_type(5 + 2 - 1)));
 					else
-						Assert::AreEqual(found_pos, test.find(str, 2, pcs::CppString::size_type(5 + 2 - 1)) - 2);
+						Assert::AreEqual(found_pos, test_str.find(str, 2, pcs::CppString::size_type(5 + 2 - 1)) - 2);
 				}
 			}
-			Assert::AreEqual(size_t(14), test.find("A", 1));
-			Assert::AreEqual(pcs::CppString::npos, test.find("A", 15));
-			Assert::AreEqual(size_t(0), test.find(""));
-			Assert::AreEqual(size_t(27), test.find(".", 14));
-			Assert::AreEqual(pcs::CppString::npos, test.find(".", 28));
-			Assert::AreEqual(size_t(13), test.find(".", 13));
+			Assert::AreEqual(size_t(14), test_str.find("A", 1));
+			Assert::AreEqual(pcs::CppString::npos, test_str.find("A", 15));
+			Assert::AreEqual(size_t(0), test_str.find(""));
+			Assert::AreEqual(size_t(27), test_str.find(".", 14));
+			Assert::AreEqual(pcs::CppString::npos, test_str.find(".", 28));
+			Assert::AreEqual(size_t(13), test_str.find(".", 13));
 
 			pcs::CppWString wtest{ L"ABC0123456789.ABC0123456789." };
 			for (int wc = 0; wc <=0xffff; ++wc) {
@@ -289,60 +943,60 @@ namespace cppstringstests
 		{
 			size_t found_pos;
 
-			pcs::CppString test{ "ABC0123456789.ABC0123456789." };
+			pcs::CppString test_str{ "ABC0123456789.ABC0123456789." };
 			for (int c = 0; c <= 255; ++c) {
 				char ch{ char(c) };
-				Assert::AreEqual(test.MyBaseClass::find(ch), test.find_n(ch, size_t(-1)));
+				Assert::AreEqual(test_str.MyBaseClass::find(ch), test_str.find_n(ch, size_t(-1)));
 
-				found_pos = test.substr(2).MyBaseClass::find(ch);
+				found_pos = test_str.substr(2).MyBaseClass::find(ch);
 				if (found_pos == pcs::CppString::npos)
-					Assert::AreEqual(found_pos, test.find_n(ch, 2));
+					Assert::AreEqual(found_pos, test_str.find_n(ch, 2));
 				else
-					Assert::AreEqual(found_pos, test.substr(2).find_n(ch, test.size() - 2));
+					Assert::AreEqual(found_pos, test_str.substr(2).find_n(ch, test_str.size() - 2));
 
-				found_pos = test.substr(2, 5).MyBaseClass::find(ch);
+				found_pos = test_str.substr(2, 5).MyBaseClass::find(ch);
 				if (found_pos == pcs::CppString::npos)
-					Assert::AreEqual(found_pos, test.find_n(ch, 2, pcs::CppString::size_type(5)));
+					Assert::AreEqual(found_pos, test_str.find_n(ch, 2, pcs::CppString::size_type(5)));
 				else
-					Assert::AreEqual(found_pos, test.find_n(ch, 2, pcs::CppString::size_type(5)) - 2);
+					Assert::AreEqual(found_pos, test_str.find_n(ch, 2, pcs::CppString::size_type(5)) - 2);
 
 				CppString s(ch);
-				Assert::AreEqual(test.MyBaseClass::find(s), test.find_n(s, size_t(-1)));
-				found_pos = test.substr(2).MyBaseClass::find(s);
+				Assert::AreEqual(test_str.MyBaseClass::find(s), test_str.find_n(s, size_t(-1)));
+				found_pos = test_str.substr(2).MyBaseClass::find(s);
 				if (found_pos == pcs::CppString::npos)
-					Assert::AreEqual(found_pos, test.find_n(s, 2));
+					Assert::AreEqual(found_pos, test_str.find_n(s, 2));
 				else
-					Assert::AreEqual(found_pos, test.substr(2).find_n(s, test.size() - 2));
+					Assert::AreEqual(found_pos, test_str.substr(2).find_n(s, test_str.size() - 2));
 
-				found_pos = test.substr(2, 5).MyBaseClass::find(s);
+				found_pos = test_str.substr(2, 5).MyBaseClass::find(s);
 				if (found_pos == pcs::CppString::npos)
-					Assert::AreEqual(found_pos, test.find_n(s, 2, pcs::CppString::size_type(5)));
+					Assert::AreEqual(found_pos, test_str.find_n(s, 2, pcs::CppString::size_type(5)));
 				else
-					Assert::AreEqual(found_pos, test.find_n(s, 2, pcs::CppString::size_type(5)) - 2);
+					Assert::AreEqual(found_pos, test_str.find_n(s, 2, pcs::CppString::size_type(5)) - 2);
 
 				if (c > 0) {
 					char str[2]{ ch, 0 };
-					Assert::AreEqual(test.MyBaseClass::find(str), test.find_n(str, size_t(-1)));
+					Assert::AreEqual(test_str.MyBaseClass::find(str), test_str.find_n(str, size_t(-1)));
 
-					found_pos = test.substr(2).MyBaseClass::find(str);
+					found_pos = test_str.substr(2).MyBaseClass::find(str);
 					if (found_pos == pcs::CppString::npos)
-						Assert::AreEqual(found_pos, test.find_n(str, test.size() - 2));
+						Assert::AreEqual(found_pos, test_str.find_n(str, test_str.size() - 2));
 					else
-						Assert::AreEqual(found_pos, test.substr(2).find_n(str, test.size() - 2));
+						Assert::AreEqual(found_pos, test_str.substr(2).find_n(str, test_str.size() - 2));
 
-					found_pos = test.substr(2, 5).MyBaseClass::find(str);
+					found_pos = test_str.substr(2, 5).MyBaseClass::find(str);
 					if (found_pos == pcs::CppString::npos)
-						Assert::AreEqual(found_pos, test.find_n(str, 2, pcs::CppString::size_type(5)));
+						Assert::AreEqual(found_pos, test_str.find_n(str, 2, pcs::CppString::size_type(5)));
 					else
-						Assert::AreEqual(found_pos, test.find_n(str, 2, pcs::CppString::size_type(5)) - 2);
+						Assert::AreEqual(found_pos, test_str.find_n(str, 2, pcs::CppString::size_type(5)) - 2);
 				}
 			}
-			Assert::AreEqual(size_t(14), test.find_n("A", 1, test.size() - 1));
-			Assert::AreEqual(pcs::CppString::npos, test.find_n("A", 15, 1));
-			Assert::AreEqual(size_t(0), test.find_n("", size_t(-1)));
-			Assert::AreEqual(size_t(27), test.find_n(".", 14, test.size() - 14));
-			Assert::AreEqual(pcs::CppString::npos, test.find_n(".", 28, 1));
-			Assert::AreEqual(size_t(13), test.find_n(".", 13, test.size() - 13));
+			Assert::AreEqual(size_t(14), test_str.find_n("A", 1, test_str.size() - 1));
+			Assert::AreEqual(pcs::CppString::npos, test_str.find_n("A", 15, 1));
+			Assert::AreEqual(size_t(0), test_str.find_n("", size_t(-1)));
+			Assert::AreEqual(size_t(27), test_str.find_n(".", 14, test_str.size() - 14));
+			Assert::AreEqual(pcs::CppString::npos, test_str.find_n(".", 28, 1));
+			Assert::AreEqual(size_t(13), test_str.find_n(".", 13, test_str.size() - 13));
 
 			pcs::CppWString wtest{ L"ABC0123456789.ABC0123456789." };
 			for (int wc = 0; wc <= 0xffff; ++wc) {
@@ -405,71 +1059,71 @@ namespace cppstringstests
 		{
 			using string_type = pcs::CppString;
 
-			string_type test{ "ABC0123456789." };
+			string_type test_str{ "ABC0123456789." };
 			char ch{ '3' };
-			Assert::AreEqual(test.MyBaseClass::find(ch), test.index(ch));
-			Assert::AreEqual(test.substr(2).MyBaseClass::find(ch), test.index(ch, 2) - 2);
-			Assert::AreEqual(test.substr(2, 5).MyBaseClass::find(ch), test.index(ch, 2, string_type::size_type(5 + 2 - 1)) - 2);
+			Assert::AreEqual(test_str.MyBaseClass::find(ch), test_str.index(ch));
+			Assert::AreEqual(test_str.substr(2).MyBaseClass::find(ch), test_str.index(ch, 2) - 2);
+			Assert::AreEqual(test_str.substr(2, 5).MyBaseClass::find(ch), test_str.index(ch, 2, string_type::size_type(5 + 2 - 1)) - 2);
 			try {
-				const string_type::size_type pos = test.index('z');
+				const string_type::size_type pos = test_str.index('z');
 				Assert::IsTrue(pos != pcs::CppString::npos);
 			}
 			catch (const string_type::NotFoundException e) { /* ok case! */ }
 
 			try {
-				const string_type::size_type pos = test.index('z', 2);
+				const string_type::size_type pos = test_str.index('z', 2);
 				Assert::IsTrue(pos != string_type::npos);
 			}
 			catch (const string_type::NotFoundException e) { /* ok case! */ }
 
 			try {
-				const string_type::size_type pos = test.index('z', 2, 5+2-1);
+				const string_type::size_type pos = test_str.index('z', 2, string_type::size_type(5 + 2 - 1));
 				Assert::IsTrue(pos != string_type::npos);
 			}
 			catch (const string_type::NotFoundException e) { /* ok case! */ }
 
 			string_type s(ch);
-			Assert::AreEqual(test.MyBaseClass::find(s), test.index(s));
-			Assert::AreEqual(test.substr(2).MyBaseClass::find(s), test.index(s, 2) - 2);
-			Assert::AreEqual(test.substr(3, 5).MyBaseClass::find(s), test.index(s, 3, string_type::size_type(5 + 3 - 1)) - 3);
+			Assert::AreEqual(test_str.MyBaseClass::find(s), test_str.index(s));
+			Assert::AreEqual(test_str.substr(2).MyBaseClass::find(s), test_str.index(s, 2) - 2);
+			Assert::AreEqual(test_str.substr(3, 5).MyBaseClass::find(s), test_str.index(s, 3, string_type::size_type(5 + 3 - 1)) - 3);
 			s = 'z';
 			try {
-				const string_type::size_type pos = test.index(s);
+				const string_type::size_type pos = test_str.index(s);
 				Assert::IsTrue(pos != string_type::npos);
 			}
 			catch (const string_type::NotFoundException e) { /* ok case! */ }
 
 			try {
-				const string_type::size_type pos = test.index(s, 2);
+				const string_type::size_type pos = test_str.index(s, 2);
 				Assert::IsTrue(pos != string_type::npos);
 			}
 			catch (const string_type::NotFoundException e) { /* ok case! */ }
 
 			try {
-				const string_type::size_type pos = test.index(s, 2, string_type::size_type(5 + 2 - 1));
+				const string_type::size_type pos = test_str.index(s, 2, string_type::size_type(5 + 2 - 1));
 				Assert::IsTrue(pos != string_type::npos);
 			}
 			catch (const string_type::NotFoundException e) { /* ok case! */ }
 
 			char str[2]{ ch, 0 };
-			Assert::AreEqual(test.MyBaseClass::find(str), test.index(str));
-			Assert::AreEqual(test.substr(2).MyBaseClass::find(str), test.index(str, 2) - 2);
-			Assert::AreEqual(test.substr(3, 5).MyBaseClass::find(str), test.index(str, 3, string_type::size_type(5 + 3 - 1)) - 3);
+			Assert::AreEqual(test_str.MyBaseClass::find(str), test_str.index(str));
+			Assert::AreEqual(test_str.substr(2).MyBaseClass::find(str), test_str.index(str, 2) - 2);
+			Assert::AreEqual(test_str.substr(3, 5).MyBaseClass::find(str), test_str.index(str, 3, string_type::size_type(5 + 3 - 1)) - 3);
 			str[0] = 'z';
 			try {
-				const string_type::size_type pos = test.index(s);
+				const string_type::size_type pos = test_str.index(s);
 				Assert::IsTrue(pos != string_type::npos);
 			}
 			catch (const string_type::NotFoundException e) { /* ok case! */ }
 
 			try {
-				const string_type::size_type pos = test.index(s, 2);
+				const string_type::size_type pos = test_str.index(s, 2);
 				Assert::IsTrue(pos != string_type::npos);
 			}
 			catch (const string_type::NotFoundException e) { /* ok case! */ }
 
 			try {
-				const string_type::size_type pos = test.index(s, 2, string_type::size_type(5 + 2 - 1));
+				const string_type::size_type pos = test_str.index(s, 2, string_type::size_type(5 + 2 - 1));
 				Assert::IsTrue(pos != string_type::npos);
 			}
 			catch (const string_type::NotFoundException e) { /* ok case! */ }
@@ -479,71 +1133,71 @@ namespace cppstringstests
 		{
 			using string_type = pcs::CppWString;
 
-			string_type test( L"ABC0123456789." );
+			string_type test_str( L"ABC0123456789." );
 			wchar_t ch{ L'3' };
-			Assert::AreEqual(test.MyBaseClass::find(ch), test.index(ch));
-			Assert::AreEqual(test.substr(2).MyBaseClass::find(ch), test.index(ch, 2) - 2);
-			Assert::AreEqual(test.substr(2, 5).MyBaseClass::find(ch), test.index(ch, 2, string_type::size_type(5 + 2 - 1)) - 2);
+			Assert::AreEqual(test_str.MyBaseClass::find(ch), test_str.index(ch));
+			Assert::AreEqual(test_str.substr(2).MyBaseClass::find(ch), test_str.index(ch, 2) - 2);
+			Assert::AreEqual(test_str.substr(2, 5).MyBaseClass::find(ch), test_str.index(ch, 2, string_type::size_type(5 + 2 - 1)) - 2);
 			try {
-				const string_type::size_type pos = test.index('z');
+				const string_type::size_type pos = test_str.index('z');
 				Assert::IsTrue(pos != pcs::CppString::npos);
 			}
 			catch (const string_type::NotFoundException e) { /* ok case! */ }
 
 			try {
-				const string_type::size_type pos = test.index('z', 2);
+				const string_type::size_type pos = test_str.index('z', 2);
 				Assert::IsTrue(pos != string_type::npos);
 			}
 			catch (const string_type::NotFoundException e) { /* ok case! */ }
 
 			try {
-				const string_type::size_type pos = test.index('z', 2, string_type::size_type(5 + 2 - 1));
+				const string_type::size_type pos = test_str.index('z', 2, string_type::size_type(5 + 2 - 1));
 				Assert::IsTrue(pos != string_type::npos);
 			}
 			catch (const string_type::NotFoundException e) { /* ok case! */ }
 
 			string_type s(ch);
-			Assert::AreEqual(test.MyBaseClass::find(s), test.index(s));
-			Assert::AreEqual(test.substr(2).MyBaseClass::find(s), test.index(s, 2) - 2);
-			Assert::AreEqual(test.substr(3, 5).MyBaseClass::find(s), test.index(s, 3, string_type::size_type(5 + 3 - 1)) - 3);
+			Assert::AreEqual(test_str.MyBaseClass::find(s), test_str.index(s));
+			Assert::AreEqual(test_str.substr(2).MyBaseClass::find(s), test_str.index(s, 2) - 2);
+			Assert::AreEqual(test_str.substr(3, 5).MyBaseClass::find(s), test_str.index(s, 3, string_type::size_type(5 + 3 - 1)) - 3);
 			s = 'z';
 			try {
-				const string_type::size_type pos = test.index(s);
+				const string_type::size_type pos = test_str.index(s);
 				Assert::IsTrue(pos != string_type::npos);
 			}
 			catch (const string_type::NotFoundException e) { /* ok case! */ }
 
 			try {
-				const string_type::size_type pos = test.index(s, 2);
+				const string_type::size_type pos = test_str.index(s, 2);
 				Assert::IsTrue(pos != string_type::npos);
 			}
 			catch (const string_type::NotFoundException e) { /* ok case! */ }
 
 			try {
-				const string_type::size_type pos = test.index(s, 2, string_type::size_type(5 + 2 - 1));
+				const string_type::size_type pos = test_str.index(s, 2, string_type::size_type(5 + 2 - 1));
 				Assert::IsTrue(pos != string_type::npos);
 			}
 			catch (const string_type::NotFoundException e) { /* ok case! */ }
 
 			wchar_t str[2]{ ch, 0 };
-			Assert::AreEqual(test.MyBaseClass::find(str), test.index(str));
-			Assert::AreEqual(test.substr(2).MyBaseClass::find(str), test.index(str, 2) - 2);
-			Assert::AreEqual(test.substr(3, 5).MyBaseClass::find(str), test.index(str, 3, string_type::size_type(5 + 3 - 1)) - 3);
+			Assert::AreEqual(test_str.MyBaseClass::find(str), test_str.index(str));
+			Assert::AreEqual(test_str.substr(2).MyBaseClass::find(str), test_str.index(str, 2) - 2);
+			Assert::AreEqual(test_str.substr(3, 5).MyBaseClass::find(str), test_str.index(str, 3, string_type::size_type(5 + 3 - 1)) - 3);
 			str[0] = 'z';
 			try {
-				const string_type::size_type pos = test.index(s);
+				const string_type::size_type pos = test_str.index(s);
 				Assert::IsTrue(pos != string_type::npos);
 			}
 			catch (const string_type::NotFoundException e) { /* ok case! */ }
 
 			try {
-				const string_type::size_type pos = test.index(s, 2);
+				const string_type::size_type pos = test_str.index(s, 2);
 				Assert::IsTrue(pos != string_type::npos);
 			}
 			catch (const string_type::NotFoundException e) { /* ok case! */ }
 
 			try {
-				const string_type::size_type pos = test.index(s, 2, string_type::size_type(5 + 2 - 1));
+				const string_type::size_type pos = test_str.index(s, 2, string_type::size_type(5 + 2 - 1));
 				Assert::IsTrue(pos != string_type::npos);
 			}
 			catch (const string_type::NotFoundException e) { /* ok case! */ }
@@ -553,47 +1207,47 @@ namespace cppstringstests
 		{
 			using string_type = pcs::CppString;
 
-			pcs::CppString test{ "ABC0123456789." };
+			pcs::CppString test_str{ "ABC0123456789." };
 			char ch{ '3' };
-			Assert::AreEqual(test.substr(0, 20).MyBaseClass::find(ch), test.index_n(ch, 20));
-			Assert::AreEqual(test.substr(2, 5).MyBaseClass::find(ch), test.index_n(ch, 2, 5) - 2);
+			Assert::AreEqual(test_str.substr(0, 20).MyBaseClass::find(ch), test_str.index_n(ch, 20));
+			Assert::AreEqual(test_str.substr(2, 5).MyBaseClass::find(ch), test_str.index_n(ch, 2, 5) - 2);
 			try {
-				const string_type::size_type pos = test.index_n('z', 20);
+				const string_type::size_type pos = test_str.index_n('z', 20);
 				Assert::IsTrue(pos != string_type::npos);
 			}
 			catch (const string_type::NotFoundException e) { /* ok case! */ }
 			try {
-				const string_type::size_type pos = test.index_n('z', 2, 5);
+				const string_type::size_type pos = test_str.index_n('z', 2, 5);
 				Assert::IsTrue(pos != string_type::npos);
 			}
 			catch (const string_type::NotFoundException e) { /* ok case! */ }
 
 			CppString s(ch);
-			Assert::AreEqual(test.substr(0, 20).MyBaseClass::find(s), test.index_n(s, 20));
-			Assert::AreEqual(test.substr(3, 5).MyBaseClass::find(s), test.index_n(s, 3, 5) - 3);
+			Assert::AreEqual(test_str.substr(0, 20).MyBaseClass::find(s), test_str.index_n(s, 20));
+			Assert::AreEqual(test_str.substr(3, 5).MyBaseClass::find(s), test_str.index_n(s, 3, 5) - 3);
 			s = 'z';
 			try {
-				const string_type::size_type pos = test.index_n(s, 20);
+				const string_type::size_type pos = test_str.index_n(s, 20);
 				Assert::IsTrue(pos != string_type::npos);
 			}
 			catch (const string_type::NotFoundException e) { /* ok case! */ }
 			try {
-				const string_type::size_type pos = test.index_n(s, 2, 5);
+				const string_type::size_type pos = test_str.index_n(s, 2, 5);
 				Assert::IsTrue(pos != string_type::npos);
 			}
 			catch (const string_type::NotFoundException e) { /* ok case! */ }
 
 			char str[2]{ ch, 0 };
-			Assert::AreEqual(test.substr(0, 20).MyBaseClass::find(str), test.index_n(str, 20));
-			Assert::AreEqual(test.substr(3, 5).MyBaseClass::find(str), test.index_n(str, 3, 5) - 3);
+			Assert::AreEqual(test_str.substr(0, 20).MyBaseClass::find(str), test_str.index_n(str, 20));
+			Assert::AreEqual(test_str.substr(3, 5).MyBaseClass::find(str), test_str.index_n(str, 3, 5) - 3);
 			str[0] = 'z';
 			try {
-				const string_type::size_type pos = test.index_n(s, 20);
+				const string_type::size_type pos = test_str.index_n(s, 20);
 				Assert::IsTrue(pos != string_type::npos);
 			}
 			catch (const string_type::NotFoundException e) { /* ok case! */ }
 			try {
-				const string_type::size_type pos = test.index_n(s, 2, 5);
+				const string_type::size_type pos = test_str.index_n(s, 2, 5);
 				Assert::IsTrue(pos != string_type::npos);
 			}
 			catch (const string_type::NotFoundException e) { /* ok case! */ }
@@ -603,46 +1257,46 @@ namespace cppstringstests
 		{
 			using string_type = pcs::CppWString;
 
-			string_type test{ L"ABC0123456789." };
+			string_type test_str{ L"ABC0123456789." };
 			wchar_t ch{ L'3'};
-			Assert::AreEqual(test.substr(0, 20).MyBaseClass::find(ch), test.index_n(ch, 20));
-			Assert::AreEqual(test.substr(2, 5).MyBaseClass::find(ch), test.index_n(ch, 2, 5) - 2);
+			Assert::AreEqual(test_str.substr(0, 20).MyBaseClass::find(ch), test_str.index_n(ch, 20));
+			Assert::AreEqual(test_str.substr(2, 5).MyBaseClass::find(ch), test_str.index_n(ch, 2, 5) - 2);
 			try {
-				const string_type::size_type pos = test.index_n('z', 20);
+				const string_type::size_type pos = test_str.index_n('z', 20);
 				Assert::IsTrue(pos != string_type::npos);
 			}
 			catch (const string_type::NotFoundException e) { /* ok case! */ }
 			try {
-				const string_type::size_type pos = test.index_n('z', 2, 5);
+				const string_type::size_type pos = test_str.index_n('z', 2, 5);
 				Assert::IsTrue(pos != string_type::npos);
 			}
 			catch (const string_type::NotFoundException e) { /* ok case! */ }
 
 			string_type s(ch);
-			Assert::AreEqual(test.substr(0, 20).MyBaseClass::find(s), test.index_n(s, 20));
-			Assert::AreEqual(test.substr(3, 5).MyBaseClass::find(s), test.index_n(s, 3, 5) - 3);
+			Assert::AreEqual(test_str.substr(0, 20).MyBaseClass::find(s), test_str.index_n(s, 20));
+			Assert::AreEqual(test_str.substr(3, 5).MyBaseClass::find(s), test_str.index_n(s, 3, 5) - 3);
 			try {
-				const string_type::size_type pos = test.index_n(s, 20);
+				const string_type::size_type pos = test_str.index_n(s, 20);
 				Assert::IsTrue(pos != string_type::npos);
 			}
 			catch (const string_type::NotFoundException e) { /* ok case! */ }
 			try {
-				const string_type::size_type pos = test.index_n(s, 2, 5);
+				const string_type::size_type pos = test_str.index_n(s, 2, 5);
 				Assert::IsTrue(pos != string_type::npos);
 			}
 			catch (const string_type::NotFoundException e) { /* ok case! */ }
 
 			wchar_t str[2]{ ch, 0 };
-			Assert::AreEqual(test.substr(0, 20).MyBaseClass::find(str), test.index_n(str, 20));
-			Assert::AreEqual(test.substr(3, 5).MyBaseClass::find(str), test.index_n(str, 3, 5) - 3);
+			Assert::AreEqual(test_str.substr(0, 20).MyBaseClass::find(str), test_str.index_n(str, 20));
+			Assert::AreEqual(test_str.substr(3, 5).MyBaseClass::find(str), test_str.index_n(str, 3, 5) - 3);
 			str[0] = L'z';
 			try {
-				const string_type::size_type pos = test.index_n(s, 20);
+				const string_type::size_type pos = test_str.index_n(s, 20);
 				Assert::IsTrue(pos != string_type::npos);
 			}
 			catch (const string_type::NotFoundException e) { /* ok case! */ }
 			try {
-				const string_type::size_type pos = test.index_n(s, 2, 5);
+				const string_type::size_type pos = test_str.index_n(s, 2, 5);
 				Assert::IsTrue(pos != string_type::npos);
 			}
 			catch (const string_type::NotFoundException e) { /* ok case! */ }
@@ -731,6 +1385,7 @@ namespace cppstringstests
 			Assert::IsTrue(pcs::CppString("b").isidentifier());
 			Assert::IsTrue(pcs::CppString("_abcdefghijklmnopqrstuvwxyz0123456789_").isidentifier());
 			Assert::IsTrue(pcs::CppString("abcdefghijklmnopqrstuvwxyz0123456789_").isidentifier());
+			Assert::IsTrue(pcs::CppString("abcdefghijklmnopqrstuvwxyz_0123456789").isidentifier());
 			Assert::IsTrue(pcs::CppString("_0123456789").isidentifier());
 			Assert::IsTrue(pcs::CppString("__").isidentifier());
 			Assert::IsFalse(pcs::CppString("_abcdefghijklmnopqrstuvwxyz0123456789.").isidentifier());
@@ -741,6 +1396,7 @@ namespace cppstringstests
 			Assert::IsTrue(pcs::CppWString(L"b").isidentifier());
 			Assert::IsTrue(pcs::CppWString(L"_0123456789abcdefghijklmnopqrstuvwxyz_").isidentifier());
 			Assert::IsTrue(pcs::CppWString(L"abcdefghijk0123456789lmnopqrstuvwxyz_").isidentifier());
+			Assert::IsTrue(pcs::CppWString(L"abcdefghijk0123456789_lmnopqrstuvwxyz").isidentifier());
 			Assert::IsTrue(pcs::CppWString(L"_0123456789").isidentifier());
 			Assert::IsTrue(pcs::CppWString(L"__").isidentifier());
 			Assert::IsFalse(pcs::CppWString(L"_0123456789abcdefghijklmnopqrstuvwxyz.").isidentifier());
@@ -1117,58 +1773,58 @@ namespace cppstringstests
 		{
 			size_t found_pos;
 
-			pcs::CppString test{ "ABC0123456789." };
+			pcs::CppString test_str{ "ABC0123456789." };
 			for (int c = 0; c <= 255; ++c) {
 				char ch{ char(c) };
-				Assert::AreEqual(test.MyBaseClass::rfind(ch), test.rfind(ch));
+				Assert::AreEqual(test_str.MyBaseClass::rfind(ch), test_str.rfind(ch));
 
-				found_pos = test.substr(2).MyBaseClass::rfind(ch);
+				found_pos = test_str.substr(2).MyBaseClass::rfind(ch);
 				if (found_pos == pcs::CppString::npos)
-					Assert::AreEqual(found_pos, test.rfind(ch, 2));
+					Assert::AreEqual(found_pos, test_str.rfind(ch, 2));
 				else
-					Assert::AreEqual(found_pos, test.rfind(ch, 2) - 2);
+					Assert::AreEqual(found_pos, test_str.rfind(ch, 2) - 2);
 
-				found_pos = test.substr(2, 5).MyBaseClass::rfind(ch);
+				found_pos = test_str.substr(2, 5).MyBaseClass::rfind(ch);
 				if (found_pos == pcs::CppString::npos)
-					Assert::AreEqual(found_pos, test.rfind(ch, 2, pcs::CppString::size_type(5 + 2 - 1)));
+					Assert::AreEqual(found_pos, test_str.rfind(ch, 2, pcs::CppString::size_type(5 + 2 - 1)));
 				else
-					Assert::AreEqual(found_pos, test.rfind(ch, 2, pcs::CppString::size_type(5 + 2 - 1)) - 2);
+					Assert::AreEqual(found_pos, test_str.rfind(ch, 2, pcs::CppString::size_type(5 + 2 - 1)) - 2);
 
 				CppString s(ch);
-				Assert::AreEqual(test.MyBaseClass::rfind(s), test.rfind(s));
-				found_pos = test.substr(2).MyBaseClass::rfind(s);
+				Assert::AreEqual(test_str.MyBaseClass::rfind(s), test_str.rfind(s));
+				found_pos = test_str.substr(2).MyBaseClass::rfind(s);
 				if (found_pos == pcs::CppString::npos)
-					Assert::AreEqual(found_pos, test.rfind(s, 2));
+					Assert::AreEqual(found_pos, test_str.rfind(s, 2));
 				else
-					Assert::AreEqual(found_pos, test.rfind(s, 2) - 2);
+					Assert::AreEqual(found_pos, test_str.rfind(s, 2) - 2);
 
-				found_pos = test.substr(2, 5).MyBaseClass::rfind(s);
+				found_pos = test_str.substr(2, 5).MyBaseClass::rfind(s);
 				if (found_pos == pcs::CppString::npos)
-					Assert::AreEqual(found_pos, test.rfind(s, 2, pcs::CppString::size_type(5 + 2 - 1)));
+					Assert::AreEqual(found_pos, test_str.rfind(s, 2, pcs::CppString::size_type(5 + 2 - 1)));
 				else
-					Assert::AreEqual(found_pos, test.rfind(s, 2, pcs::CppString::size_type(5 + 2 - 1)) - 2);
+					Assert::AreEqual(found_pos, test_str.rfind(s, 2, pcs::CppString::size_type(5 + 2 - 1)) - 2);
 
 				if (c > 0) {
 					char str[2]{ ch, 0 };
-					Assert::AreEqual(test.MyBaseClass::rfind(str), test.rfind(str));
+					Assert::AreEqual(test_str.MyBaseClass::rfind(str), test_str.rfind(str));
 
-					found_pos = test.substr(2).MyBaseClass::rfind(str);
+					found_pos = test_str.substr(2).MyBaseClass::rfind(str);
 					if (found_pos == pcs::CppString::npos)
-						Assert::AreEqual(found_pos, test.rfind(str, 2));
+						Assert::AreEqual(found_pos, test_str.rfind(str, 2));
 					else
-						Assert::AreEqual(found_pos, test.rfind(str, 2) - 2);
+						Assert::AreEqual(found_pos, test_str.rfind(str, 2) - 2);
 
-					found_pos = test.substr(2, 5).MyBaseClass::rfind(str);
+					found_pos = test_str.substr(2, 5).MyBaseClass::rfind(str);
 					if (found_pos == pcs::CppString::npos)
-						Assert::AreEqual(found_pos, test.rfind(str, 2, pcs::CppString::size_type(5 + 2 - 1)));
+						Assert::AreEqual(found_pos, test_str.rfind(str, 2, pcs::CppString::size_type(5 + 2 - 1)));
 					else
-						Assert::AreEqual(found_pos, test.rfind(str, 2, pcs::CppString::size_type(5 + 2 - 1)) - 2);
+						Assert::AreEqual(found_pos, test_str.rfind(str, 2, pcs::CppString::size_type(5 + 2 - 1)) - 2);
 				}
 			}
-			Assert::AreEqual(pcs::CppString::npos, test.rfind("A", 1));
-			Assert::AreEqual(test.size(), test.rfind(""));
-			Assert::AreEqual(pcs::CppString::npos, test.rfind(".", 14));
-			Assert::AreEqual(size_t(13), test.rfind(".", 13));
+			Assert::AreEqual(pcs::CppString::npos, test_str.rfind("A", 1));
+			Assert::AreEqual(test_str.size(), test_str.rfind(""));
+			Assert::AreEqual(pcs::CppString::npos, test_str.rfind(".", 14));
+			Assert::AreEqual(size_t(13), test_str.rfind(".", 13));
 
 			pcs::CppWString wtest{ L"ABC0123456789." };
 			for (int wc = 0; wc <= 0xffff; ++wc) {
@@ -1228,60 +1884,60 @@ namespace cppstringstests
 		{
 			size_t found_pos;
 
-			pcs::CppString test{ "ABC0123456789.ABC0123456789." };
+			pcs::CppString test_str{ "ABC0123456789.ABC0123456789." };
 			for (int c = 0; c <= 255; ++c) {
 				char ch{ char(c) };
-				Assert::AreEqual(test.MyBaseClass::rfind(ch), test.rfind_n(ch, size_t(-1)));
+				Assert::AreEqual(test_str.MyBaseClass::rfind(ch), test_str.rfind_n(ch, size_t(-1)));
 
-				found_pos = test.substr(2).MyBaseClass::rfind(ch);
+				found_pos = test_str.substr(2).MyBaseClass::rfind(ch);
 				if (found_pos == pcs::CppString::npos)
-					Assert::AreEqual(found_pos, test.rfind_n(ch, 2));
+					Assert::AreEqual(found_pos, test_str.rfind_n(ch, 2));
 				else
-					Assert::AreEqual(found_pos, test.substr(2).rfind_n(ch, test.size() - 2));
+					Assert::AreEqual(found_pos, test_str.substr(2).rfind_n(ch, test_str.size() - 2));
 
-				found_pos = test.substr(2, 5).MyBaseClass::rfind(ch);
+				found_pos = test_str.substr(2, 5).MyBaseClass::rfind(ch);
 				if (found_pos == pcs::CppString::npos)
-					Assert::AreEqual(found_pos, test.rfind_n(ch, 2, pcs::CppString::size_type(5)));
+					Assert::AreEqual(found_pos, test_str.rfind_n(ch, 2, pcs::CppString::size_type(5)));
 				else
-					Assert::AreEqual(found_pos, test.rfind_n(ch, 2, pcs::CppString::size_type(5)) - 2);
+					Assert::AreEqual(found_pos, test_str.rfind_n(ch, 2, pcs::CppString::size_type(5)) - 2);
 
 				CppString s(ch);
-				Assert::AreEqual(test.MyBaseClass::rfind(s), test.rfind_n(s, size_t(-1)));
-				found_pos = test.substr(2).MyBaseClass::rfind(s);
+				Assert::AreEqual(test_str.MyBaseClass::rfind(s), test_str.rfind_n(s, size_t(-1)));
+				found_pos = test_str.substr(2).MyBaseClass::rfind(s);
 				if (found_pos == pcs::CppString::npos)
-					Assert::AreEqual(found_pos, test.rfind_n(s, 2));
+					Assert::AreEqual(found_pos, test_str.rfind_n(s, 2));
 				else
-					Assert::AreEqual(found_pos, test.substr(2).rfind_n(s, test.size() - 2));
+					Assert::AreEqual(found_pos, test_str.substr(2).rfind_n(s, test_str.size() - 2));
 
-				found_pos = test.substr(2, 5).MyBaseClass::rfind(s);
+				found_pos = test_str.substr(2, 5).MyBaseClass::rfind(s);
 				if (found_pos == pcs::CppString::npos)
-					Assert::AreEqual(found_pos, test.rfind_n(s, 2, pcs::CppString::size_type(5)));
+					Assert::AreEqual(found_pos, test_str.rfind_n(s, 2, pcs::CppString::size_type(5)));
 				else
-					Assert::AreEqual(found_pos, test.rfind_n(s, 2, pcs::CppString::size_type(5)) - 2);
+					Assert::AreEqual(found_pos, test_str.rfind_n(s, 2, pcs::CppString::size_type(5)) - 2);
 
 				if (c > 0) {
 					char str[2]{ ch, 0 };
-					Assert::AreEqual(test.MyBaseClass::rfind(str), test.rfind_n(str, size_t(-1)));
+					Assert::AreEqual(test_str.MyBaseClass::rfind(str), test_str.rfind_n(str, size_t(-1)));
 
-					found_pos = test.substr(2).MyBaseClass::rfind(str);
+					found_pos = test_str.substr(2).MyBaseClass::rfind(str);
 					if (found_pos == pcs::CppString::npos)
-						Assert::AreEqual(found_pos, test.rfind_n(str, test.size() - 2));
+						Assert::AreEqual(found_pos, test_str.rfind_n(str, test_str.size() - 2));
 					else
-						Assert::AreEqual(found_pos, test.substr(2).rfind_n(str, test.size() - 2));
+						Assert::AreEqual(found_pos, test_str.substr(2).rfind_n(str, test_str.size() - 2));
 
-					found_pos = test.substr(2, 5).MyBaseClass::rfind(str);
+					found_pos = test_str.substr(2, 5).MyBaseClass::rfind(str);
 					if (found_pos == pcs::CppString::npos)
-						Assert::AreEqual(found_pos, test.rfind_n(str, 2, pcs::CppString::size_type(5)));
+						Assert::AreEqual(found_pos, test_str.rfind_n(str, 2, pcs::CppString::size_type(5)));
 					else
-						Assert::AreEqual(found_pos, test.rfind_n(str, 2, pcs::CppString::size_type(5)) - 2);
+						Assert::AreEqual(found_pos, test_str.rfind_n(str, 2, pcs::CppString::size_type(5)) - 2);
 				}
 			}
-			Assert::AreEqual(size_t(14), test.rfind_n("A", 1, test.size() - 1));
-			Assert::AreEqual(pcs::CppString::npos, test.rfind_n("A", 15, 1));
-			Assert::AreEqual(size_t(0), test.rfind_n("", size_t(-1)));
-			Assert::AreEqual(size_t(27), test.rfind_n(".", 14, test.size() - 14));
-			Assert::AreEqual(pcs::CppString::npos, test.rfind_n(".", 28, 1));
-			Assert::AreEqual(size_t(27), test.rfind_n(".", 13, test.size() - 13));
+			Assert::AreEqual(size_t(14), test_str.rfind_n("A", 1, test_str.size() - 1));
+			Assert::AreEqual(pcs::CppString::npos, test_str.rfind_n("A", 15, 1));
+			Assert::AreEqual(size_t(0), test_str.rfind_n("", size_t(-1)));
+			Assert::AreEqual(size_t(27), test_str.rfind_n(".", 14, test_str.size() - 14));
+			Assert::AreEqual(pcs::CppString::npos, test_str.rfind_n(".", 28, 1));
+			Assert::AreEqual(size_t(27), test_str.rfind_n(".", 13, test_str.size() - 13));
 
 			pcs::CppWString wtest{ L"ABC0123456789.ABC0123456789." };
 			for (int wc = 0; wc <= 0xffff; ++wc) {
