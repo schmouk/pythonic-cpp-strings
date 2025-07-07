@@ -2314,7 +2314,7 @@ namespace cppstringstests
 			wres = L""cs.rpartition(L"A");
 			Assert::AreEqual(L"", wres[0].c_str());
 			Assert::AreEqual(L"", wres[1].c_str());
-			Assert::AreEqual(L"", wres[2].c_str()); 
+			Assert::AreEqual(L"", wres[2].c_str());
 		}
 
 	};
