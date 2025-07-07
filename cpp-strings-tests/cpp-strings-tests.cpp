@@ -2166,7 +2166,7 @@ namespace cppstringstests
 			CppString s(ch);
 			Assert::AreEqual(test_str.substr(0, 20).MyBaseClass::rfind(s), test_str.rindex_n(s, 20));
 			Assert::AreEqual(test_str.substr(3, 5).MyBaseClass::rfind(s), test_str.rindex_n(s, 3, 5) - 3);
-			s = 'z';
+			s = 'z'; 
 			try {
 				const string_type::size_type pos = test_str.rindex_n(s, 20);
 				Assert::IsTrue(pos != string_type::npos);
