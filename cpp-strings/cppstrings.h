@@ -1429,17 +1429,18 @@ namespace pcs // i.e. "pythonic c++ strings"
         /** \brief Returns a vector of the words in the string, using sep as the delimiter string. At most maxsplit splits are done, the rightmost ones. */
         std::vector<CppStringT> rsplit(const CppStringT& sep, const size_type maxsplit) noexcept
         {
-            const size_type sep_size{ sep.size() };
             std::vector<CppStringT> res{};
 
             if (maxsplit == 0) {
                 res.push_back({ *this });
             }
             else {
+                const size_type sep_size{ sep.size() };
                 std::vector<size_type> indexes{};
-                CppStringT tmp = *this;
-                size_type count = maxsplit;
-                size_type index;
+                CppStringT tmp{ *this };
+                size_type count{ maxsplit };
+                size_type index{ 0 };
+
                 while ((index = tmp.rfind(sep)) != CppStringT::npos  &&  count > 0) {
                     indexes.insert(indexes.begin(), index);
                     if (index == 0)
@@ -1457,7 +1458,7 @@ namespace pcs // i.e. "pythonic c++ strings"
                         index = ndx + sep_size;
                     }
                 }
-                res.push_back(this->substr(index/* + sep_size - 1*/, this->size() - index));
+                res.push_back(this->substr(index, this->size() - index));
             }
 
             return res;
@@ -1493,12 +1494,8 @@ namespace pcs // i.e. "pythonic c++ strings"
         //---   split()   -----------------------------------------
         /** \brief Returns a vector of the words in the whole string, as seperated with whitespace strings.
         *
-        * Notice: runs of consecutive whitespace are regarded as a single
-        * separator,  and the result will contain no empty strings at the
-        * start or end if the string has leading or trailing  whitespace.
-        * Consequently,  splitting an empty string or a string consisting
-        * of just whitespace with a whitespace separator returns an ampty
-        * vector.
+        * Notice: consecutive whitespaces are each regarded as a
+        * single separator. So, they each separate empty strings.
         */
         inline std::vector<CppStringT> split() noexcept
         {
@@ -1527,36 +1524,9 @@ namespace pcs // i.e. "pythonic c++ strings"
         }
 
         /** \brief Returns a vector of the words in the string, as seperated with whitespace strings. At most maxsplit splits are done, the leftmost ones. */
-        std::vector<CppStringT> split(const size_type maxsplit) noexcept
+        inline std::vector<CppStringT> split(const size_type maxsplit) noexcept
         {
-            std::vector<CppStringT> res{};
-
-            if (maxsplit == 0) {
-                res.push_back(*this);
-            }
-            else {
-                const CppStringT whitespace(value_type(' '));
-                std::vector<CppStringT> all_words{ this->split(whitespace) };
-
-                size_type count = maxsplit;
-                auto word_it = all_words.cbegin();
-                while (count > 0 && word_it != all_words.cend()) {
-                    if (!word_it->empty()) {
-                        res.insert(res.cbegin(), *word_it);
-                        --count;
-                    }
-                    word_it++;
-                }
-
-                size_type chars_count = 0;
-                for (auto it = word_it; it != all_words.cend(); ++it) {
-                    chars_count += it->size() + 1;
-                }
-                if (chars_count > 0)
-                    res.insert(res.cbegin(), this->substr(this->cbegin() + chars_count - 1, this->cend()));
-            }
-
-            return res;
+            return split(CppStringT(value_type(' ')), maxsplit);
         }
 
         /** \brief Returns a vector of the words in the string, using sep as the delimiter string. At most maxsplit splits are done, the leftmost ones. */
@@ -1568,6 +1538,30 @@ namespace pcs // i.e. "pythonic c++ strings"
                 res.push_back(*this);
             }
             else {
+                const size_type sep_size{ sep.size() };
+                std::vector<size_type> indexes{};
+                size_type count{ maxsplit };
+                size_type index{ 0 };
+
+                while ((index = this->find(sep, index)) != CppStringT::npos && count > 0) {
+                    indexes.push_back(index);
+                    if (index == this->size())
+                        break;
+                    index += sep_size;
+                    count--;
+                }
+
+                if (indexes.size() == 0)
+                    res.push_back(*this);
+                else {
+                    index = 0;
+                    for (const size_type ndx : indexes) {
+                        res.push_back(this->substr(index, ndx - index));
+                        index = ndx + sep_size;
+                    }
+                }
+                res.push_back(this->substr(index, this->size() - index));
+                /** /
                 const CppStringT whitespace(value_type(' '));
                 std::vector<CppStringT> all_words{ this->split(sep) };
 
@@ -1585,6 +1579,7 @@ namespace pcs // i.e. "pythonic c++ strings"
                 }
                 if (chars_count > 0)
                     res.insert(res.cbegin(), this->substr(this->cbegin() + chars_count - 1, this->cend()));
+                /**/
             }
 
             return res;
