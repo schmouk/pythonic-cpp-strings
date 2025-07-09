@@ -2317,5 +2317,452 @@ namespace cppstringstests
 			Assert::AreEqual(L"", wres[2].c_str());
 		}
 
+		TEST_METHOD(rsplit)
+		{
+			pcs::CppString s(" abcd efg   hij klmn  ");
+			std::vector<CppString> res{ s.rsplit() };
+			Assert::AreEqual("", res[0].c_str());
+			Assert::AreEqual("abcd", res[1].c_str());
+			Assert::AreEqual("efg", res[2].c_str());
+			Assert::AreEqual("", res[3].c_str());
+			Assert::AreEqual("", res[4].c_str());
+			Assert::AreEqual("hij", res[5].c_str());
+			Assert::AreEqual("klmn", res[6].c_str());
+			Assert::AreEqual("", res[7].c_str());
+			Assert::AreEqual("", res[8].c_str());
+
+			res = s.rsplit(0);
+			Assert::AreEqual(pcs::CppString::size_type(1), res.size());
+			Assert::AreEqual(" abcd efg   hij klmn  ", res[0].c_str());
+
+			res = s.rsplit(1);
+			Assert::AreEqual(pcs::CppString::size_type(2), res.size());
+			Assert::AreEqual(" abcd efg   hij klmn ", res[0].c_str());
+			Assert::AreEqual("", res[1].c_str());
+
+			res = s.rsplit(2);
+			Assert::AreEqual(pcs::CppString::size_type(3), res.size());
+			Assert::AreEqual(" abcd efg   hij klmn", res[0].c_str());
+			Assert::AreEqual("", res[1].c_str());
+			Assert::AreEqual("", res[2].c_str());
+
+			res = s.rsplit(3);
+			Assert::AreEqual(pcs::CppString::size_type(4), res.size());
+			Assert::AreEqual(" abcd efg   hij", res[0].c_str());
+			Assert::AreEqual("klmn", res[1].c_str());
+			Assert::AreEqual("", res[2].c_str());
+			Assert::AreEqual("", res[3].c_str());
+
+			res = s.rsplit(4);
+			Assert::AreEqual(pcs::CppString::size_type(5), res.size());
+			Assert::AreEqual(" abcd efg  ", res[0].c_str());
+			Assert::AreEqual("hij", res[1].c_str());
+			Assert::AreEqual("klmn", res[2].c_str());
+			Assert::AreEqual("", res[3].c_str());
+			Assert::AreEqual("", res[4].c_str());
+
+			res = s.rsplit(5);
+			Assert::AreEqual(pcs::CppString::size_type(6), res.size());
+			Assert::AreEqual(" abcd efg ", res[0].c_str());
+			Assert::AreEqual("", res[1].c_str());
+			Assert::AreEqual("hij", res[2].c_str());
+			Assert::AreEqual("klmn", res[3].c_str());
+			Assert::AreEqual("", res[4].c_str());
+			Assert::AreEqual("", res[5].c_str());
+
+			res = s.rsplit(6);
+			Assert::AreEqual(pcs::CppString::size_type(7), res.size());
+			Assert::AreEqual(" abcd efg", res[0].c_str());
+			Assert::AreEqual("", res[1].c_str());
+			Assert::AreEqual("", res[2].c_str());
+			Assert::AreEqual("hij", res[3].c_str());
+			Assert::AreEqual("klmn", res[4].c_str());
+			Assert::AreEqual("", res[5].c_str());
+			Assert::AreEqual("", res[6].c_str());
+
+			res = s.rsplit(7);
+			Assert::AreEqual(pcs::CppString::size_type(8), res.size());
+			Assert::AreEqual(" abcd", res[0].c_str());
+			Assert::AreEqual("efg", res[1].c_str());
+			Assert::AreEqual("", res[2].c_str());
+			Assert::AreEqual("", res[3].c_str());
+			Assert::AreEqual("hij", res[4].c_str());
+			Assert::AreEqual("klmn", res[5].c_str());
+			Assert::AreEqual("", res[6].c_str());
+			Assert::AreEqual("", res[7].c_str());
+
+			res = s.rsplit(8);
+			Assert::AreEqual(pcs::CppString::size_type(9), res.size());
+			Assert::AreEqual("", res[0].c_str());
+			Assert::AreEqual("abcd", res[1].c_str());
+			Assert::AreEqual("efg", res[2].c_str());
+			Assert::AreEqual("", res[3].c_str());
+			Assert::AreEqual("", res[4].c_str());
+			Assert::AreEqual("hij", res[5].c_str());
+			Assert::AreEqual("klmn", res[6].c_str());
+			Assert::AreEqual("", res[7].c_str());
+			Assert::AreEqual("", res[8].c_str());
+
+			res = s.rsplit(9);
+			Assert::AreEqual(pcs::CppString::size_type(9), res.size());
+			Assert::AreEqual("", res[0].c_str());
+			Assert::AreEqual("abcd", res[1].c_str());
+			Assert::AreEqual("efg", res[2].c_str());
+			Assert::AreEqual("", res[3].c_str());
+			Assert::AreEqual("", res[4].c_str());
+			Assert::AreEqual("hij", res[5].c_str());
+			Assert::AreEqual("klmn", res[6].c_str());
+			Assert::AreEqual("", res[7].c_str());
+			Assert::AreEqual("", res[8].c_str());
+
+			res = s.rsplit(10);
+			Assert::AreEqual(pcs::CppString::size_type(9), res.size());
+			Assert::AreEqual("", res[0].c_str());
+			Assert::AreEqual("abcd", res[1].c_str());
+			Assert::AreEqual("efg", res[2].c_str());
+			Assert::AreEqual("", res[3].c_str());
+			Assert::AreEqual("", res[4].c_str());
+			Assert::AreEqual("hij", res[5].c_str());
+			Assert::AreEqual("klmn", res[6].c_str());
+			Assert::AreEqual("", res[7].c_str());
+			Assert::AreEqual("", res[8].c_str());
+
+			s = " abcd#123efg#123hij #123#123klmn  "cs;
+			res = s.rsplit("#123");
+			Assert::AreEqual(pcs::CppString::size_type(5), res.size());
+			Assert::AreEqual(" abcd", res[0].c_str());
+			Assert::AreEqual("efg", res[1].c_str());
+			Assert::AreEqual("hij ", res[2].c_str());
+			Assert::AreEqual("", res[3].c_str());
+			Assert::AreEqual("klmn  ", res[4].c_str());
+
+			s = "#123#123abcd#123123efg#123hij #123#123klmn  #123#123"cs;
+			res = s.rsplit("#123");
+			Assert::AreEqual(pcs::CppString::size_type(9), res.size());
+			Assert::AreEqual("", res[0].c_str());
+			Assert::AreEqual("", res[1].c_str());
+			Assert::AreEqual("abcd", res[2].c_str());
+			Assert::AreEqual("123efg", res[3].c_str());
+			Assert::AreEqual("hij ", res[4].c_str());
+			Assert::AreEqual("", res[5].c_str());
+			Assert::AreEqual("klmn  ", res[6].c_str());
+			Assert::AreEqual("", res[7].c_str());
+			Assert::AreEqual("", res[8].c_str());
+
+			res = s.rsplit("#123", 1);
+			Assert::AreEqual(pcs::CppString::size_type(2), res.size());
+			Assert::AreEqual("#123#123abcd#123123efg#123hij #123#123klmn  #123", res[0].c_str());
+			Assert::AreEqual("", res[1].c_str());
+
+			res = s.rsplit("#123", 2);
+			Assert::AreEqual(pcs::CppString::size_type(3), res.size());
+			Assert::AreEqual("#123#123abcd#123123efg#123hij #123#123klmn  ", res[0].c_str());
+			Assert::AreEqual("", res[1].c_str());
+			Assert::AreEqual("", res[2].c_str());
+
+			res = s.rsplit("#123", 3);
+			Assert::AreEqual(pcs::CppString::size_type(4), res.size());
+			Assert::AreEqual("#123#123abcd#123123efg#123hij #123", res[0].c_str());
+			Assert::AreEqual("klmn  ", res[1].c_str());
+			Assert::AreEqual("", res[2].c_str());
+			Assert::AreEqual("", res[3].c_str());
+
+			res = s.rsplit("#123", 4);
+			Assert::AreEqual(pcs::CppString::size_type(5), res.size());
+			Assert::AreEqual("#123#123abcd#123123efg#123hij ", res[0].c_str());
+			Assert::AreEqual("", res[1].c_str());
+			Assert::AreEqual("klmn  ", res[2].c_str());
+			Assert::AreEqual("", res[3].c_str());
+			Assert::AreEqual("", res[4].c_str());
+
+			res = s.rsplit("#123", 5);
+			Assert::AreEqual(pcs::CppString::size_type(6), res.size());
+			Assert::AreEqual("#123#123abcd#123123efg", res[0].c_str());
+			Assert::AreEqual("hij ", res[1].c_str());
+			Assert::AreEqual("", res[2].c_str());
+			Assert::AreEqual("klmn  ", res[3].c_str());
+			Assert::AreEqual("", res[4].c_str());
+			Assert::AreEqual("", res[5].c_str());
+
+			res = s.rsplit("#123", 6);
+			Assert::AreEqual(pcs::CppString::size_type(7), res.size());
+			Assert::AreEqual("#123#123abcd", res[0].c_str());
+			Assert::AreEqual("123efg", res[1].c_str());
+			Assert::AreEqual("hij ", res[2].c_str());
+			Assert::AreEqual("", res[3].c_str());
+			Assert::AreEqual("klmn  ", res[4].c_str());
+			Assert::AreEqual("", res[5].c_str());
+			Assert::AreEqual("", res[6].c_str());
+
+			res = s.rsplit("#123", 7);
+			Assert::AreEqual(pcs::CppString::size_type(8), res.size());
+			Assert::AreEqual("#123", res[0].c_str());
+			Assert::AreEqual("abcd", res[1].c_str());
+			Assert::AreEqual("123efg", res[2].c_str());
+			Assert::AreEqual("hij ", res[3].c_str());
+			Assert::AreEqual("", res[4].c_str());
+			Assert::AreEqual("klmn  ", res[5].c_str());
+			Assert::AreEqual("", res[6].c_str());
+			Assert::AreEqual("", res[7].c_str());
+
+			res = s.rsplit("#123", 8);
+			Assert::AreEqual(pcs::CppString::size_type(9), res.size());
+			Assert::AreEqual("", res[0].c_str());
+			Assert::AreEqual("", res[1].c_str());
+			Assert::AreEqual("abcd", res[2].c_str());
+			Assert::AreEqual("123efg", res[3].c_str());
+			Assert::AreEqual("hij ", res[4].c_str());
+			Assert::AreEqual("", res[5].c_str());
+			Assert::AreEqual("klmn  ", res[6].c_str());
+			Assert::AreEqual("", res[7].c_str());
+			Assert::AreEqual("", res[8].c_str());
+
+			res = s.rsplit("#123", 9);
+			Assert::AreEqual(pcs::CppString::size_type(9), res.size());
+			Assert::AreEqual("", res[0].c_str());
+			Assert::AreEqual("", res[1].c_str());
+			Assert::AreEqual("abcd", res[2].c_str());
+			Assert::AreEqual("123efg", res[3].c_str());
+			Assert::AreEqual("hij ", res[4].c_str());
+			Assert::AreEqual("", res[5].c_str());
+			Assert::AreEqual("klmn  ", res[6].c_str());
+			Assert::AreEqual("", res[7].c_str());
+			Assert::AreEqual("", res[8].c_str());
+
+			res = s.rsplit("#123", 10);
+			Assert::AreEqual(pcs::CppString::size_type(9), res.size());
+			Assert::AreEqual("", res[0].c_str());
+			Assert::AreEqual("", res[1].c_str());
+			Assert::AreEqual("abcd", res[2].c_str());
+			Assert::AreEqual("123efg", res[3].c_str());
+			Assert::AreEqual("hij ", res[4].c_str());
+			Assert::AreEqual("", res[5].c_str());
+			Assert::AreEqual("klmn  ", res[6].c_str());
+			Assert::AreEqual("", res[7].c_str());
+			Assert::AreEqual("", res[8].c_str());
+
+
+			pcs::CppWString ws(L" abcd efg   hij klmn  ");
+			std::vector<CppWString> wres{ ws.rsplit() };
+			Assert::AreEqual(L"", wres[0].c_str());
+			Assert::AreEqual(L"abcd", wres[1].c_str());
+			Assert::AreEqual(L"efg", wres[2].c_str());
+			Assert::AreEqual(L"", wres[3].c_str());
+			Assert::AreEqual(L"", wres[4].c_str());
+			Assert::AreEqual(L"hij", wres[5].c_str());
+			Assert::AreEqual(L"klmn", wres[6].c_str());
+			Assert::AreEqual(L"", wres[7].c_str());
+			Assert::AreEqual(L"", wres[8].c_str());
+
+			wres = ws.rsplit(0);
+			Assert::AreEqual(pcs::CppWString::size_type(1), wres.size());
+			Assert::AreEqual(L" abcd efg   hij klmn  ", wres[0].c_str());
+
+			wres = ws.rsplit(1);
+			Assert::AreEqual(pcs::CppWString::size_type(2), wres.size());
+			Assert::AreEqual(L" abcd efg   hij klmn ", wres[0].c_str());
+			Assert::AreEqual(L"", wres[1].c_str());
+
+			wres = ws.rsplit(2);
+			Assert::AreEqual(pcs::CppWString::size_type(3), wres.size());
+			Assert::AreEqual(L" abcd efg   hij klmn", wres[0].c_str());
+			Assert::AreEqual(L"", wres[1].c_str());
+			Assert::AreEqual(L"", wres[2].c_str());
+
+			wres = ws.rsplit(3);
+			Assert::AreEqual(pcs::CppWString::size_type(4), wres.size());
+			Assert::AreEqual(L" abcd efg   hij", wres[0].c_str());
+			Assert::AreEqual(L"klmn", wres[1].c_str());
+			Assert::AreEqual(L"", wres[2].c_str());
+			Assert::AreEqual(L"", wres[3].c_str());
+
+			wres = ws.rsplit(4);
+			Assert::AreEqual(pcs::CppWString::size_type(5), wres.size());
+			Assert::AreEqual(L" abcd efg  ", wres[0].c_str());
+			Assert::AreEqual(L"hij", wres[1].c_str());
+			Assert::AreEqual(L"klmn", wres[2].c_str());
+			Assert::AreEqual(L"", wres[3].c_str());
+			Assert::AreEqual(L"", wres[4].c_str());
+
+			wres = ws.rsplit(5);
+			Assert::AreEqual(pcs::CppWString::size_type(6), wres.size());
+			Assert::AreEqual(L" abcd efg ", wres[0].c_str());
+			Assert::AreEqual(L"", wres[1].c_str());
+			Assert::AreEqual(L"hij", wres[2].c_str());
+			Assert::AreEqual(L"klmn", wres[3].c_str());
+			Assert::AreEqual(L"", wres[4].c_str());
+			Assert::AreEqual(L"", wres[5].c_str());
+
+			wres = ws.rsplit(6);
+			Assert::AreEqual(pcs::CppWString::size_type(7), wres.size());
+			Assert::AreEqual(L" abcd efg", wres[0].c_str());
+			Assert::AreEqual(L"", wres[1].c_str());
+			Assert::AreEqual(L"", wres[2].c_str());
+			Assert::AreEqual(L"hij", wres[3].c_str());
+			Assert::AreEqual(L"klmn", wres[4].c_str());
+			Assert::AreEqual(L"", wres[5].c_str());
+			Assert::AreEqual(L"", wres[6].c_str());
+
+			wres = ws.rsplit(7);
+			Assert::AreEqual(pcs::CppWString::size_type(8), wres.size());
+			Assert::AreEqual(L" abcd", wres[0].c_str());
+			Assert::AreEqual(L"efg", wres[1].c_str());
+			Assert::AreEqual(L"", wres[2].c_str());
+			Assert::AreEqual(L"", wres[3].c_str());
+			Assert::AreEqual(L"hij", wres[4].c_str());
+			Assert::AreEqual(L"klmn", wres[5].c_str());
+			Assert::AreEqual(L"", wres[6].c_str());
+			Assert::AreEqual(L"", wres[7].c_str());
+
+			wres = ws.rsplit(8);
+			Assert::AreEqual(pcs::CppWString::size_type(9), wres.size());
+			Assert::AreEqual(L"", wres[0].c_str());
+			Assert::AreEqual(L"abcd", wres[1].c_str());
+			Assert::AreEqual(L"efg", wres[2].c_str());
+			Assert::AreEqual(L"", wres[3].c_str());
+			Assert::AreEqual(L"", wres[4].c_str());
+			Assert::AreEqual(L"hij", wres[5].c_str());
+			Assert::AreEqual(L"klmn", wres[6].c_str());
+			Assert::AreEqual(L"", wres[7].c_str());
+			Assert::AreEqual(L"", wres[8].c_str());
+
+			wres = ws.rsplit(9);
+			Assert::AreEqual(pcs::CppWString::size_type(9), wres.size());
+			Assert::AreEqual(L"", wres[0].c_str());
+			Assert::AreEqual(L"abcd", wres[1].c_str());
+			Assert::AreEqual(L"efg", wres[2].c_str());
+			Assert::AreEqual(L"", wres[3].c_str());
+			Assert::AreEqual(L"", wres[4].c_str());
+			Assert::AreEqual(L"hij", wres[5].c_str());
+			Assert::AreEqual(L"klmn", wres[6].c_str());
+			Assert::AreEqual(L"", wres[7].c_str());
+			Assert::AreEqual(L"", wres[8].c_str());
+
+			wres = ws.rsplit(10);
+			Assert::AreEqual(pcs::CppWString::size_type(9), wres.size());
+			Assert::AreEqual(L"", wres[0].c_str());
+			Assert::AreEqual(L"abcd", wres[1].c_str());
+			Assert::AreEqual(L"efg", wres[2].c_str());
+			Assert::AreEqual(L"", wres[3].c_str());
+			Assert::AreEqual(L"", wres[4].c_str());
+			Assert::AreEqual(L"hij", wres[5].c_str());
+			Assert::AreEqual(L"klmn", wres[6].c_str());
+			Assert::AreEqual(L"", wres[7].c_str());
+			Assert::AreEqual(L"", wres[8].c_str());
+
+			ws = L" abcd#123efg#123hij #123#123klmn  "cs;
+			wres = ws.rsplit(L"#123");
+			Assert::AreEqual(pcs::CppWString::size_type(5), wres.size());
+			Assert::AreEqual(L" abcd", wres[0].c_str());
+			Assert::AreEqual(L"efg", wres[1].c_str());
+			Assert::AreEqual(L"hij ", wres[2].c_str());
+			Assert::AreEqual(L"", wres[3].c_str());
+			Assert::AreEqual(L"klmn  ", wres[4].c_str());
+
+			ws = L"#123#123abcd#123123efg#123hij #123#123klmn  #123#123"cs;
+			wres = ws.rsplit(L"#123");
+			Assert::AreEqual(pcs::CppWString::size_type(9), wres.size());
+			Assert::AreEqual(L"", wres[0].c_str());
+			Assert::AreEqual(L"", wres[1].c_str());
+			Assert::AreEqual(L"abcd", wres[2].c_str());
+			Assert::AreEqual(L"123efg", wres[3].c_str());
+			Assert::AreEqual(L"hij ", wres[4].c_str());
+			Assert::AreEqual(L"", wres[5].c_str());
+			Assert::AreEqual(L"klmn  ", wres[6].c_str());
+			Assert::AreEqual(L"", wres[7].c_str());
+			Assert::AreEqual(L"", wres[8].c_str());
+
+			wres = ws.rsplit(L"#123", 1);
+			Assert::AreEqual(pcs::CppWString::size_type(2), wres.size());
+			Assert::AreEqual(L"#123#123abcd#123123efg#123hij #123#123klmn  #123", wres[0].c_str());
+			Assert::AreEqual(L"", wres[1].c_str());
+
+			wres = ws.rsplit(L"#123", 2);
+			Assert::AreEqual(pcs::CppWString::size_type(3), wres.size());
+			Assert::AreEqual(L"#123#123abcd#123123efg#123hij #123#123klmn  ", wres[0].c_str());
+			Assert::AreEqual(L"", wres[1].c_str());
+			Assert::AreEqual(L"", wres[2].c_str());
+
+			wres = ws.rsplit(L"#123", 3);
+			Assert::AreEqual(pcs::CppWString::size_type(4), wres.size());
+			Assert::AreEqual(L"#123#123abcd#123123efg#123hij #123", wres[0].c_str());
+			Assert::AreEqual(L"klmn  ", wres[1].c_str());
+			Assert::AreEqual(L"", wres[2].c_str());
+			Assert::AreEqual(L"", wres[3].c_str());
+
+			wres = ws.rsplit(L"#123", 4);
+			Assert::AreEqual(pcs::CppWString::size_type(5), wres.size());
+			Assert::AreEqual(L"#123#123abcd#123123efg#123hij ", wres[0].c_str());
+			Assert::AreEqual(L"", wres[1].c_str());
+			Assert::AreEqual(L"klmn  ", wres[2].c_str());
+			Assert::AreEqual(L"", wres[3].c_str());
+			Assert::AreEqual(L"", wres[4].c_str());
+
+			wres = ws.rsplit(L"#123", 5);
+			Assert::AreEqual(pcs::CppWString::size_type(6), wres.size());
+			Assert::AreEqual(L"#123#123abcd#123123efg", wres[0].c_str());
+			Assert::AreEqual(L"hij ", wres[1].c_str());
+			Assert::AreEqual(L"", wres[2].c_str());
+			Assert::AreEqual(L"klmn  ", wres[3].c_str());
+			Assert::AreEqual(L"", wres[4].c_str());
+			Assert::AreEqual(L"", wres[5].c_str());
+
+			wres = ws.rsplit(L"#123", 6);
+			Assert::AreEqual(pcs::CppWString::size_type(7), wres.size());
+			Assert::AreEqual(L"#123#123abcd", wres[0].c_str());
+			Assert::AreEqual(L"123efg", wres[1].c_str());
+			Assert::AreEqual(L"hij ", wres[2].c_str());
+			Assert::AreEqual(L"", wres[3].c_str());
+			Assert::AreEqual(L"klmn  ", wres[4].c_str());
+			Assert::AreEqual(L"", wres[5].c_str());
+			Assert::AreEqual(L"", wres[6].c_str());
+
+			wres = ws.rsplit(L"#123", 7);
+			Assert::AreEqual(pcs::CppWString::size_type(8), wres.size());
+			Assert::AreEqual(L"#123", wres[0].c_str());
+			Assert::AreEqual(L"abcd", wres[1].c_str());
+			Assert::AreEqual(L"123efg", wres[2].c_str());
+			Assert::AreEqual(L"hij ", wres[3].c_str());
+			Assert::AreEqual(L"", wres[4].c_str());
+			Assert::AreEqual(L"klmn  ", wres[5].c_str());
+			Assert::AreEqual(L"", wres[6].c_str());
+			Assert::AreEqual(L"", wres[7].c_str());
+
+			wres = ws.rsplit(L"#123", 8);
+			Assert::AreEqual(pcs::CppWString::size_type(9), wres.size());
+			Assert::AreEqual(L"", wres[0].c_str());
+			Assert::AreEqual(L"", wres[1].c_str());
+			Assert::AreEqual(L"abcd", wres[2].c_str());
+			Assert::AreEqual(L"123efg", wres[3].c_str());
+			Assert::AreEqual(L"hij ", wres[4].c_str());
+			Assert::AreEqual(L"", wres[5].c_str());
+			Assert::AreEqual(L"klmn  ", wres[6].c_str());
+			Assert::AreEqual(L"", wres[7].c_str());
+			Assert::AreEqual(L"", wres[8].c_str());
+
+			wres = ws.rsplit(L"#123", 9);
+			Assert::AreEqual(pcs::CppWString::size_type(9), wres.size());
+			Assert::AreEqual(L"", wres[0].c_str());
+			Assert::AreEqual(L"", wres[1].c_str());
+			Assert::AreEqual(L"abcd", wres[2].c_str());
+			Assert::AreEqual(L"123efg", wres[3].c_str());
+			Assert::AreEqual(L"hij ", wres[4].c_str());
+			Assert::AreEqual(L"", wres[5].c_str());
+			Assert::AreEqual(L"klmn  ", wres[6].c_str());
+			Assert::AreEqual(L"", wres[7].c_str());
+			Assert::AreEqual(L"", wres[8].c_str());
+
+			wres = ws.rsplit(L"#123", 10);
+			Assert::AreEqual(pcs::CppWString::size_type(9), wres.size());
+			Assert::AreEqual(L"", wres[0].c_str());
+			Assert::AreEqual(L"", wres[1].c_str());
+			Assert::AreEqual(L"abcd", wres[2].c_str());
+			Assert::AreEqual(L"123efg", wres[3].c_str());
+			Assert::AreEqual(L"hij ", wres[4].c_str());
+			Assert::AreEqual(L"", wres[5].c_str());
+			Assert::AreEqual(L"klmn  ", wres[6].c_str());
+			Assert::AreEqual(L"", wres[7].c_str());
+			Assert::AreEqual(L"", wres[8].c_str());
+		}
 	};
 }

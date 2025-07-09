@@ -1410,95 +1410,37 @@ namespace pcs // i.e. "pythonic c++ strings"
         * separator,  and the result will contain no empty strings at the 
         * start or end if the string has leading or trailing  whitespace.
         * Consequently,  splitting an empty string or a string consisting 
-        * of just whitespace with a whitespace separator returns an ampty
+        * of just whitespace with a whitespace separator returns an empty
         * vector.
         */
-        inline std::vector<CppStringT> rsplit() const noexcept
+        inline std::vector<CppStringT> rsplit() noexcept
         {
             return split();
         }
 
         /** \brief Returns a vector of the words in the whole string, using sep as the delimiter string. */
-        inline std::vector<CppStringT> rsplit(const CppStringT& sep) const noexcept
+        inline std::vector<CppStringT> rsplit(const CppStringT& sep) noexcept
         {
             return split(sep);
         }
 
         /** \brief Returns a vector of the words in the string, as seperated with whitespace strings. At most maxsplit splits are done, the rightmost ones. */
-        std::vector<CppStringT> rsplit(const size_type maxsplit) const noexcept
+        inline std::vector<CppStringT> rsplit(const size_type maxsplit) noexcept
         {
-            std::vector<CppStringT> res{};
-
-            if (maxsplit == 0) {
-                res.push_back(*this);
-            }
-            else {
-                const CppStringT whitespace(value_type(' '));
-                std::vector<CppStringT> all_words{ this->split(whitespace) };
-
-                size_type count = maxsplit;
-                auto word_it = all_words.crbegin();
-                size_type last_split_index = all_words.size();
-                while (count > 0 && word_it != all_words.crend()) {
-                    if (!word_it->empty()) {
-                        res.insert(res.cbegin(), *word_it);
-                        --count;
-                        --last_split_index;
-                    }
-                    word_it++;
-                }
-                
-                size_type chars_count = last_split_index;
-                while (last_split_index > 0) {
-                    chars_count += all_words[last_split_index].size();
-                    --last_split_index;
-                }
-                if (chars_count > 0)
-                    res.insert(res.cbegin(), this->substr(0, chars_count));
-                /*
-                constexpr CppStringT spc2("  ");
-                constexpr CppStringT spc(value_type(' '));
-                CppStringT tmp = *this;
-                while (tmp.contains(spc2))
-                    tmp = tmp.replace(spc2, spc);
-
-                res = tmp->rsplit(spc, maxsplit);
-                */
-            }
-
-            return res;
+            return rsplit(CppStringT(value_type(' ')), maxsplit);
         }
 
         /** \brief Returns a vector of the words in the string, using sep as the delimiter string. At most maxsplit splits are done, the rightmost ones. */
-        std::vector<CppStringT> rsplit(const CppStringT& sep, const size_type maxsplit) const noexcept
+        std::vector<CppStringT> rsplit(const CppStringT& sep, const size_type maxsplit) noexcept
         {
+            const size_type sep_size{ sep.size() };
             std::vector<CppStringT> res{};
 
             if (maxsplit == 0) {
                 res.push_back({ *this });
             }
             else {
-                std::vector<CppStringT> all_words{ this->split(sep) };
-
-                size_type count = maxsplit;
-                auto word_it = all_words.crbegin();
-                size_type last_split_index = all_words.size();
-                while (count > 0 && word_it != all_words.crend()) {
-                    res.insert(res.cbegin(), *word_it);
-                    --count;
-                    --last_split_index;
-                    word_it++;
-                }
-
-                size_type chars_count = last_split_index;
-                while (last_split_index > 0) {
-                    chars_count += all_words[last_split_index].size();
-                    --last_split_index;
-                }
-                if (chars_count > 0)
-                    res.insert(res.cbegin(), this->substr(0, chars_count));
-                /*
-                std::vector<CppStringT> indexes{};
+                std::vector<size_type> indexes{};
                 CppStringT tmp = *this;
                 size_type count = maxsplit;
                 size_type index;
@@ -1506,7 +1448,7 @@ namespace pcs // i.e. "pythonic c++ strings"
                     indexes.insert(indexes.begin(), index);
                     if (index == 0)
                         break;
-                    tmp = tmp.substr(0, index-1);
+                    tmp = tmp.substr(0, index);
                     count--;
                 }
 
@@ -1514,12 +1456,12 @@ namespace pcs // i.e. "pythonic c++ strings"
                     res.push_back(*this);
                 else {
                     index = 0;
-                    for (const size_type ndx: indexes) {
+                    for (const size_type ndx : indexes) {
                         res.push_back(this->substr(index, ndx - index));
-                        index = ndx + 1;
+                        index = ndx + sep_size;
+                    }
                 }
-                res.push_back(this->substr(index, this->size() - index));
-                */
+                res.push_back(this->substr(index/* + sep_size - 1*/, this->size() - index));
             }
 
             return res;
@@ -1534,10 +1476,10 @@ namespace pcs // i.e. "pythonic c++ strings"
         * its values are stripped.
         * To remove a suffix, rather call method 'removesuffix()'.
         */
-        inline CppStringT rstrip(const CppStringT& prefix) const noexcept
+        inline CppStringT rstrip(const CppStringT& suffix) const noexcept
         {
             for (auto it = this->crbegin(); it != this->crend(); ++it)
-                if (std::none_of(prefix.cbegin(), prefix.cend(), [it](const value_type ch) { *it == ch; }))
+                if (std::none_of(suffix.cbegin(), suffix.cend(), [it](const value_type ch) { return *it == ch; }))
                     return CppStringT(this->cbegin(), it);
             return CppStringT();
         }
@@ -1562,13 +1504,12 @@ namespace pcs // i.e. "pythonic c++ strings"
         * of just whitespace with a whitespace separator returns an ampty
         * vector.
         */
-        inline std::vector<CppStringT> split() const noexcept
+        inline std::vector<CppStringT> split() noexcept
         {
-            std::vector<std::string> res;
-            constexpr CppStringT whitespace(value_type(' '));
+            std::vector<CppStringT> res;
+            const CppStringT whitespace(value_type(' '));
             for (const auto& word : *this | std::views::split(whitespace))
-                if (!word.empty())
-                    res.push_back(CppStringT(word.begin(), word.end()));
+                res.push_back(CppStringT(word.begin(), word.end()));
             return res;
         }
 
@@ -1581,7 +1522,7 @@ namespace pcs // i.e. "pythonic c++ strings"
         * "3"]).  Splitting  an  empty  string  with  a specified separator 
         * returns {""}.
         */
-        inline std::vector<CppStringT> split(const CppStringT& sep) const noexcept
+        inline std::vector<CppStringT> split(const CppStringT& sep) noexcept
         {
             std::vector<CppStringT> res;
             for (const auto& word : *this | std::views::split(sep))
@@ -1590,7 +1531,7 @@ namespace pcs // i.e. "pythonic c++ strings"
         }
 
         /** \brief Returns a vector of the words in the string, as seperated with whitespace strings. At most maxsplit splits are done, the leftmost ones. */
-        std::vector<CppStringT> split(const size_type maxsplit) const noexcept
+        std::vector<CppStringT> split(const size_type maxsplit) noexcept
         {
             std::vector<CppStringT> res{};
 
@@ -1623,7 +1564,7 @@ namespace pcs // i.e. "pythonic c++ strings"
         }
 
         /** \brief Returns a vector of the words in the string, using sep as the delimiter string. At most maxsplit splits are done, the leftmost ones. */
-        std::vector<CppStringT> split(const CppStringT& sep, const size_type maxsplit) const noexcept
+        std::vector<CppStringT> split(const CppStringT& sep, const size_type maxsplit) noexcept
         {
             std::vector<CppStringT> res{};
 
