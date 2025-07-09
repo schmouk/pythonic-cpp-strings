@@ -2785,5 +2785,65 @@ namespace cppstringstests
 			Assert::AreEqual(L"", wres[7].c_str());
 			Assert::AreEqual(L"", wres[8].c_str());
 		}
+
+		TEST_METHOD(rstrip)
+		{
+			pcs::CppString s(" abcd efg   ");
+			pcs::CppString sres{ s.rstrip() };
+			Assert::AreEqual(" abcd efg", sres.c_str());
+
+			s = " abcd efg  hij"cs;
+			sres = s.rstrip();
+			Assert::AreEqual(" abcd efg  hij", sres.c_str());
+
+			s = ""cs;
+			sres = s.rstrip();
+			Assert::AreEqual("", sres.c_str());
+
+			s = "     "cs;
+			sres = s.rstrip();
+			Assert::AreEqual("", sres.c_str());
+
+			s = "#124abcd#124efg#124#124#124"cs;
+			sres = s.rstrip("#124");
+			Assert::AreEqual("#124abcd#124efg", sres.c_str());
+
+			s = "#124abcd#124efg#124#124hij"cs;
+			sres = s.rstrip("#124");
+			Assert::AreEqual("#124abcd#124efg#124#124hij", sres.c_str());
+
+			s = "#124#124#124#124#124";
+			sres = s.rstrip("#124");
+			Assert::AreEqual("", sres.c_str());
+
+			pcs::CppWString ws(L" abcd efg   ");
+			pcs::CppWString wsres{ ws.rstrip() };
+			Assert::AreEqual(L" abcd efg", wsres.c_str());
+
+			ws = L" abcd efg  hij"cs;
+			wsres = ws.rstrip();
+			Assert::AreEqual(L" abcd efg  hij", wsres.c_str());
+
+			ws = L""cs;
+			wsres = ws.rstrip();
+			Assert::AreEqual(L"", wsres.c_str());
+
+			ws = L"     "cs;
+			wsres = ws.rstrip();
+			Assert::AreEqual(L"", wsres.c_str());
+
+			ws = L"#124abcd#124efg#124#124#124"cs;
+			wsres = ws.rstrip(L"#124");
+			Assert::AreEqual(L"#124abcd#124efg", wsres.c_str());
+
+			ws = L"#124abcd#124efg#124#124hij"cs;
+			wsres = ws.rstrip(L"#124");
+			Assert::AreEqual(L"#124abcd#124efg#124#124hij", wsres.c_str());
+
+			ws = L"#124#124#124#124#124";
+			wsres = ws.rstrip(L"#124");
+			Assert::AreEqual(L"", wsres.c_str());
+		}
+
 	};
 }

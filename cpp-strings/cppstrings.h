@@ -1476,7 +1476,7 @@ namespace pcs // i.e. "pythonic c++ strings"
         {
             for (auto it = this->crbegin(); it != this->crend(); ++it)
                 if (std::none_of(suffix.cbegin(), suffix.cend(), [it](const value_type ch) { return *it == ch; }))
-                    return CppStringT(this->cbegin(), it);
+                    return CppStringT(this->cbegin(), this->cbegin() + this->size() - (it - this->crbegin()));
             return CppStringT();
         }
 
@@ -1485,7 +1485,7 @@ namespace pcs // i.e. "pythonic c++ strings"
         {
             for (auto it = this->crbegin(); it != this->crend(); ++it)
                 if (*it != value_type(' '))
-                    return CppStringT(this->cbegin(), it);
+                    return CppStringT(this->cbegin(), this->cbegin() + this->size() - (it - this->crbegin()));
             return CppStringT();
         }
 
