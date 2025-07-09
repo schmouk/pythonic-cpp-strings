@@ -2427,6 +2427,17 @@ namespace cppstringstests
 			Assert::AreEqual("", res[7].c_str());
 			Assert::AreEqual("", res[8].c_str());
 
+			s = pcs::CppString(5, ' ');  //"     "cs;
+			res = s.rsplit();
+			Assert::AreEqual(pcs::CppString::size_type(6), res.size());
+			Assert::AreEqual("", res[0].c_str());
+			Assert::AreEqual("", res[1].c_str());
+			Assert::AreEqual("", res[2].c_str());
+			Assert::AreEqual("", res[3].c_str());
+			Assert::AreEqual("", res[4].c_str());
+			Assert::AreEqual("", res[5].c_str());
+
+
 			s = " abcd#123efg#123hij #123#123klmn  "cs;
 			res = s.rsplit("#123");
 			Assert::AreEqual(pcs::CppString::size_type(5), res.size());
@@ -2649,6 +2660,16 @@ namespace cppstringstests
 			Assert::AreEqual(L"klmn", wres[6].c_str());
 			Assert::AreEqual(L"", wres[7].c_str());
 			Assert::AreEqual(L"", wres[8].c_str());
+
+			ws = pcs::CppWString(5, ' ');  //L"     "cs;
+			wres = ws.rsplit();
+			Assert::AreEqual(pcs::CppWString::size_type(6), wres.size());
+			Assert::AreEqual(L"", wres[0].c_str());
+			Assert::AreEqual(L"", wres[1].c_str());
+			Assert::AreEqual(L"", wres[2].c_str());
+			Assert::AreEqual(L"", wres[3].c_str());
+			Assert::AreEqual(L"", wres[4].c_str());
+			Assert::AreEqual(L"", wres[5].c_str());
 
 			ws = L" abcd#123efg#123hij #123#123klmn  "cs;
 			wres = ws.rsplit(L"#123");

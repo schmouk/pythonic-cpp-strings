@@ -1406,12 +1406,8 @@ namespace pcs // i.e. "pythonic c++ strings"
         //---   rsplit()   ----------------------------------------
         /** \brief Returns a vector of the words in the whole string, as seperated with whitespace strings.
         *
-        * Notice: runs of consecutive whitespace are regarded as a single
-        * separator,  and the result will contain no empty strings at the 
-        * start or end if the string has leading or trailing  whitespace.
-        * Consequently,  splitting an empty string or a string consisting 
-        * of just whitespace with a whitespace separator returns an empty
-        * vector.
+        * Notice: consecutive whitespaces are each regarded as a 
+        * single separator. So, they each separate empty strings.
         */
         inline std::vector<CppStringT> rsplit() noexcept
         {
