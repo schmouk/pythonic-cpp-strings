@@ -2804,7 +2804,7 @@ namespace cppstringstests
 			sres = s.rstrip();
 			Assert::AreEqual("", sres.c_str());
 
-			s = "#124abcd#124efg#124#124#124"cs;
+			s = "#124abcd#124efg#1241#24#142"cs;
 			sres = s.rstrip("#124");
 			Assert::AreEqual("#124abcd#124efg", sres.c_str());
 
@@ -2812,7 +2812,7 @@ namespace cppstringstests
 			sres = s.rstrip("#124");
 			Assert::AreEqual("#124abcd#124efg#124#124hij", sres.c_str());
 
-			s = "#124#124#124#124#124";
+			s = "#124#142#241124#421#";
 			sres = s.rstrip("#124");
 			Assert::AreEqual("", sres.c_str());
 
@@ -3736,6 +3736,33 @@ namespace cppstringstests
 			Assert::IsTrue(wtext.startswith_n({ L"ghi", L"abca", L"Abcd" }, 0, wlen - 2));
 			Assert::IsFalse(wtext.startswith_n({ L"def", L"ghi" }, 0, wlen - 4));
 			Assert::IsFalse(wtext.startswith_n({ L"def", L"ghi", L"Abcd" }, 0, wlen - 4));
+		}
+
+		TEST_METHOD(strip)
+		{
+			CppString text("abcdefedcbaea");
+
+			Assert::AreEqual("bcdefedcbae", text.strip("a").c_str());
+			Assert::AreEqual("cdefedcbae", text.strip("ba").c_str());
+			Assert::AreEqual("defedcbae", text.strip("acb").c_str());
+			Assert::AreEqual("efedcbae", text.strip("dacb").c_str());
+			Assert::AreEqual("f", text.strip("abcde").c_str());
+			Assert::AreEqual("bcdefedcb", text.strip("ea").c_str());
+			Assert::AreEqual("cdefedc", text.strip("eba").c_str());
+			Assert::AreEqual("abcdefedcbaea", text.strip("ghijZ").c_str());
+			Assert::AreEqual("abcdefedcbaea", text.strip("ABc").c_str());
+
+			CppWString wtext(L"abcdefedcbaea");
+
+			Assert::AreEqual(L"bcdefedcbae", wtext.strip(L"a").c_str());
+			Assert::AreEqual(L"cdefedcbae", wtext.strip(L"ba").c_str());
+			Assert::AreEqual(L"defedcbae", wtext.strip(L"acb").c_str());
+			Assert::AreEqual(L"efedcbae", wtext.strip(L"dacb").c_str());
+			Assert::AreEqual(L"f", wtext.strip(L"abcde").c_str());
+			Assert::AreEqual(L"bcdefedcb", wtext.strip(L"ea").c_str());
+			Assert::AreEqual(L"cdefedc", wtext.strip(L"eba").c_str());
+			Assert::AreEqual(L"abcdefedcbaea", wtext.strip(L"ghijZ").c_str());
+			Assert::AreEqual(L"abcdefedcbaea", wtext.strip(L"ABc").c_str());
 		}
 	};
 }

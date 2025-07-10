@@ -1122,10 +1122,10 @@ namespace pcs // i.e. "pythonic c++ strings"
         * its values are stripped.
         * To remove a prefix, rather call method 'removeprefix()'.
         */
-        inline CppStringT lstrip(const CppStringT& prefix) const noexcept
+        inline CppStringT lstrip(const CppStringT& removedchars) const noexcept
         {
             for (auto it = this->cbegin(); it != this->cend(); ++it)
-                if (std::none_of(prefix.cbegin(), prefix.cend(), [it](const value_type ch) { return *it == ch; }))
+                if (std::none_of(removedchars.cbegin(), removedchars.cend(), [it](const value_type ch) { return *it == ch; }))
                     return CppStringT(it, this->cend());
             return CppStringT();
         }
@@ -1473,10 +1473,10 @@ namespace pcs // i.e. "pythonic c++ strings"
         * its values are stripped.
         * To remove a suffix, rather call method 'removesuffix()'.
         */
-        inline CppStringT rstrip(const CppStringT& suffix) const noexcept
+        inline CppStringT rstrip(const CppStringT& removedchars) const noexcept
         {
             for (auto it = this->crbegin(); it != this->crend(); ++it)
-                if (std::none_of(suffix.cbegin(), suffix.cend(), [it](const value_type ch) { return *it == ch; }))
+                if (std::none_of(removedchars.cbegin(), removedchars.cend(), [it](const value_type ch) { return *it == ch; }))
                     return CppStringT(this->cbegin(), this->cbegin() + this->size() - (it - this->crbegin()));
             return CppStringT();
         }
@@ -1715,9 +1715,9 @@ namespace pcs // i.e. "pythonic c++ strings"
         * The chars argument is not a prefix;  rather, all combinations of
         * its values are stripped.
         */
-        inline CppStringT strip(const CppStringT& prefix) const noexcept
+        inline CppStringT strip(const CppStringT& removedchars) const noexcept
         {
-            return this->rstrip(prefix).lstrip(prefix);
+            return this->rstrip(removedchars).lstrip(removedchars);
         }
 
         /** \brief Returns a copy of the string with the leading and trailing whitespaces removed. */
