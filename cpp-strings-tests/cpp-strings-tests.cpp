@@ -3764,5 +3764,84 @@ namespace cppstringstests
 			Assert::AreEqual(L"abcdefedcbaea", wtext.strip(L"ghijZ").c_str());
 			Assert::AreEqual(L"abcdefedcbaea", wtext.strip(L"ABc").c_str());
 		}
+
+		TEST_METHOD(substr)
+		{
+			CppString text("AbcDefGhi");
+
+			Assert::AreEqual("AbcDefGhi", text.substr(0, 9).c_str());
+			Assert::AreEqual("bcDefGhi", text.substr(1, 8).c_str());
+			Assert::AreEqual("cDefGhi", text.substr(2, 7).c_str());
+			Assert::AreEqual("DefGhi", text.substr(3, 6).c_str());
+			Assert::AreEqual("efGhi", text.substr(4, 5).c_str());
+			Assert::AreEqual("fGhi", text.substr(5, 4).c_str());
+			Assert::AreEqual("Ghi", text.substr(6, 3).c_str());
+			Assert::AreEqual("hi", text.substr(7, 2).c_str());
+			Assert::AreEqual("i", text.substr(8, 1).c_str());
+			Assert::AreEqual("", text.substr(9, 0).c_str());
+
+			Assert::AreEqual("AbcDefGhi", text.substr(0).c_str());
+			Assert::AreEqual("bcDefGhi", text.substr(1).c_str());
+			Assert::AreEqual("cDefGhi", text.substr(2).c_str());
+			Assert::AreEqual("DefGhi", text.substr(3).c_str());
+			Assert::AreEqual("efGhi", text.substr(4).c_str());
+			Assert::AreEqual("fGhi", text.substr(5).c_str());
+			Assert::AreEqual("Ghi", text.substr(6).c_str());
+			Assert::AreEqual("hi", text.substr(7).c_str());
+			Assert::AreEqual("i", text.substr(8).c_str());
+			Assert::AreEqual("", text.substr(9).c_str());
+
+			Assert::AreEqual("AbcDefGh", text.substr(0, 8).c_str());
+			Assert::AreEqual("bcDefGh", text.substr(1, 7).c_str());
+			Assert::AreEqual("cDefG", text.substr(2, 5).c_str());
+			Assert::AreEqual("DefGh", text.substr(3, 5).c_str());
+			Assert::AreEqual("efGh", text.substr(4, 4).c_str());
+			Assert::AreEqual("fG", text.substr(5, 2).c_str());
+			Assert::AreEqual("G", text.substr(6, 1).c_str());
+			Assert::AreEqual("h", text.substr(7, 1).c_str());
+			Assert::AreEqual("i", text.substr(8, 3).c_str());
+			Assert::AreEqual("", text.substr(9, 0).c_str());
+
+			Assert::AreEqual("", text.substr(10, 15).c_str());
+			Assert::AreEqual("", text.substr(21).c_str());
+
+			CppWString wtext(L"AbcDefGhi");
+
+			Assert::AreEqual(L"AbcDefGhi", wtext.substr(0, 9).c_str());
+			Assert::AreEqual(L"bcDefGhi", wtext.substr(1, 8).c_str());
+			Assert::AreEqual(L"cDefGhi", wtext.substr(2, 7).c_str());
+			Assert::AreEqual(L"DefGhi", wtext.substr(3, 6).c_str());
+			Assert::AreEqual(L"efGhi", wtext.substr(4, 5).c_str());
+			Assert::AreEqual(L"fGhi", wtext.substr(5, 4).c_str());
+			Assert::AreEqual(L"Ghi", wtext.substr(6, 3).c_str());
+			Assert::AreEqual(L"hi", wtext.substr(7, 2).c_str());
+			Assert::AreEqual(L"i", wtext.substr(8, 1).c_str());
+			Assert::AreEqual(L"", wtext.substr(9, 0).c_str());
+
+			Assert::AreEqual(L"AbcDefGhi", wtext.substr(0).c_str());
+			Assert::AreEqual(L"bcDefGhi", wtext.substr(1).c_str());
+			Assert::AreEqual(L"cDefGhi", wtext.substr(2).c_str());
+			Assert::AreEqual(L"DefGhi", wtext.substr(3).c_str());
+			Assert::AreEqual(L"efGhi", wtext.substr(4).c_str());
+			Assert::AreEqual(L"fGhi", wtext.substr(5).c_str());
+			Assert::AreEqual(L"Ghi", wtext.substr(6).c_str());
+			Assert::AreEqual(L"hi", wtext.substr(7).c_str());
+			Assert::AreEqual(L"i", wtext.substr(8).c_str());
+			Assert::AreEqual(L"", wtext.substr(9).c_str());
+
+			Assert::AreEqual(L"AbcDefGh", wtext.substr(0, 8).c_str());
+			Assert::AreEqual(L"bcDefGh", wtext.substr(1, 7).c_str());
+			Assert::AreEqual(L"cDefG", wtext.substr(2, 5).c_str());
+			Assert::AreEqual(L"DefGh", wtext.substr(3, 5).c_str());
+			Assert::AreEqual(L"efGh", wtext.substr(4, 4).c_str());
+			Assert::AreEqual(L"fG", wtext.substr(5, 2).c_str());
+			Assert::AreEqual(L"G", wtext.substr(6, 1).c_str());
+			Assert::AreEqual(L"h", wtext.substr(7, 1).c_str());
+			Assert::AreEqual(L"i", wtext.substr(8, 3).c_str());
+			Assert::AreEqual(L"", wtext.substr(9, 0).c_str());
+
+			Assert::AreEqual(L"", wtext.substr(10, 15).c_str());
+			Assert::AreEqual(L"", wtext.substr(21).c_str());
+		}
 	};
 }
