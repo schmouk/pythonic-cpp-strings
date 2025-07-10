@@ -1561,25 +1561,6 @@ namespace pcs // i.e. "pythonic c++ strings"
                     }
                 }
                 res.push_back(this->substr(index, this->size() - index));
-                /** /
-                const CppStringT whitespace(value_type(' '));
-                std::vector<CppStringT> all_words{ this->split(sep) };
-
-                size_type count = maxsplit;
-                auto word_it = all_words.cbegin();
-                while (count > 0 && word_it != all_words.cend()) {
-                    res.insert(res.cbegin(), *word_it);
-                    --count;
-                    word_it++;
-                }
-
-                size_type chars_count = 0;
-                for (auto it = word_it; it != all_words.cend(); ++it) {
-                    chars_count += it->size() + 1;
-                }
-                if (chars_count > 0)
-                    res.insert(res.cbegin(), this->substr(this->cbegin() + chars_count - 1, this->cend()));
-                /**/
             }
 
             return res;
@@ -1600,6 +1581,7 @@ namespace pcs // i.e. "pythonic c++ strings"
         * \x1c 	        File Separator
         * \x1d 	        Group Separator
         * \x1e 	        Record Separator
+        * Next separators values, detected by Python method splitlines(), are NOT detected with CppStrings
         * \x85 	        Next Line (C1 Control Code)
         * \u2028 	    Line Separator
         * \u2029 	    Paragraph Separator
@@ -1610,21 +1592,16 @@ namespace pcs // i.e. "pythonic c++ strings"
             CppStringT current{};
             bool prev_cr = false;
 
-            for (const value_type& ch : *this) {
+            for (const value_type ch : *this) {
                 switch (ch) {
-                case value_type('\v'):      // Line Tabulation
-                case value_type('\x0b'):    // Line Tabulation
-                case value_type('\f'):      // Form Feed
-                case value_type('\x0c'):    // Form Feed
-                case value_type('\x1c'):    // File Separator
-                case value_type('\x1d'):    // Group Separator
-                case value_type('\x1e'):    // Record Separator
-                case value_type('\x85'):    // Next Line (C1 Control Code)
-#pragma warning(push)
-#pragma warning(disable: 4566)  // to get no warning when current page code is not compatible with next unicode points
-                case value_type('\u2028'):  // Line Separator
-                case value_type('\u2029'):  // Paragraph Separator
-#pragma warning(pop)
+                case 0x0b:       // Line Tabulation, \v as well as \x0b and \013
+                case 0x0c:       // Form Feed, \f as well as \x0c and \014
+                case 0x1c:       // File Separator, or \034
+                case 0x1d:       // Group Separator, or \035
+                case 0x1e:       // Record Separator, or \036
+                //case L'\u0085':  // Next Line (C1 Control Code), or \0205
+                //case L'\u2028':  // Line Separator
+                //case L'\u2029':  // Paragraph Separator
                     if (prev_cr) {
                         res.push_back(current);
                         current.clear();
@@ -1646,7 +1623,7 @@ namespace pcs // i.e. "pythonic c++ strings"
                     prev_cr = true;
                     break;
 
-                case value_type('\n'):      // Line Feed
+                case value_type('\n'):      // Carriage return
                     if (keep_end)
                         current += ch;
                     res.push_back(current);
@@ -1659,10 +1636,15 @@ namespace pcs // i.e. "pythonic c++ strings"
                     if (prev_cr) {
                         res.push_back(current);
                         current.clear();
+                        prev_cr = false;
                     }
                     current += ch;
                     break;
                 }
+            }
+
+            if (prev_cr) {
+                res.push_back(current);
             }
 
             return res;

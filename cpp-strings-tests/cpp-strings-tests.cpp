@@ -701,53 +701,53 @@ namespace cppstringstests
 		TEST_METHOD(count)
 		{
 			pcs::CppString s("abcabcabcdefabca bca bcabca");
-			Assert::AreEqual(3ULL, s.count("abca"));
-			Assert::AreEqual(6ULL, s.count("bca"));
-			Assert::AreEqual(0ULL, s.count("A"));
-			Assert::AreEqual(2ULL, s.count("abca", 4));
-			Assert::AreEqual(5ULL, s.count("bca", 2));
-			Assert::AreEqual(0ULL, s.count("A", 3));
-			Assert::AreEqual(1ULL, s.count("abca", 4, s.size() - 5));
-			Assert::AreEqual(4ULL, s.count("bca", 2, s.size() - 2));
-			Assert::AreEqual(0ULL, s.count("A", 3, s.size() + 4));
+			Assert::AreEqual(pcs::CppString::size_type(3), s.count("abca"));
+			Assert::AreEqual(pcs::CppString::size_type(6), s.count("bca"));
+			Assert::AreEqual(pcs::CppString::size_type(0), s.count("A"));
+			Assert::AreEqual(pcs::CppString::size_type(2), s.count("abca", 4));
+			Assert::AreEqual(pcs::CppString::size_type(5), s.count("bca", 2));
+			Assert::AreEqual(pcs::CppString::size_type(0), s.count("A", 3));
+			Assert::AreEqual(pcs::CppString::size_type(1), s.count("abca", 4, s.size() - 5));
+			Assert::AreEqual(pcs::CppString::size_type(4), s.count("bca", 2, s.size() - 2));
+			Assert::AreEqual(pcs::CppString::size_type(0), s.count("A", 3, s.size() + 4));
 
 			pcs::CppWString ws(L"abcabcabcdefabca bca bcabca");
-			Assert::AreEqual(3ULL, ws.count(L"abca"));
-			Assert::AreEqual(6ULL, ws.count(L"bca"));
-			Assert::AreEqual(0ULL, ws.count(L"A"));
-			Assert::AreEqual(2ULL, ws.count(L"abca", 4));
-			Assert::AreEqual(5ULL, ws.count(L"bca", 2));
-			Assert::AreEqual(0ULL, ws.count(L"A", 3));
-			Assert::AreEqual(1ULL, ws.count(L"abca", 4, s.size() - 5));
-			Assert::AreEqual(4ULL, ws.count(L"bca", 2, s.size() - 2));
-			Assert::AreEqual(0ULL, ws.count(L"A", 3, s.size() + 4));
+			Assert::AreEqual(pcs::CppString::size_type(3), ws.count(L"abca"));
+			Assert::AreEqual(pcs::CppString::size_type(6), ws.count(L"bca"));
+			Assert::AreEqual(pcs::CppString::size_type(0), ws.count(L"A"));
+			Assert::AreEqual(pcs::CppString::size_type(2), ws.count(L"abca", 4));
+			Assert::AreEqual(pcs::CppString::size_type(5), ws.count(L"bca", 2));
+			Assert::AreEqual(pcs::CppString::size_type(0), ws.count(L"A", 3));
+			Assert::AreEqual(pcs::CppString::size_type(1), ws.count(L"abca", 4, s.size() - 5));
+			Assert::AreEqual(pcs::CppString::size_type(4), ws.count(L"bca", 2, s.size() - 2));
+			Assert::AreEqual(pcs::CppString::size_type(0), ws.count(L"A", 3, s.size() + 4));
 		}
 
 		TEST_METHOD(count_n)
 		{
 			pcs::CppString s("abcabcabcdefabca bca bcabca");
 			const pcs::CppString::size_type len{ s.size() };
-			Assert::AreEqual(3ULL, s.count_n("abca", 0, len));
-			Assert::AreEqual(6ULL, s.count_n("bca", 0, len));
-			Assert::AreEqual(0ULL, s.count_n("A", 0, len));
-			Assert::AreEqual(2ULL, s.count_n("abca", 4, len - 4));
-			Assert::AreEqual(5ULL, s.count_n("bca", 2, len - 2));
-			Assert::AreEqual(0ULL, s.count_n("A", 3, len - 3));
-			Assert::AreEqual(1ULL, s.count_n("abca", 4, len - 5));
-			Assert::AreEqual(4ULL, s.count_n("bca", 2, len - 3));
-			Assert::AreEqual(0ULL, s.count_n("A", 3, len + 4));
+			Assert::AreEqual(pcs::CppString::size_type(3), s.count_n("abca", 0, len));
+			Assert::AreEqual(pcs::CppString::size_type(6), s.count_n("bca", 0, len));
+			Assert::AreEqual(pcs::CppString::size_type(0), s.count_n("A", 0, len));
+			Assert::AreEqual(pcs::CppString::size_type(2), s.count_n("abca", 4, len - 4));
+			Assert::AreEqual(pcs::CppString::size_type(5), s.count_n("bca", 2, len - 2));
+			Assert::AreEqual(pcs::CppString::size_type(0), s.count_n("A", 3, len - 3));
+			Assert::AreEqual(pcs::CppString::size_type(1), s.count_n("abca", 4, len - 5));
+			Assert::AreEqual(pcs::CppString::size_type(4), s.count_n("bca", 2, len - 3));
+			Assert::AreEqual(pcs::CppString::size_type(0), s.count_n("A", 3, len + 4));
 
 			pcs::CppWString ws(L"abcabcabcdefabca bca bcabca");
 			const pcs::CppWString::size_type wlen{ ws.size() };
-			Assert::AreEqual(3ULL, ws.count_n(L"abca", 0, wlen));
-			Assert::AreEqual(6ULL, ws.count_n(L"bca", 0, wlen));
-			Assert::AreEqual(0ULL, ws.count_n(L"A", 0, wlen));
-			Assert::AreEqual(2ULL, ws.count_n(L"abca", 4, wlen - 4));
-			Assert::AreEqual(5ULL, ws.count_n(L"bca", 2, wlen - 2));
-			Assert::AreEqual(0ULL, ws.count_n(L"A", 3, wlen - 3));
-			Assert::AreEqual(1ULL, ws.count_n(L"abca", 4, wlen - 5));
-			Assert::AreEqual(4ULL, ws.count_n(L"bca", 2, wlen - 3));
-			Assert::AreEqual(0ULL, ws.count_n(L"A", 3, wlen + 4));
+			Assert::AreEqual(pcs::CppString::size_type(3), ws.count_n(L"abca", 0, wlen));
+			Assert::AreEqual(pcs::CppString::size_type(6), ws.count_n(L"bca", 0, wlen));
+			Assert::AreEqual(pcs::CppString::size_type(0), ws.count_n(L"A", 0, wlen));
+			Assert::AreEqual(pcs::CppString::size_type(2), ws.count_n(L"abca", 4, wlen - 4));
+			Assert::AreEqual(pcs::CppString::size_type(5), ws.count_n(L"bca", 2, wlen - 2));
+			Assert::AreEqual(pcs::CppString::size_type(0), ws.count_n(L"A", 3, wlen - 3));
+			Assert::AreEqual(pcs::CppString::size_type(1), ws.count_n(L"abca", 4, wlen - 5));
+			Assert::AreEqual(pcs::CppString::size_type(4), ws.count_n(L"bca", 2, wlen - 3));
+			Assert::AreEqual(pcs::CppString::size_type(0), ws.count_n(L"A", 3, wlen + 4));
 		}
 
 		TEST_METHOD(endswith)
@@ -3310,6 +3310,189 @@ namespace cppstringstests
 			Assert::AreEqual(L"klmn  ", wres[6].c_str());
 			Assert::AreEqual(L"", wres[7].c_str());
 			Assert::AreEqual(L"", wres[8].c_str());
+		}
+
+		TEST_METHOD(splitline)
+		{
+#pragma warning(push)
+#pragma warning(disable: 4566)  // to get no warning when current page code is not compatible with next unicode points
+			{
+				CppString text{ "\vabc\013cde\fefg\x0cghi\x1cijk\x1dklm\x1dmno\r\n\nopq\rqrs\vstu\ruvw\nwxy\r\nzzz\x0c.\r" };
+				std::vector<CppString> lines{ text.splitlines() };
+				std::vector<CppString> expected{ "", "abc", "cde", "efg", "ghi", "ijk", "klm", "mno", "", "opq", "qrs", "stu", "uvw", "wxy", "zzz", "." };
+				auto exp_it{ expected.cbegin() };
+				auto lin_it{ lines.cbegin() };
+				for (; lin_it != lines.cend() && exp_it != expected.cend(); ++lin_it, ++exp_it) {
+					Assert::AreEqual(exp_it->c_str(), lin_it->c_str());
+				}
+				Assert::IsFalse(lin_it != lines.cend());
+				Assert::IsFalse(exp_it != expected.cend());
+			}
+
+			{
+				CppString text{ "\vabc\013cde\fefg\x0cghi\x1cijk\x1dklm\x1dmno\r\n\nopq\rqrs\vstu\ruvw\nwxy\r\nzzz\x0c.\r\n" };
+				std::vector<CppString> lines{ text.splitlines() };
+				std::vector<CppString> expected{ "", "abc", "cde", "efg", "ghi", "ijk", "klm", "mno", "", "opq", "qrs", "stu", "uvw", "wxy", "zzz", "." };
+				auto exp_it{ expected.cbegin() };
+				auto lin_it{ lines.cbegin() };
+				for (; lin_it != lines.cend() && exp_it != expected.cend(); ++lin_it, ++exp_it) {
+					Assert::AreEqual(exp_it->c_str(), lin_it->c_str());
+				}
+				Assert::IsFalse(lin_it != lines.cend());
+				Assert::IsFalse(exp_it != expected.cend());
+			}
+
+			{
+				CppString text{ "\vabc\013cde\fefg\x0cghi\x1cijk\x1dklm\x1dmno\r\n\nopq\rqrs\vstu\ruvw\nwxy\r\nzzz\x0c.\n\r" };
+				std::vector<CppString> lines{ text.splitlines() };
+				std::vector<CppString> expected{ "", "abc", "cde", "efg", "ghi", "ijk", "klm", "mno", "", "opq", "qrs", "stu", "uvw", "wxy", "zzz", ".", "" };
+				auto exp_it{ expected.cbegin() };
+				auto lin_it{ lines.cbegin() };
+				for (; lin_it != lines.cend() && exp_it != expected.cend(); ++lin_it, ++exp_it) {
+					Assert::AreEqual(exp_it->c_str(), lin_it->c_str());
+				}
+				Assert::IsFalse(lin_it != lines.cend());
+				Assert::IsFalse(exp_it != expected.cend());
+			}
+
+			{
+				CppString text{ "\vabc\013cde\fefg\x0cghi\x1cijk\x1dklm\x1dmno\r\n\nopq\rqrs\vstu\ruvw\nwxy\r\nzzz\x0c.\r" };
+				std::vector<CppString> lines{ text.splitlines(true) };
+				std::vector<CppString> expected{
+					"\v", "abc\013", "cde\f", "efg\x0c", "ghi\x1c", "ijk\x1d", "klm\x1d", "mno\r\n",
+					"\n", "opq\r", "qrs\v", "stu\r", "uvw\n", "wxy\r\n", "zzz\x0c", ".\r"
+				};
+				auto exp_it{ expected.cbegin() };
+				auto lin_it{ lines.cbegin() };
+				for (; lin_it != lines.cend() && exp_it != expected.cend(); ++lin_it, ++exp_it) {
+					Assert::AreEqual(exp_it->c_str(), lin_it->c_str());
+				}
+				Assert::IsFalse(lin_it != lines.cend());
+				Assert::IsFalse(exp_it != expected.cend());
+			}
+
+			{
+				CppString text{ "\vabc\013cde\fefg\x0cghi\x1cijk\x1dklm\x1dmno\r\n\nopq\rqrs\vstu\ruvw\nwxy\r\nzzz\x0c.\r\n" };
+				std::vector<CppString> lines{ text.splitlines(true) };
+				std::vector<CppString> expected{
+					"\v", "abc\013", "cde\f", "efg\x0c", "ghi\x1c", "ijk\x1d", "klm\x1d", "mno\r\n",
+					"\n", "opq\r", "qrs\v", "stu\r", "uvw\n", "wxy\r\n", "zzz\x0c", ".\r\n"
+				};
+				auto exp_it{ expected.cbegin() };
+				auto lin_it{ lines.cbegin() };
+				for (; lin_it != lines.cend() && exp_it != expected.cend(); ++lin_it, ++exp_it) {
+					Assert::AreEqual(exp_it->c_str(), lin_it->c_str());
+				}
+				Assert::IsFalse(lin_it != lines.cend());
+				Assert::IsFalse(exp_it != expected.cend());
+			}
+
+			{
+				CppString text{ "\vabc\013cde\fefg\x0cghi\x1cijk\x1dklm\x1dmno\r\n\nopq\rqrs\vstu\ruvw\nwxy\r\nzzz\x0c.\n\r" };
+				std::vector<CppString> lines{ text.splitlines(true) };
+				std::vector<CppString> expected{
+					"\v", "abc\013", "cde\f", "efg\x0c", "ghi\x1c", "ijk\x1d", "klm\x1d", "mno\r\n",
+					"\n", "opq\r", "qrs\v", "stu\r", "uvw\n", "wxy\r\n", "zzz\x0c", ".\n", "\r"
+				};
+				auto exp_it{ expected.cbegin() };
+				auto lin_it{ lines.cbegin() };
+				for (; lin_it != lines.cend() && exp_it != expected.cend(); ++lin_it, ++exp_it) {
+					Assert::AreEqual(exp_it->c_str(), lin_it->c_str());
+				}
+				Assert::IsFalse(lin_it != lines.cend());
+				Assert::IsFalse(exp_it != expected.cend());
+			}
+
+
+			{
+				CppWString wtext{ L"\vabc\013cde\fefg\x0cghi\x1cijk\x1dklm\x1dmno\r\n\nopq\rqrs\vstu\ruvw\nwxy\r\nzzz\x0c.\r" };
+				std::vector<CppWString> wlines{ wtext.splitlines() };
+				std::vector<CppWString> wexpected{ L"", L"abc", L"cde", L"efg", L"ghi", L"ijk", L"klm", L"mno", L"", L"opq", L"qrs", L"stu", L"uvw", L"wxy", L"zzz", L"."};
+				auto exp_it{ wexpected.cbegin() };
+				auto lin_it{ wlines.cbegin() };
+				for (; lin_it != wlines.cend() && exp_it != wexpected.cend(); ++lin_it, ++exp_it) {
+					Assert::AreEqual(exp_it->c_str(), lin_it->c_str());
+				}
+				Assert::IsFalse(lin_it != wlines.cend());
+				Assert::IsFalse(exp_it != wexpected.cend());
+			}
+
+			{
+				CppWString wtext{ L"\vabc\013cde\fefg\x0cghi\x1cijk\x1dklm\x1dmno\r\n\nopq\rqrs\vstu\ruvw\nwxy\r\nzzz\x0c.\r\n" };
+				std::vector<CppWString> wlines{ wtext.splitlines() };
+				std::vector<CppWString> wexpected{ L"", L"abc", L"cde", L"efg", L"ghi", L"ijk", L"klm", L"mno", L"", L"opq", L"qrs", L"stu", L"uvw", L"wxy", L"zzz", L"."};
+				auto exp_it{ wexpected.cbegin() };
+				auto lin_it{ wlines.cbegin() };
+				for (; lin_it != wlines.cend() && exp_it != wexpected.cend(); ++lin_it, ++exp_it) {
+					Assert::AreEqual(exp_it->c_str(), lin_it->c_str());
+				}
+				Assert::IsFalse(lin_it != wlines.cend());
+				Assert::IsFalse(exp_it != wexpected.cend());
+			}
+
+			{
+				CppWString wtext{ L"\vabc\013cde\fefg\x0cghi\x1cijk\x1dklm\x1dmno\r\n\nopq\rqrs\vstu\ruvw\nwxy\r\nzzz\x0c.\n\r" };
+				std::vector<CppWString> wlines{ wtext.splitlines() };
+				std::vector<CppWString> wexpected{ L"", L"abc", L"cde", L"efg", L"ghi", L"ijk", L"klm", L"mno", L"", L"opq", L"qrs", L"stu", L"uvw", L"wxy", L"zzz", L".", L""};
+				auto exp_it{ wexpected.cbegin() };
+				auto lin_it{ wlines.cbegin() };
+				for (; lin_it != wlines.cend() && exp_it != wexpected.cend(); ++lin_it, ++exp_it) {
+					Assert::AreEqual(exp_it->c_str(), lin_it->c_str());
+				}
+				Assert::IsFalse(lin_it != wlines.cend());
+				Assert::IsFalse(exp_it != wexpected.cend());
+			}
+
+			{
+				CppWString wtext{ L"\vabc\013cde\fefg\x0cghi\x1cijk\x1dklm\x1dmno\r\n\nopq\rqrs\vstu\ruvw\nwxy\r\nzzz\x0c.\r" };
+				std::vector<CppWString> wlines{ wtext.splitlines(true) };
+				std::vector<CppWString> wexpected{
+					L"\v", L"abc\013", L"cde\f", L"efg\x0c", L"ghi\x1c", L"ijk\x1d", L"klm\x1d", L"mno\r\n",
+					L"\n", L"opq\r", L"qrs\v", L"stu\r", L"uvw\n", L"wxy\r\n", L"zzz\x0c", L".\r"
+				};
+				auto exp_it{ wexpected.cbegin() };
+				auto lin_it{ wlines.cbegin() };
+				for (; lin_it != wlines.cend() && exp_it != wexpected.cend(); ++lin_it, ++exp_it) {
+					Assert::AreEqual(exp_it->c_str(), lin_it->c_str());
+				}
+				Assert::IsFalse(lin_it != wlines.cend());
+				Assert::IsFalse(exp_it != wexpected.cend());
+			}
+
+			{
+				CppWString wtext{ L"\vabc\013cde\fefg\x0cghi\x1cijk\x1dklm\x1dmno\r\n\nopq\rqrs\vstu\ruvw\nwxy\r\nzzz\x0c.\r\n" };
+				std::vector<CppWString> wlines{ wtext.splitlines(true) };
+				std::vector<CppWString> wexpected{
+					L"\v", L"abc\013", L"cde\f", L"efg\x0c", L"ghi\x1c", L"ijk\x1d", L"klm\x1d", L"mno\r\n",
+					L"\n", L"opq\r", L"qrs\v", L"stu\r", L"uvw\n", L"wxy\r\n", L"zzz\x0c", L".\r\n"
+				};
+				auto exp_it{ wexpected.cbegin() };
+				auto lin_it{ wlines.cbegin() };
+				for (; lin_it != wlines.cend() && exp_it != wexpected.cend(); ++lin_it, ++exp_it) {
+					Assert::AreEqual(exp_it->c_str(), lin_it->c_str());
+				}
+				Assert::IsFalse(lin_it != wlines.cend());
+				Assert::IsFalse(exp_it != wexpected.cend());
+			}
+
+			{
+				CppWString wtext{ L"\vabc\013cde\fefg\x0cghi\x1cijk\x1dklm\x1dmno\r\n\nopq\rqrs\vstu\ruvw\nwxy\r\nzzz\x0c.\n\r" };
+				std::vector<CppWString> wlines{ wtext.splitlines(true) };
+				std::vector<CppWString> wexpected{
+					L"\v", L"abc\013", L"cde\f", L"efg\x0c", L"ghi\x1c", L"ijk\x1d", L"klm\x1d", L"mno\r\n",
+					L"\n", L"opq\r", L"qrs\v", L"stu\r", L"uvw\n", L"wxy\r\n", L"zzz\x0c", L".\n", L"\r"
+				};
+				auto exp_it{ wexpected.cbegin() };
+				auto lin_it{ wlines.cbegin() };
+				for (; lin_it != wlines.cend() && exp_it != wexpected.cend(); ++lin_it, ++exp_it) {
+					Assert::AreEqual(exp_it->c_str(), lin_it->c_str());
+				}
+				Assert::IsFalse(lin_it != wlines.cend());
+				Assert::IsFalse(exp_it != wexpected.cend());
+			}
+
+#pragma warning(pop)
+
 		}
 
 	};

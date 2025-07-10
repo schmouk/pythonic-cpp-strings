@@ -34,3 +34,8 @@
 # Visual Studio specifics
 .vs
 x64
+Debug
+Release
+
+# CppStrings specifics
+archive
