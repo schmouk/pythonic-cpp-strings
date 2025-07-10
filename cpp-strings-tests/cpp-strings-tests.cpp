@@ -3616,5 +3616,126 @@ namespace cppstringstests
 			Assert::IsFalse(wtext.startswith({ L"def", L"ghi", L"Abcd" }, 0, len - 4));
 		}
 
+		TEST_METHOD(startswith_n)
+		{
+			CppString text("Abcdef");
+			const size_t len{ text.size() };
+
+			Assert::IsTrue(text.startswith_n("A", 2));
+			Assert::IsTrue(text.startswith_n("Ab", 2));
+			Assert::IsTrue(text.startswith_n("Abc", 3));
+			Assert::IsTrue(text.startswith_n("Abcd", 5));
+			Assert::IsTrue(text.startswith_n("Abcde", 5));
+			Assert::IsTrue(text.startswith_n("Abcdef", 7));
+			Assert::IsFalse(text.startswith_n("Abcdefg", 11));
+			Assert::IsFalse(text.startswith_n("a", 2));
+			Assert::IsFalse(text.startswith_n("def", len));
+
+			Assert::IsTrue(text.startswith_n("b", 1, 1));
+			Assert::IsTrue(text.startswith_n("bc", 1, 3));
+			Assert::IsTrue(text.startswith_n("bcd", 1, 3));
+			Assert::IsFalse(text.startswith_n("bcdefg", 1, 5));
+			Assert::IsFalse(text.startswith_n("A", 1, 8));
+			Assert::IsFalse(text.startswith_n("def", 1, 2));
+
+			Assert::IsTrue(text.startswith_n("c", 2, 1));
+			Assert::IsTrue(text.startswith_n("cd", 2, 2));
+			Assert::IsTrue(text.startswith_n("cde", 2, 4));
+			Assert::IsFalse(text.startswith_n("cdefg", 2, 6));
+			Assert::IsFalse(text.startswith_n("Ab", 2, 2));
+			Assert::IsFalse(text.startswith_n("def", 2, 5));
+
+			Assert::IsTrue(text.startswith_n("d", 3, 2));
+			Assert::IsTrue(text.startswith_n("de", 3, 2));
+			Assert::IsTrue(text.startswith_n("def", 3, 4));
+			Assert::IsFalse(text.startswith_n("defg", 3, 5));
+			Assert::IsFalse(text.startswith_n("Abc", 3, 1));
+			Assert::IsFalse(text.startswith_n("ef", 3, 2));
+
+			Assert::IsTrue(text.startswith_n("e", 4, 1));
+			Assert::IsTrue(text.startswith_n("ef", 4, 3));
+			Assert::IsFalse(text.startswith_n("efg", 4, 5));
+			Assert::IsFalse(text.startswith_n("Abcd", 4, 7));
+			Assert::IsFalse(text.startswith_n("f", 4, 9));
+
+			Assert::IsTrue(text.startswith_n("f", 5, 2));
+			Assert::IsFalse(text.startswith_n("fg", 5, 1));
+			Assert::IsFalse(text.startswith_n("Abcde", 5, 8));
+			Assert::IsFalse(text.startswith_n("g", 5, 11));
+
+			Assert::IsTrue(text.startswith_n("A", 0, 1));
+			Assert::IsFalse(text.startswith_n("b", 0, 2));
+			Assert::IsTrue(text.startswith_n("b", 1, 3));
+			Assert::IsTrue(text.startswith_n("bc", 1, 3));
+			Assert::IsTrue(text.startswith_n("bcd", 1, 3));
+			Assert::IsFalse(text.startswith_n("bcde", 1, 3));
+
+			Assert::IsTrue(text.startswith_n("", 5, 2));
+			Assert::IsTrue(text.startswith_n("", 15, 16));
+
+			Assert::IsTrue(text.startswith_n({ "ghi", "abca", "Abcd" }, 0, len - 2));
+			Assert::IsFalse(text.startswith_n({ "def", "ghi" }, 0, len - 4));
+			Assert::IsFalse(text.startswith_n({ "def", "ghi", "Abcd" }, 0, len - 4));
+
+
+			CppWString wtext(L"Abcdef");
+			const size_t wlen{ wtext.size() };
+
+			Assert::IsTrue(wtext.startswith_n(L"A", 2));
+			Assert::IsTrue(wtext.startswith_n(L"Ab", 2));
+			Assert::IsTrue(wtext.startswith_n(L"Abc", 3));
+			Assert::IsTrue(wtext.startswith_n(L"Abcd", 5));
+			Assert::IsTrue(wtext.startswith_n(L"Abcde", 5));
+			Assert::IsTrue(wtext.startswith_n(L"Abcdef", 7));
+			Assert::IsFalse(wtext.startswith_n(L"Abcdefg", 11));
+			Assert::IsFalse(wtext.startswith_n(L"a", 2));
+			Assert::IsFalse(wtext.startswith_n(L"def", wlen));
+
+			Assert::IsTrue(wtext.startswith_n(L"b", 1, 1));
+			Assert::IsTrue(wtext.startswith_n(L"bc", 1, 3));
+			Assert::IsTrue(wtext.startswith_n(L"bcd", 1, 3));
+			Assert::IsFalse(wtext.startswith_n(L"bcdefg", 1, 5));
+			Assert::IsFalse(wtext.startswith_n(L"A", 1, 8));
+			Assert::IsFalse(wtext.startswith_n(L"def", 1, 2));
+
+			Assert::IsTrue(wtext.startswith_n(L"c", 2, 1));
+			Assert::IsTrue(wtext.startswith_n(L"cd", 2, 2));
+			Assert::IsTrue(wtext.startswith_n(L"cde", 2, 4));
+			Assert::IsFalse(wtext.startswith_n(L"cdefg", 2, 6));
+			Assert::IsFalse(wtext.startswith_n(L"Ab", 2, 2));
+			Assert::IsFalse(wtext.startswith_n(L"def", 2, 5));
+
+			Assert::IsTrue(wtext.startswith_n(L"d", 3, 2));
+			Assert::IsTrue(wtext.startswith_n(L"de", 3, 2));
+			Assert::IsTrue(wtext.startswith_n(L"def", 3, 4));
+			Assert::IsFalse(wtext.startswith_n(L"defg", 3, 5));
+			Assert::IsFalse(wtext.startswith_n(L"Abc", 3, 1));
+			Assert::IsFalse(wtext.startswith_n(L"ef", 3, 2));
+
+			Assert::IsTrue(wtext.startswith_n(L"e", 4, 1));
+			Assert::IsTrue(wtext.startswith_n(L"ef", 4, 3));
+			Assert::IsFalse(wtext.startswith_n(L"efg", 4, 5));
+			Assert::IsFalse(wtext.startswith_n(L"Abcd", 4, 7));
+			Assert::IsFalse(wtext.startswith_n(L"f", 4, 9));
+
+			Assert::IsTrue(wtext.startswith_n(L"f", 5, 2));
+			Assert::IsFalse(wtext.startswith_n(L"fg", 5, 1));
+			Assert::IsFalse(wtext.startswith_n(L"Abcde", 5, 8));
+			Assert::IsFalse(wtext.startswith_n(L"g", 5, 11));
+
+			Assert::IsTrue(wtext.startswith_n(L"A", 0, 1));
+			Assert::IsFalse(wtext.startswith_n(L"b", 0, 2));
+			Assert::IsTrue(wtext.startswith_n(L"b", 1, 3));
+			Assert::IsTrue(wtext.startswith_n(L"bc", 1, 3));
+			Assert::IsTrue(wtext.startswith_n(L"bcd", 1, 3));
+			Assert::IsFalse(wtext.startswith_n(L"bcde", 1, 3));
+
+			Assert::IsTrue(wtext.startswith_n(L"", 5, 2));
+			Assert::IsTrue(wtext.startswith_n(L"", 15, 16));
+
+			Assert::IsTrue(wtext.startswith_n({ L"ghi", L"abca", L"Abcd" }, 0, wlen - 2));
+			Assert::IsFalse(wtext.startswith_n({ L"def", L"ghi" }, 0, wlen - 4));
+			Assert::IsFalse(wtext.startswith_n({ L"def", L"ghi", L"Abcd" }, 0, wlen - 4));
+		}
 	};
 }
