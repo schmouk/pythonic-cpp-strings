@@ -1652,39 +1652,39 @@ namespace pcs // i.e. "pythonic c++ strings"
 
 
         //---   startswith()   ------------------------------------
-        /** Returns true if the string starts with the specified suffix, otherwise returns false. Test begins at start position and stops at end position. */
-        inline const bool startswith(const CppStringT& suffix, const size_type start, const size_type end) const noexcept
+        /** Returns true if the string starts with the specified prefix, otherwise returns false. Test begins at start position and stops at end position. */
+        inline const bool startswith(const CppStringT& prefix, const size_type start, const size_type end) const noexcept
         {
-            return startswith(std::span{ suffix }, start, end);
+            return this->substr(start, end - start + 1).MyBaseClass::starts_with(prefix);
         }
 
-        /** Returns true if the string starts with the specified suffix, otherwise returns false. Test begins at start position and stops at end of string. */
-        inline const bool startswith(const CppStringT& suffix, const size_type start) const noexcept
+        /** Returns true if the string starts with the specified prefix, otherwise returns false. Test begins at start position and stops at end of string. */
+        inline const bool startswith(const CppStringT& prefix, const size_type start) const noexcept
         {
-            return startswith(std::span{ suffix }, start, this->size() - 1);
+            return startswith(prefix, start, this->size() - 1);
         }
 
-        /** Returns true if the string starts with the specified suffix, otherwise returns false. Test runs on the whole string. */
-        inline const bool startswith(const CppStringT& suffix) const noexcept
+        /** Returns true if the string starts with the specified prefix, otherwise returns false. Test runs on the whole string. */
+        inline const bool startswith(const CppStringT& prefix) const noexcept
         {
-            return this->starts_with(suffix);
+            return this->starts_with(prefix);
         }
 
-        /** Returns true if the string starts with any of the specified suffixes, otherwise returns false. Test begins at start position and stops at end of string. */
-        inline const bool startswith(const std::span<CppStringT>& suffixes, const size_type start, const size_type end) const noexcept
+        /** Returns true if the string starts with any of the specified prefixes, otherwise returns false. Test begins at start position and stops at end of string. */
+        inline const bool startswith(const std::initializer_list<CppStringT>& prefixes, const size_type start, const size_type end) const noexcept
         {
             if (start > end)
                 return false;
-            else
-                return std::any_of(suffixes.cbegin(), suffixes.cend(), this->substr(start, end).starts_with);
-            /*
-            for (auto& suffix : suffixes) {
-                if (this->substr(start, end).starts_with(suffix))
+
+            CppStringT tmp(this->substr(start, end));
+            for (auto& prefix : prefixes) {
+                if (tmp.starts_with(prefix))
                     return true;
             }
-
             return false;
-            */
+
+            //else
+            //    return std::any_of(prefixes.cbegin(), prefixes.cend(), this->substr(start, end).starts_with);
         }
 
 
@@ -1692,7 +1692,8 @@ namespace pcs // i.e. "pythonic c++ strings"
         /** Returns true if the string starts with the specified suffix, otherwise returns false. Test begins at start position and stops after count positions. */
         inline const bool startswith_n(const CppStringT& suffix, const size_type start, const size_type count) const noexcept
         {
-            return startswith(std::span{ suffix }, start, start + count - 1);
+            //return startswith(std::span{ suffix }, start, start + count - 1);
+            return startswith(std::initializer_list<CppStringT>(suffix), start, start + count - 1);
         }
 
         /** Returns true if the string starts with the specified suffix, otherwise returns false. Test begins at position 0 and stops after count positions. */
@@ -1732,8 +1733,8 @@ namespace pcs // i.e. "pythonic c++ strings"
         inline CppStringT substr(const size_type start, const size_type count=-1) const noexcept
         {
             if (start > this->size())
-                return *this;
-            const size_type width = std::min(count, this->size() - start + 1);
+                return CppStringT();
+            const size_type width{ std::min(count, this->size() - start + 1) };
             return CppStringT(MyBaseClass::substr(start, width));
         }
 

@@ -3317,8 +3317,8 @@ namespace cppstringstests
 #pragma warning(push)
 #pragma warning(disable: 4566)  // to get no warning when current page code is not compatible with next unicode points
 			{
-				CppString text{ "\vabc\013cde\fefg\x0cghi\x1cijk\x1dklm\x1dmno\r\n\nopq\rqrs\vstu\ruvw\nwxy\r\nzzz\x0c.\r" };
-				std::vector<CppString> lines{ text.splitlines() };
+				CppString wtext{ "\vabc\013cde\fefg\x0cghi\x1cijk\x1dklm\x1dmno\r\n\nopq\rqrs\vstu\ruvw\nwxy\r\nzzz\x0c.\r" };
+				std::vector<CppString> lines{ wtext.splitlines() };
 				std::vector<CppString> expected{ "", "abc", "cde", "efg", "ghi", "ijk", "klm", "mno", "", "opq", "qrs", "stu", "uvw", "wxy", "zzz", "." };
 				auto exp_it{ expected.cbegin() };
 				auto lin_it{ lines.cbegin() };
@@ -3330,8 +3330,8 @@ namespace cppstringstests
 			}
 
 			{
-				CppString text{ "\vabc\013cde\fefg\x0cghi\x1cijk\x1dklm\x1dmno\r\n\nopq\rqrs\vstu\ruvw\nwxy\r\nzzz\x0c.\r\n" };
-				std::vector<CppString> lines{ text.splitlines() };
+				CppString wtext{ "\vabc\013cde\fefg\x0cghi\x1cijk\x1dklm\x1dmno\r\n\nopq\rqrs\vstu\ruvw\nwxy\r\nzzz\x0c.\r\n" };
+				std::vector<CppString> lines{ wtext.splitlines() };
 				std::vector<CppString> expected{ "", "abc", "cde", "efg", "ghi", "ijk", "klm", "mno", "", "opq", "qrs", "stu", "uvw", "wxy", "zzz", "." };
 				auto exp_it{ expected.cbegin() };
 				auto lin_it{ lines.cbegin() };
@@ -3343,8 +3343,8 @@ namespace cppstringstests
 			}
 
 			{
-				CppString text{ "\vabc\013cde\fefg\x0cghi\x1cijk\x1dklm\x1dmno\r\n\nopq\rqrs\vstu\ruvw\nwxy\r\nzzz\x0c.\n\r" };
-				std::vector<CppString> lines{ text.splitlines() };
+				CppString wtext{ "\vabc\013cde\fefg\x0cghi\x1cijk\x1dklm\x1dmno\r\n\nopq\rqrs\vstu\ruvw\nwxy\r\nzzz\x0c.\n\r" };
+				std::vector<CppString> lines{ wtext.splitlines() };
 				std::vector<CppString> expected{ "", "abc", "cde", "efg", "ghi", "ijk", "klm", "mno", "", "opq", "qrs", "stu", "uvw", "wxy", "zzz", ".", "" };
 				auto exp_it{ expected.cbegin() };
 				auto lin_it{ lines.cbegin() };
@@ -3356,8 +3356,8 @@ namespace cppstringstests
 			}
 
 			{
-				CppString text{ "\vabc\013cde\fefg\x0cghi\x1cijk\x1dklm\x1dmno\r\n\nopq\rqrs\vstu\ruvw\nwxy\r\nzzz\x0c.\r" };
-				std::vector<CppString> lines{ text.splitlines(true) };
+				CppString wtext{ "\vabc\013cde\fefg\x0cghi\x1cijk\x1dklm\x1dmno\r\n\nopq\rqrs\vstu\ruvw\nwxy\r\nzzz\x0c.\r" };
+				std::vector<CppString> lines{ wtext.splitlines(true) };
 				std::vector<CppString> expected{
 					"\v", "abc\013", "cde\f", "efg\x0c", "ghi\x1c", "ijk\x1d", "klm\x1d", "mno\r\n",
 					"\n", "opq\r", "qrs\v", "stu\r", "uvw\n", "wxy\r\n", "zzz\x0c", ".\r"
@@ -3372,8 +3372,8 @@ namespace cppstringstests
 			}
 
 			{
-				CppString text{ "\vabc\013cde\fefg\x0cghi\x1cijk\x1dklm\x1dmno\r\n\nopq\rqrs\vstu\ruvw\nwxy\r\nzzz\x0c.\r\n" };
-				std::vector<CppString> lines{ text.splitlines(true) };
+				CppString wtext{ "\vabc\013cde\fefg\x0cghi\x1cijk\x1dklm\x1dmno\r\n\nopq\rqrs\vstu\ruvw\nwxy\r\nzzz\x0c.\r\n" };
+				std::vector<CppString> lines{ wtext.splitlines(true) };
 				std::vector<CppString> expected{
 					"\v", "abc\013", "cde\f", "efg\x0c", "ghi\x1c", "ijk\x1d", "klm\x1d", "mno\r\n",
 					"\n", "opq\r", "qrs\v", "stu\r", "uvw\n", "wxy\r\n", "zzz\x0c", ".\r\n"
@@ -3388,8 +3388,8 @@ namespace cppstringstests
 			}
 
 			{
-				CppString text{ "\vabc\013cde\fefg\x0cghi\x1cijk\x1dklm\x1dmno\r\n\nopq\rqrs\vstu\ruvw\nwxy\r\nzzz\x0c.\n\r" };
-				std::vector<CppString> lines{ text.splitlines(true) };
+				CppString wtext{ "\vabc\013cde\fefg\x0cghi\x1cijk\x1dklm\x1dmno\r\n\nopq\rqrs\vstu\ruvw\nwxy\r\nzzz\x0c.\n\r" };
+				std::vector<CppString> lines{ wtext.splitlines(true) };
 				std::vector<CppString> expected{
 					"\v", "abc\013", "cde\f", "efg\x0c", "ghi\x1c", "ijk\x1d", "klm\x1d", "mno\r\n",
 					"\n", "opq\r", "qrs\v", "stu\r", "uvw\n", "wxy\r\n", "zzz\x0c", ".\n", "\r"
@@ -3493,6 +3493,127 @@ namespace cppstringstests
 
 #pragma warning(pop)
 
+		}
+
+		TEST_METHOD(startswith)
+		{
+			CppString text("Abcdef");
+			const size_t len{ text.size() };
+
+			Assert::IsTrue(text.startswith("A"));
+			Assert::IsTrue(text.startswith("Ab"));
+			Assert::IsTrue(text.startswith("Abc"));
+			Assert::IsTrue(text.startswith("Abcd"));
+			Assert::IsTrue(text.startswith("Abcde"));
+			Assert::IsTrue(text.startswith("Abcdef"));
+			Assert::IsFalse(text.startswith("Abcdefg"));
+			Assert::IsFalse(text.startswith("a"));
+			Assert::IsFalse(text.startswith("def"));
+
+			Assert::IsTrue(text.startswith("b", 1));
+			Assert::IsTrue(text.startswith("bc", 1));
+			Assert::IsTrue(text.startswith("bcd", 1));
+			Assert::IsFalse(text.startswith("bcdefg", 1));
+			Assert::IsFalse(text.startswith("A", 1));
+			Assert::IsFalse(text.startswith("def", 1));
+
+			Assert::IsTrue(text.startswith("c", 2));
+			Assert::IsTrue(text.startswith("cd", 2));
+			Assert::IsTrue(text.startswith("cde", 2));
+			Assert::IsFalse(text.startswith("cdefg", 2));
+			Assert::IsFalse(text.startswith("Ab", 2));
+			Assert::IsFalse(text.startswith("def", 2));
+
+			Assert::IsTrue(text.startswith("d", 3));
+			Assert::IsTrue(text.startswith("de", 3));
+			Assert::IsTrue(text.startswith("def", 3));
+			Assert::IsFalse(text.startswith("defg", 3));
+			Assert::IsFalse(text.startswith("Abc", 3));
+			Assert::IsFalse(text.startswith("ef", 3));
+
+			Assert::IsTrue(text.startswith("e", 4));
+			Assert::IsTrue(text.startswith("ef", 4));
+			Assert::IsFalse(text.startswith("efg", 4));
+			Assert::IsFalse(text.startswith("Abcd", 4));
+			Assert::IsFalse(text.startswith("f", 4));
+
+			Assert::IsTrue(text.startswith("f", 5));
+			Assert::IsFalse(text.startswith("fg", 5));
+			Assert::IsFalse(text.startswith("Abcde", 5));
+			Assert::IsFalse(text.startswith("g", 5));
+
+			Assert::IsTrue(text.startswith("A", 0, 0));
+			Assert::IsFalse(text.startswith("b", 0, 0));
+			Assert::IsTrue(text.startswith("b", 1, 3));
+			Assert::IsTrue(text.startswith("bc", 1, 3));
+			Assert::IsTrue(text.startswith("bcd", 1, 3));
+			Assert::IsFalse(text.startswith("bcde", 1, 3));
+
+			Assert::IsTrue(text.startswith("", 5, 2));
+			Assert::IsTrue(text.startswith("", 15, 16));
+
+			Assert::IsTrue(text.startswith({ "ghi", "abca", "Abcd" }, 0, len - 2));
+			Assert::IsFalse(text.startswith({ "def", "ghi" }, 0, len - 4));
+			Assert::IsFalse(text.startswith({ "def", "ghi", "Abcd" }, 0, len - 4));
+
+
+			CppWString wtext(L"Abcdef");
+
+			Assert::IsTrue(wtext.startswith(L"A"));
+			Assert::IsTrue(wtext.startswith(L"Ab"));
+			Assert::IsTrue(wtext.startswith(L"Abc"));
+			Assert::IsTrue(wtext.startswith(L"Abcd"));
+			Assert::IsTrue(wtext.startswith(L"Abcde"));
+			Assert::IsTrue(wtext.startswith(L"Abcdef"));
+			Assert::IsFalse(wtext.startswith(L"Abcdefg"));
+			Assert::IsFalse(wtext.startswith(L"a"));
+			Assert::IsFalse(wtext.startswith(L"def"));
+
+			Assert::IsTrue(wtext.startswith(L"b", 1));
+			Assert::IsTrue(wtext.startswith(L"bc", 1));
+			Assert::IsTrue(wtext.startswith(L"bcd", 1));
+			Assert::IsFalse(wtext.startswith(L"bcdefg", 1));
+			Assert::IsFalse(wtext.startswith(L"A", 1));
+			Assert::IsFalse(wtext.startswith(L"def", 1));
+
+			Assert::IsTrue(wtext.startswith(L"c", 2));
+			Assert::IsTrue(wtext.startswith(L"cd", 2));
+			Assert::IsTrue(wtext.startswith(L"cde", 2));
+			Assert::IsFalse(wtext.startswith(L"cdefg", 2));
+			Assert::IsFalse(wtext.startswith(L"Ab", 2));
+			Assert::IsFalse(wtext.startswith(L"def", 2));
+
+			Assert::IsTrue(wtext.startswith(L"d", 3));
+			Assert::IsTrue(wtext.startswith(L"de", 3));
+			Assert::IsTrue(wtext.startswith(L"def", 3));
+			Assert::IsFalse(wtext.startswith(L"defg", 3));
+			Assert::IsFalse(wtext.startswith(L"Abc", 3));
+			Assert::IsFalse(wtext.startswith(L"ef", 3));
+
+			Assert::IsTrue(wtext.startswith(L"e", 4));
+			Assert::IsTrue(wtext.startswith(L"ef", 4));
+			Assert::IsFalse(wtext.startswith(L"efg", 4));
+			Assert::IsFalse(wtext.startswith(L"Abcd", 4));
+			Assert::IsFalse(wtext.startswith(L"f", 4));
+
+			Assert::IsTrue(wtext.startswith(L"f", 5));
+			Assert::IsFalse(wtext.startswith(L"fg", 5));
+			Assert::IsFalse(wtext.startswith(L"Abcde", 5));
+			Assert::IsFalse(wtext.startswith(L"g", 5));
+
+			Assert::IsTrue(wtext.startswith(L"A", 0, 0));
+			Assert::IsFalse(wtext.startswith(L"b", 0, 0));
+			Assert::IsTrue(wtext.startswith(L"b", 1, 3));
+			Assert::IsTrue(wtext.startswith(L"bc", 1, 3));
+			Assert::IsTrue(wtext.startswith(L"bcd", 1, 3));
+			Assert::IsFalse(wtext.startswith(L"bcde", 1, 3));
+
+			Assert::IsTrue(wtext.startswith(L"", 5, 2));
+			Assert::IsTrue(wtext.startswith(L"", 15, 16));
+
+			Assert::IsTrue(wtext.startswith({  L"ghi", L"abca", L"Abcd" }, 0, len - 2));
+			Assert::IsFalse(wtext.startswith({ L"def", L"ghi" }, 0, len - 4));
+			Assert::IsFalse(wtext.startswith({ L"def", L"ghi", L"Abcd" }, 0, len - 4));
 		}
 
 	};
