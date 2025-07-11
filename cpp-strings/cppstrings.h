@@ -459,7 +459,7 @@ namespace pcs // i.e. "pythonic c++ strings"
         //---   contains()   --------------------------------------
         /** \brief Returns true if this string contains the passed string, or false otherwise.
         *
-        * This is the c++ implementation of Python keyword 'in' applied to strings.
+        * This is a c++ implementation of Python keyword 'in' applied to strings.
         */
         constexpr bool contains(const CppStringT& substr) const noexcept
         {
@@ -516,7 +516,10 @@ namespace pcs // i.e. "pythonic c++ strings"
 
 
         //---   contains_n()   ------------------------------------
-        /** Returns true if the passed string is found within the slice str[start:start+count-1], or false otherwise. */
+        /** Returns true if the passed string is found within the slice str[start:start+count-1], or false otherwise.
+        *
+        * This is a c++ implementation of Python keyword 'in' applied to Python sliced strings.
+        */
         inline constexpr bool contains_n(const CppStringT& sub, const size_type start, const size_type count = -1) const noexcept
         {
             try {
