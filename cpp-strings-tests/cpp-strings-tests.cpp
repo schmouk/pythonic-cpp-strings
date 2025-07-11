@@ -3886,5 +3886,19 @@ namespace cppstringstests
 			Assert::AreEqual(wexpected.c_str(), wres.c_str());
 
 		}
+
+		TEST_METHOD(translate)
+		{
+			CppString::TransTable trans_table("oizeaslbgOIZEASLG", "012345789012345789");
+			CppString text("This is a big 'Oiseau' that can be seen in 'Le Zoo'");
+			CppString expected("Th15 15 4 819 '01534u' th4t c4n 83 533n 1n '73 200'");
+			Assert::AreEqual(expected.c_str(), text.translate(trans_table).c_str());
+
+			CppWString::TransTable wtrans_table(L"oizeaslbgOIZEASLG", L"012345789012345789");
+			CppWString wtext(L"This is a big 'Oiseau' that can be seen in 'Le Zoo'");
+			CppWString wexpected(L"Th15 15 4 819 '01534u' th4t c4n 83 533n 1n '73 200'");
+			Assert::AreEqual(wexpected.c_str(), wtext.translate(wtrans_table).c_str());
+		}
+
 	};
 }

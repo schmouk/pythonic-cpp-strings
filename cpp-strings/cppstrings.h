@@ -348,14 +348,15 @@ namespace pcs // i.e. "pythonic c++ strings"
             }
 
             /** \brief Indexing operator. */
-            inline CppStringT operator[] (const key_type ch) noexcept
+            inline value_type operator[] (const key_type ch) noexcept
+            //inline CppStringT operator[] (const key_type ch) noexcept
             {
                 auto it = m_table.find(ch);
                 if (it != m_table.end()) {
                     return it->second;
                 }
                 else {
-                    return CppStringT(ch);
+                    return ch;  // CppStringT(ch);
                 }
             }
 
@@ -366,7 +367,8 @@ namespace pcs // i.e. "pythonic c++ strings"
 
         private:
             std::map<typename key_type, typename value_type> m_table{};  // the internal storage of the translation table. Access it via the indexing operator.
-        };
+        
+};
 
 
         //===   Constructors / Destructor   =======================
@@ -1774,23 +1776,13 @@ namespace pcs // i.e. "pythonic c++ strings"
         * to  be  translated  is not available as an entry in the tranlation
         * table, it is set as is in the resulting string.
         */
-        CppStringT translate(const TransTable& table) const noexcept
+        CppStringT translate(TransTable& table) noexcept
         {
-            /*
             CppStringT res{};
             for (auto ch : *this) {
                 try { res += table[ch]; }
                 catch (...) { res += ch; }
             }
-            return res;
-            */
-
-            CppStringT res{};
-            auto _translate = [&](auto const ch) {
-                try { return table[ch]; }
-                catch (...) { return ch; }
-            };
-            std::ranges::copy(std::views::transform(*this, _translate), std::back_inserter(res));
             return res;
         }
 
