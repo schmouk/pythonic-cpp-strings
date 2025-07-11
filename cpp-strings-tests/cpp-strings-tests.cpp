@@ -3843,5 +3843,35 @@ namespace cppstringstests
 			Assert::AreEqual(L"", wtext.substr(10, 15).c_str());
 			Assert::AreEqual(L"", wtext.substr(21).c_str());
 		}
+
+		TEST_METHOD(swapcase)
+		{
+			CppString s(255, '\0');
+			for (int i : std::views::iota(0, 256))
+				s[i] = CppString::value_type(i);
+			CppString res{ s.swapcase() };
+			for (auto const [s, r] : std::views::zip(s, res)) {
+				if (std::islower(s))
+					Assert::IsTrue(std::isupper(r));
+				else if (std::isupper(s))
+					Assert::IsTrue(std::islower(r));
+				else
+					Assert::AreEqual(s, r);
+			}
+
+			CppWString ws(0xffff, '\0');
+			for (int i : std::views::iota(0, 0x1'0000))
+				ws[i] = CppWString::value_type(i);
+			CppWString wres{ ws.swapcase() };
+			for (auto const [ws, wr] : std::views::zip(ws, wres)) {
+				if (std::islower(ws))
+					Assert::IsTrue(std::isupper(wr));
+				else if (std::isupper(ws))
+					Assert::IsTrue(std::islower(wr));
+				else
+					Assert::AreEqual(ws, wr);
+			}
+		}
+
 	};
 }

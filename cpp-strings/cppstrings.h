@@ -1745,13 +1745,8 @@ namespace pcs // i.e. "pythonic c++ strings"
         */
         inline CppStringT swapcase() const noexcept
         {
-            /*
-            CppStringT res(*this);
-            std::transform(this->cbegin(), this->cend(), res.begin(), pcs::swap_case);
-            return res;
-            */
             CppStringT res;
-            std::ranges::copy(std::views::transform(*this, pcs::swap_case), std::back_inserter(res));
+            std::ranges::transform(*this, std::back_inserter(res), [](const value_type c) -> value_type { return pcs::swap_case(c); });
             return res;
         }
 
