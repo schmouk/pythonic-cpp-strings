@@ -738,7 +738,6 @@ namespace cppstringstests
 			Assert::IsFalse(wtext.contains(L"Abcd. Efgh ij!!"cs));
 			Assert::IsTrue(wtext.contains(L""cs));
 
-
 			for (std::size_t index = 0; index < text.size(); ++index) {
 				Assert::IsTrue(text.contains(text.substr(index).c_str()));
 				for (std::size_t count = 0; count < text.size() - index; ++count)
@@ -760,7 +759,6 @@ namespace cppstringstests
 			Assert::IsFalse(wtext.contains(L"Abcd. Efgh ij!!"));
 			Assert::IsTrue(wtext.contains(L""));
 			Assert::IsTrue(wtext.contains(nullptr));
-
 
 			for (auto const ch : text)
 				Assert::IsTrue(text.contains(ch));
