@@ -1580,25 +1580,25 @@ namespace cppstringstests
 			Assert::AreEqual("abc", s.ljust(1).c_str());
 			Assert::AreEqual("abc", s.ljust(2).c_str());
 			Assert::AreEqual("abc", s.ljust(3).c_str());
-			Assert::AreEqual("abc ", s.ljust(4).c_str());
-			Assert::AreEqual("abc  ", s.ljust(5).c_str());
+			Assert::AreEqual(" abc", s.ljust(4).c_str());
+			Assert::AreEqual("  abc", s.ljust(5).c_str());
 			Assert::AreEqual("abc", s.ljust(1).c_str());
 			Assert::AreEqual("abc", s.ljust(2).c_str());
 			Assert::AreEqual("abc", s.ljust(3).c_str());
-			Assert::AreEqual("abc.", s.ljust(4, '.').c_str());
-			Assert::AreEqual("abc..", s.ljust(5, '.').c_str());
+			Assert::AreEqual(".abc", s.ljust(4, '.').c_str());
+			Assert::AreEqual("..abc", s.ljust(5, '.').c_str());
 
 			pcs::CppWString ws(L"abc");
 			Assert::AreEqual(L"abc", ws.ljust(1).c_str());
 			Assert::AreEqual(L"abc", ws.ljust(2).c_str());
 			Assert::AreEqual(L"abc", ws.ljust(3).c_str());
-			Assert::AreEqual(L"abc ", ws.ljust(4).c_str());
-			Assert::AreEqual(L"abc  ", ws.ljust(5).c_str());
+			Assert::AreEqual(L" abc", ws.ljust(4).c_str());
+			Assert::AreEqual(L"  abc", ws.ljust(5).c_str());
 			Assert::AreEqual(L"abc", ws.ljust(1).c_str());
 			Assert::AreEqual(L"abc", ws.ljust(2).c_str());
 			Assert::AreEqual(L"abc", ws.ljust(3).c_str());
-			Assert::AreEqual(L"abc.", ws.ljust(4, '.').c_str());
-			Assert::AreEqual(L"abc..", ws.ljust(5, '.').c_str());
+			Assert::AreEqual(L".abc", ws.ljust(4, '.').c_str());
+			Assert::AreEqual(L"..abc", ws.ljust(5, '.').c_str());
 		}
 
 		TEST_METHOD(lower)
@@ -2276,25 +2276,25 @@ namespace cppstringstests
 			Assert::AreEqual("abc", s.rjust(1).c_str());
 			Assert::AreEqual("abc", s.rjust(2).c_str());
 			Assert::AreEqual("abc", s.rjust(3).c_str());
-			Assert::AreEqual(" abc", s.rjust(4).c_str());
-			Assert::AreEqual("  abc", s.rjust(5).c_str());
+			Assert::AreEqual("abc ", s.rjust(4).c_str());
+			Assert::AreEqual("abc  ", s.rjust(5).c_str());
 			Assert::AreEqual("abc", s.rjust(1).c_str());
 			Assert::AreEqual("abc", s.rjust(2).c_str());
 			Assert::AreEqual("abc", s.rjust(3).c_str());
-			Assert::AreEqual(".abc", s.rjust(4, '.').c_str());
-			Assert::AreEqual("..abc", s.rjust(5, '.').c_str());
+			Assert::AreEqual("abc.", s.rjust(4, '.').c_str());
+			Assert::AreEqual("abc..", s.rjust(5, '.').c_str());
 
 			pcs::CppWString ws(L"abc");
 			Assert::AreEqual(L"abc", ws.rjust(1).c_str());
 			Assert::AreEqual(L"abc", ws.rjust(2).c_str());
 			Assert::AreEqual(L"abc", ws.rjust(3).c_str());
-			Assert::AreEqual(L" abc", ws.rjust(4).c_str());
-			Assert::AreEqual(L"  abc", ws.rjust(5).c_str());
+			Assert::AreEqual(L"abc ", ws.rjust(4).c_str());
+			Assert::AreEqual(L"abc  ", ws.rjust(5).c_str());
 			Assert::AreEqual(L"abc", ws.rjust(1).c_str());
 			Assert::AreEqual(L"abc", ws.rjust(2).c_str());
 			Assert::AreEqual(L"abc", ws.rjust(3).c_str());
-			Assert::AreEqual(L".abc", ws.rjust(4, '.').c_str());
-			Assert::AreEqual(L"..abc", ws.rjust(5, '.').c_str());
+			Assert::AreEqual(L"abc.", ws.rjust(4, '.').c_str());
+			Assert::AreEqual(L"abc..", ws.rjust(5, '.').c_str());
 		}
 
 		TEST_METHOD(rpartition)
@@ -3975,6 +3975,88 @@ namespace cppstringstests
 					Assert::AreEqual(wcs, wcr);
 			}
 
+		}
+
+		TEST_METHOD(zfill)
+		{
+			CppString s("1.23");
+			Assert::AreEqual("1.23", s.zfill(0).c_str());
+			Assert::AreEqual("1.23", s.zfill(1).c_str());
+			Assert::AreEqual("1.23", s.zfill(2).c_str());
+			Assert::AreEqual("1.23", s.zfill(3).c_str());
+			Assert::AreEqual("1.23", s.zfill(4).c_str());
+			Assert::AreEqual("01.23", s.zfill(5).c_str());
+			Assert::AreEqual("001.23", s.zfill(6).c_str());
+
+			s = '+' + s;
+			Assert::AreEqual("+1.23", s.zfill(0).c_str());
+			Assert::AreEqual("+1.23", s.zfill(1).c_str());
+			Assert::AreEqual("+1.23", s.zfill(2).c_str());
+			Assert::AreEqual("+1.23", s.zfill(3).c_str());
+			Assert::AreEqual("+1.23", s.zfill(4).c_str());
+			Assert::AreEqual("+1.23", s.zfill(5).c_str());
+			Assert::AreEqual("+01.23", s.zfill(6).c_str());
+			Assert::AreEqual("+001.23", s.zfill(7).c_str());
+
+			s[0] = '-';
+			Assert::AreEqual("-1.23", s.zfill(0).c_str());
+			Assert::AreEqual("-1.23", s.zfill(1).c_str());
+			Assert::AreEqual("-1.23", s.zfill(2).c_str());
+			Assert::AreEqual("-1.23", s.zfill(3).c_str());
+			Assert::AreEqual("-1.23", s.zfill(4).c_str());
+			Assert::AreEqual("-1.23", s.zfill(5).c_str());
+			Assert::AreEqual("-01.23", s.zfill(6).c_str());
+			Assert::AreEqual("-001.23", s.zfill(7).c_str());
+
+			s[0] = '*';
+			Assert::AreEqual("*1.23", s.zfill(0).c_str());
+			Assert::AreEqual("*1.23", s.zfill(1).c_str());
+			Assert::AreEqual("*1.23", s.zfill(2).c_str());
+			Assert::AreEqual("*1.23", s.zfill(3).c_str());
+			Assert::AreEqual("*1.23", s.zfill(4).c_str());
+			Assert::AreEqual("*1.23", s.zfill(5).c_str());
+			Assert::AreEqual("0*1.23", s.zfill(6).c_str());
+			Assert::AreEqual("00*1.23", s.zfill(7).c_str());
+
+
+			CppWString ws(L"1.23");
+			Assert::AreEqual(L"1.23", ws.zfill(0).c_str());
+			Assert::AreEqual(L"1.23", ws.zfill(1).c_str());
+			Assert::AreEqual(L"1.23", ws.zfill(2).c_str());
+			Assert::AreEqual(L"1.23", ws.zfill(3).c_str());
+			Assert::AreEqual(L"1.23", ws.zfill(4).c_str());
+			Assert::AreEqual(L"01.23", ws.zfill(5).c_str());
+			Assert::AreEqual(L"001.23", ws.zfill(6).c_str());
+
+			ws = L'+' + ws;
+			Assert::AreEqual(L"+1.23", ws.zfill(0).c_str());
+			Assert::AreEqual(L"+1.23", ws.zfill(1).c_str());
+			Assert::AreEqual(L"+1.23", ws.zfill(2).c_str());
+			Assert::AreEqual(L"+1.23", ws.zfill(3).c_str());
+			Assert::AreEqual(L"+1.23", ws.zfill(4).c_str());
+			Assert::AreEqual(L"+1.23", ws.zfill(5).c_str());
+			Assert::AreEqual(L"+01.23", ws.zfill(6).c_str());
+			Assert::AreEqual(L"+001.23", ws.zfill(7).c_str());
+
+			ws[0] = L'-';
+			Assert::AreEqual(L"-1.23", ws.zfill(0).c_str());
+			Assert::AreEqual(L"-1.23", ws.zfill(1).c_str());
+			Assert::AreEqual(L"-1.23", ws.zfill(2).c_str());
+			Assert::AreEqual(L"-1.23", ws.zfill(3).c_str());
+			Assert::AreEqual(L"-1.23", ws.zfill(4).c_str());
+			Assert::AreEqual(L"-1.23", ws.zfill(5).c_str());
+			Assert::AreEqual(L"-01.23", ws.zfill(6).c_str());
+			Assert::AreEqual(L"-001.23", ws.zfill(7).c_str());
+
+			ws[0] = L'*';
+			Assert::AreEqual(L"*1.23", ws.zfill(0).c_str());
+			Assert::AreEqual(L"*1.23", ws.zfill(1).c_str());
+			Assert::AreEqual(L"*1.23", ws.zfill(2).c_str());
+			Assert::AreEqual(L"*1.23", ws.zfill(3).c_str());
+			Assert::AreEqual(L"*1.23", ws.zfill(4).c_str());
+			Assert::AreEqual(L"*1.23", ws.zfill(5).c_str());
+			Assert::AreEqual(L"0*1.23", ws.zfill(6).c_str());
+			Assert::AreEqual(L"00*1.23", ws.zfill(7).c_str());
 		}
 
 	};

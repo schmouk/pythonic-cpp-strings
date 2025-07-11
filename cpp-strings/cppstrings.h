@@ -1087,7 +1087,7 @@ namespace pcs // i.e. "pythonic c++ strings"
             if (this->size() >= width)
                 return *this;
             else
-                return *this + CppStringT(width - this->size(), fillch);
+                return CppStringT(width - this->size(), fillch) + *this;
         }
 
 
@@ -1380,7 +1380,7 @@ namespace pcs // i.e. "pythonic c++ strings"
             if (this->size() >= width)
                 return *this;
             else
-                return CppStringT(width - this->size(), fillch) + *this;
+                return *this + CppStringT(width - this->size(), fillch);
         }
 
 
@@ -1825,9 +1825,9 @@ namespace pcs // i.e. "pythonic c++ strings"
 
             const size_type padding_width = width - this->size();
             if ((*this)[0] == '+' || (*this)[0] == '-')
-                return (*this)[0] + this->substr(1, this->size() - 1).ljust(padding_width, value_type('0'));
+                return (*this)[0] + this->substr(1, this->size() - 1).ljust(width-1, value_type('0'));
             else
-                return this->ljust(padding_width, value_type('0'));
+                return this->ljust(width, value_type('0'));
         }
 
     };
