@@ -1795,10 +1795,9 @@ namespace pcs // i.e. "pythonic c++ strings"
         */
         inline CppStringT& upper() noexcept
         {
-            std::transform(this->begin(), this->end(),
-                           this->begin(),
-                           [](value_type ch) { return this->upper(ch); });
-            return *this;
+            CppStringT res{};
+            std::ranges::transform(*this, std::back_inserter(res), [&](const value_type ch) -> value_type { return this->upper(ch); });
+            return *this = res;
         }
 
         /** \brief Returns uppercase conversion of the character.

@@ -1622,6 +1622,33 @@ namespace cppstringstests
 					Assert::AreEqual(pcs::to_lower(wch), ws[i]);
 				Assert::AreEqual(wchar_t(std::tolower(wch)), pcs::CppWString::lower(wch));
 			}
+
+			CppString s(255, '\0');
+			for (int i : std::views::iota(0, 256))
+				s[i] = CppString::value_type(i);
+			CppString res{ s.lower() };
+			for (auto const [cs, cr] : std::views::zip(s, res)) {
+				if (std::islower(cs))
+					Assert::IsTrue(std::islower(cr));
+				else if (std::isupper(cs))
+					Assert::IsTrue(std::islower(cr));
+				else
+					Assert::AreEqual(cs, cr);
+			}
+
+			CppWString ws(0xffff, '\0');
+			for (int i : std::views::iota(0, 0x1'0000))
+				ws[i] = CppWString::value_type(i);
+			CppWString wres{ ws.lower() };
+			for (auto const [wcs, wcr] : std::views::zip(ws, wres)) {
+				if (std::islower(wcs))
+					Assert::IsTrue(std::islower(wcr));
+				else if (std::isupper(wcs))
+					Assert::IsTrue(std::islower(wcr));
+				else
+					Assert::AreEqual(wcs, wcr);
+			}
+
 		}
 
 		TEST_METHOD(lstrip)
@@ -3898,6 +3925,56 @@ namespace cppstringstests
 			CppWString wtext(L"This is a big 'Oiseau' that can be seen in 'Le Zoo'");
 			CppWString wexpected(L"Th15 15 4 819 '01534u' th4t c4n 83 533n 1n '73 200'");
 			Assert::AreEqual(wexpected.c_str(), wtext.translate(wtrans_table).c_str());
+		}
+
+		TEST_METHOD(upper)
+		{
+			for (int c = 0; c <= 255; ++c) {
+				const char ch{ char(c) };
+				constexpr int N{ 5 };
+				pcs::CppString s(N, ch);
+				s.upper();
+				for (int i = 0; i < N; ++i)
+					Assert::AreEqual(pcs::to_upper(ch), s[i]);
+				Assert::AreEqual(char(std::toupper(ch)), pcs::CppString::upper(ch));
+			}
+
+			for (int c = 0; c <= 0xffff; ++c) {
+				const wchar_t wch{ wchar_t(c) };
+				constexpr int N{ 5 };
+				pcs::CppWString ws(N, wch);
+				ws.upper();
+				for (int i = 0; i < N; ++i)
+					Assert::AreEqual(pcs::to_upper(wch), ws[i]);
+				Assert::AreEqual(wchar_t(std::toupper(wch)), pcs::CppWString::upper(wch));
+			}
+
+			CppString s(255, '\0');
+			for (int i : std::views::iota(0, 256))
+				s[i] = CppString::value_type(i);
+			CppString res{ s.upper() };
+			for (auto const [cs, cr] : std::views::zip(s, res)) {
+				if (std::islower(cs))
+					Assert::IsTrue(std::isupper(cr));
+				else if (std::isupper(cs))
+					Assert::IsTrue(std::isupper(cr));
+				else
+					Assert::AreEqual(cs, cr);
+			}
+
+			CppWString ws(0xffff, '\0');
+			for (int i : std::views::iota(0, 0x1'0000))
+				ws[i] = CppWString::value_type(i);
+			CppWString wres{ ws.upper() };
+			for (auto const [wcs, wcr] : std::views::zip(ws, wres)) {
+				if (std::islower(wcs))
+					Assert::IsTrue(std::isupper(wcr));
+				else if (std::isupper(wcs))
+					Assert::IsTrue(std::isupper(wcr));
+				else
+					Assert::AreEqual(wcs, wcr);
+			}
+
 		}
 
 	};
