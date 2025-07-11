@@ -1832,6 +1832,23 @@ namespace cppstringstests
 			Assert::AreEqual(L"a  bcd   ", L"         a  bcd   "cs.lstrip().c_str());
 		}
 
+		TEST_METHOD(operator_times)
+		{
+			pcs::CppString text("Abcd,");
+			Assert::AreEqual("", (text * -1).c_str());
+			Assert::AreEqual("", (text * 0).c_str());
+			Assert::AreEqual(text.c_str(), (text * 1).c_str());
+			Assert::AreEqual((text + text).c_str(), (text * 2).c_str());
+			Assert::AreEqual((text + text + text).c_str(), (text * 3).c_str());
+
+			pcs::CppWString wtext(L"Abcd,");
+			Assert::AreEqual(L"", (wtext * -1).c_str());
+			Assert::AreEqual(L"", (wtext * 0).c_str());
+			Assert::AreEqual(wtext.c_str(), (wtext * 1).c_str());
+			Assert::AreEqual((wtext + wtext).c_str(), (wtext * 2).c_str());
+			Assert::AreEqual((wtext + wtext + wtext).c_str(), (wtext * 3).c_str());
+		}
+
 		TEST_METHOD(partition)
 		{
 			pcs::CppString s("abcd#123efg");
