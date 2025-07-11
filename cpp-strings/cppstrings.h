@@ -1247,6 +1247,20 @@ namespace pcs // i.e. "pythonic c++ strings"
         }
 
 
+        //---   operator *   --------------------------------------
+        /** Generates a new string with count times the content of this string. */
+        CppStringT operator* (std::int64_t count) const noexcept
+        {
+            if (count <= 0)
+                return CppStringT();
+
+            CppStringT res( *this );
+            while (--count)
+                res += *this;
+            return res;
+        }
+
+
         //---   partition()   -------------------------------------
         /** Splits the string at the first occurrence of sep, and returns a 3-items vector containing the part before the separator, the separator itself, and the part after the separator.
         *
