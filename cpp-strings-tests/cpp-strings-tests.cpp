@@ -3873,5 +3873,18 @@ namespace cppstringstests
 			}
 		}
 
+		TEST_METHOD(title)
+		{
+			CppString text("to bE  TiTlEd - cheCKing,errors, in Case oF aNy fOUNd");
+			CppString expected("To Be  Titled - Checking,errors, In Case Of Any Found");
+			CppString res{ text.title() };
+			Assert::AreEqual(expected.c_str(), res.c_str());
+
+			CppWString wtext(L"to bE  TiTlEd - cheCKing,errors, in Case oF aNy fOUNd\u2026\x86");
+			CppWString wexpected(L"To Be  Titled - Checking,errors, In Case Of Any Found\u2026\x86");
+			CppWString wres{ wtext.title() };
+			Assert::AreEqual(wexpected.c_str(), wres.c_str());
+
+		}
 	};
 }
