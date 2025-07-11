@@ -487,33 +487,6 @@ namespace pcs // i.e. "pythonic c++ strings"
 #endif
         }
 
-        /** \brief Returns true if this string contains the passed C-string, or false otherwise. */
-        inline constexpr bool contains(const CharT* substr) const noexcept
-        {
-            if (substr == nullptr)
-                // just to avoid system error on invalid access
-                return true;
-
-#if (defined(_HAS_CXX23) && _HAS_CXX23) || (!defined(_HAS_CXX23) && __cplusplus >= 202302L)
-            // c++23 and above already defines this method
-            return MyBaseClass::contains(substr);
-#else
-            return contains(CppStringT(substr));
-#endif
-        }
-
-        /** \brief Returns true if this string contains the passed char, or false otherwise. */
-        inline constexpr bool contains(const CharT& ch) const noexcept
-        {
-#if (defined(_HAS_CXX23) && _HAS_CXX23) || (!defined(_HAS_CXX23) && __cplusplus >= 202302L)
-            // c++23 and above already defines this method
-            return MyBaseClass::contains(ch);
-#else
-            // up to c++20, we have to implement this method
-            return std::ranges::any_of(*this, [ch](const value_type c) -> bool { return c == ch; });
-#endif
-        }
-
 
         //---   contains_n()   ------------------------------------
         /** Returns true if the passed string is found within the slice str[start:start+count-1], or false otherwise.
@@ -524,32 +497,6 @@ namespace pcs // i.e. "pythonic c++ strings"
         {
             try {
                 return this->substr(start, count).contains(sub);
-            }
-            catch (...) {
-                return false;
-            }
-        }
-
-        /** Returns true if the passed C-string is found within the slice str[start:start+count-1], or false otherwise. */
-        inline constexpr bool contains_n(const CharT* sub, const size_type start, const size_type count = -1) const noexcept
-        {
-            if (sub == nullptr)
-                // just to avoid system error on invalid access
-                return true;
-
-            try {
-                return this->substr(start, count).contains(sub);
-            }
-            catch (...) {
-                return false;
-            }
-        }
-
-        /** Returns true if the passed char is found within the slice str[start:start+count-1], or false otherwise. */
-        inline constexpr bool contains_n(const CharT ch, const size_type start, const size_type count = -1) const noexcept
-        {
-            try {
-                return this->substr(start, count).contains(ch);
             }
             catch (...) {
                 return false;
@@ -698,42 +645,6 @@ namespace pcs // i.e. "pythonic c++ strings"
                 return find_n(sub, start, end_ - start + 1);
         }
 
-        /** Returns the lowest index in the string where character ch is found within the slice str[start:end], or -1 (i.e. 'npos') if ch is not found.
-        *
-        * Note: this method should be used only if you need to know the position of
-        * sub.  To check if sub is a substring or not, use the method contains().
-        *
-        * CAUTION: empty substrings are considered to be in the string if start and
-        * end positions are both less than the string size and if start <= end.
-        *
-        * \see find_n(), rfind() and rfind_n().
-        * \see index(), index_n(), rindex() and rindex_n().
-        */
-        inline constexpr size_type find(const CharT ch, const size_type start = 0, const size_type end = -1) const noexcept
-        {
-            return find(CppStringT(ch), start, end);
-        }
-
-        /** Returns the lowest index in the string where null-terminated string sub is found within the slice str[start:end], or -1 (i.e. 'npos') if sub is not found.
-        *
-        * Note: this method should be used only if you need to know the position of
-        * sub.  To check if sub is a substring or not, use the method contains().
-        * 
-        * CAUTION: empty substrings are considered to be in the string if start and
-        * end positions are both less than the string size and if start <= end. The
-        * returned position is 0.
-        *
-        * \see find_n(), rfind() and rfind_n().
-        * \see index(), index_n(), rindex() and rindex_n().
-        */
-        inline constexpr size_type find(const CharT* sub, const size_type start = 0, const size_type end = -1) const noexcept
-        {
-            if (sub == nullptr)
-                return CppStringT::npos;
-            else
-                return find(CppStringT(sub), start, end);
-        }
-
 
         //---   find_n()   ----------------------------------------
         /** Returns the lowest index in the string where substring sub is found within the slice str[start:start+count-1], or -1 (i.e. 'npos') if sub is not found.
@@ -780,64 +691,6 @@ namespace pcs // i.e. "pythonic c++ strings"
             return find_n(sub, 0, count);
         }
 
-        /** Returns the lowest index in the string where character ch is found within the slice str[start:start+count-1], or -1 (i.e. 'npos') if ch is not found.
-        *
-        * Note: this method should be used only if you need to know the position of
-        * sub.  To check if sub is a substring or not, use the method contains_n().
-        *
-        * CAUTION: empty substrings are considered to be in the string if start and
-        * end positions are both less than the string size and if start <= end.
-        *
-        * \see find(), rfind() and rfind_n().
-        * \see index(), index_n(), rindex() and rindex_n().
-        */
-        inline constexpr size_type find_n(const CharT ch, const size_type start, const size_type count) const noexcept
-        {
-            return find_n(CppStringT(ch), start, count);
-        }
-
-        /** Returns the lowest index in the string where character ch is found within the slice str[0:count-1], or -1 (i.e. 'npos') if ch is not found.
-        *
-        * Note: this method should be used only if you need to know the position of
-        * sub.  To check if sub is a substring or not, use the method contains_n().
-        *
-        * \see find(), rfind() and rfind_n().
-        * \see index(), index_n(), rindex() and rindex_n().
-        */
-        inline constexpr size_type find_n(const CharT ch, const size_type count) const noexcept
-        {
-            return find_n(CppStringT(ch), 0, count);
-        }
-
-        /** Returns the lowest index in the string where null-terminated substring sub is found within the slice str[start:start+count-1], or -1 (i.e. 'npos') if sub is not found.
-        *
-        * Note: this method should be used only if you need to know the position of
-        * sub.  To check if sub is a substring or not, use the method contains_n().
-        *
-        * \see find(), rfind() and rfind_n().
-        * \see index(), index_n(), rindex() and rindex_n().
-        */
-        inline constexpr size_type find_n(const CharT* sub, const size_type start, const size_type count) const noexcept
-        {
-            if (sub == nullptr)
-                return CppStringT::npos;
-            else
-                return find_n(CppStringT(sub), start, count);
-        }
-
-        /** Returns the lowest index in the string where null-terminated substring sub is found within the slice str[0:count-1], or -1 (i.e. 'npos') if sub is not found.
-        *
-        * Note: this method should be used only if you need to know the position of
-        * sub.  To check if sub is a substring or not, use the method contains_n().
-        *
-        * \see find(), rfind() and rfind_n().
-        * \see index(), index_n(), rindex() and rindex_n().
-        */
-        inline constexpr size_type find_n(const CharT* sub, const size_type count) const noexcept
-        {
-            return find_n(sub, 0, count);
-        }
-
 
         //---   index()   -----------------------------------------
         /** Like find(const CppStringT&), but raises NotFoundException when the substring sub is not found.
@@ -851,36 +704,6 @@ namespace pcs // i.e. "pythonic c++ strings"
             if (ret_value == CppStringT::npos)
                 throw NotFoundException("substring not found in string.");
                 //throw NotFoundException(CppStringT(std::format("substring \"{}\" not found in string \"{}\"", sub.c_str(), this->c_str()).c_str()));
-            else
-                return ret_value;
-        }
-
-        /** Like find(const CharT), but raises NotFoundException when character ch is not found.
-        *
-        * \see index_n(), rindex() and rindex_n().
-        * \see find(), find_n(), rfind() and rfind_n().
-        */
-        inline constexpr size_type index(const CharT ch, const size_type start = 0, const size_type end = -1) const
-        {
-            const size_type ret_value = find(ch, start, end);
-            if (ret_value == CppStringT::npos)
-                throw NotFoundException("char not found in string.");
-                //throw NotFoundException(CppStringT(std::format("character \"{}\" not found in string \"{}\"", CppStringT(ch).c_str(), this->c_str()).c_str()));
-            else
-                return ret_value;
-        }
-
-        /** Like find(const CharT*), but raises NotFoundException when the substring sub is not found.
-        *
-        * \see index_n(), rindex() and rindex_n().
-        * \see find(), find_n(), rfind() and rfind_n().
-        */
-        inline constexpr size_type index(const CharT* sub, const size_type start = 0, const size_type end = -1) const
-        {
-            const size_type ret_value = find(sub, start, end);
-            if (ret_value == CppStringT::npos)
-                throw NotFoundException("substring not found in string");
-                //throw NotFoundException(CppStringT(std::format("substring \"{}\" not found in string \"{}\"", CppStringT(sub).c_str(), this->c_str()).c_str()));
             else
                 return ret_value;
         }
@@ -903,46 +726,6 @@ namespace pcs // i.e. "pythonic c++ strings"
         * \see find(), find_n(), rfind() and rfind_n().
         */
         inline constexpr size_type index_n(const CppStringT& sub, const size_type count) const
-        {
-            return index(sub, 0, count);
-        }
-
-        /** Like find_n(sub, start, count), but raises NotFoundException when the character is not found.
-        *
-        * \see index_n(), rindex() and rindex_n().
-        * \see find(), find_n(), rfind() and rfind_n().
-        */
-        inline constexpr size_type index_n(const CharT ch, const size_type start, const size_type count) const
-        {
-            return index(ch, start, start + count - 1);
-        }
-
-        /** Like find_n(sub, count), but raises NotFoundException when the character is not found.
-        *
-        * \see index_n(), rindex() and rindex_n().
-        * \see find(), find_n(), rfind() and rfind_n().
-        */
-        inline constexpr size_type index_n(const CharT ch, const size_type count) const
-        {
-            return index(ch, 0, count);
-        }
-
-        /** Like find_n(sub, start, count), but raises NotFoundException when the null-terminated substring is not found.
-        *
-        * \see index_n(), rindex() and rindex_n().
-        * \see find(), find_n(), rfind() and rfind_n().
-        */
-        inline constexpr size_type index_n(const CharT* sub, const size_type start, const size_type count) const
-        {
-            return index(sub, start, start + count - 1);
-        }
-
-        /** Like find_n(sub, count), but raises NotFoundException when the null-terminated substring is not found.
-        *
-        * \see index_n(), rindex() and rindex_n().
-        * \see find(), find_n(), rfind() and rfind_n().
-        */
-        inline constexpr size_type index_n(const CharT* sub, const size_type count) const
         {
             return index(sub, 0, count);
         }
@@ -1378,7 +1161,8 @@ namespace pcs // i.e. "pythonic c++ strings"
             return rfind(sub, start, this->size() - 1);
         }
 
-        /** Returns the highest index in the string where substring sub is found in the whole string, or -1 (i.e. 'npos') if sub is not found.
+
+        /** Returns the highest index in the string where C-substring sub is found in the whole string, or -1 (i.e. 'npos') if sub is not found.
         *
         * Note that this is an offset from the start of the string, not the end.
         *
