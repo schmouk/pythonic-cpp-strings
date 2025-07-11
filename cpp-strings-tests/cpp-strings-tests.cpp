@@ -771,6 +771,87 @@ namespace cppstringstests
 			Assert::IsFalse(wtext.contains(L'a'));
 		}
 
+		TEST_METHOD(contains_n)
+		{
+			pcs::CppString text("Abcd. Efgh ij!");
+			for (std::size_t index = 0; index < text.size(); ++index) {
+				Assert::IsTrue(text.contains_n(text.substr(index), index));
+				for (std::size_t count = 0; count < text.size() - index; ++count) {
+					Assert::IsTrue(text.contains_n(text.substr(index, count), index, count));
+					Assert::IsTrue(text.contains_n(text.substr(index, count), index, count + 1));
+					if (count > 0)
+						Assert::IsFalse(text.contains_n(text.substr(index, count), index, count - 1));
+				}
+			}
+			Assert::IsFalse(text.contains_n("zzz"cs, 0));
+			Assert::IsFalse(text.contains_n("abc"cs, 0));
+			Assert::IsFalse(text.contains_n("Abcd. Efgh ij!!"cs, 0));
+			Assert::IsTrue(text.contains_n(""cs, 6));
+			Assert::IsFalse(text.contains_n(". Ef"cs, 10, 4));
+			Assert::IsFalse(text.contains_n(". Ef"cs, 4, 3));
+
+			pcs::CppWString wtext(L"Abcd. Efgh ij!");
+			for (std::size_t index = 0; index < wtext.size(); ++index) {
+				Assert::IsTrue(wtext.contains_n(wtext.substr(index), index));
+				for (std::size_t count = 0; count < text.size() - index; ++count) {
+					Assert::IsTrue(wtext.contains_n(wtext.substr(index, count), index, count));
+					Assert::IsTrue(wtext.contains_n(wtext.substr(index, count), index, count + 1));
+					if (count > 0)
+						Assert::IsFalse(wtext.contains_n(wtext.substr(index, count), index, count - 1));
+				}
+			}
+			Assert::IsFalse(wtext.contains_n(L"zzz"cs, 0));
+			Assert::IsFalse(wtext.contains_n(L"abc"cs, 0));
+			Assert::IsFalse(wtext.contains_n(L"Abcd. Efgh ij!!"cs, 0));
+			Assert::IsTrue(wtext.contains_n(L""cs, 6));
+			Assert::IsFalse(wtext.contains_n(L". Ef"cs, 10, 4));
+			Assert::IsFalse(wtext.contains_n(L". Ef"cs, 4, 3));
+
+			for (std::size_t index = 0; index < text.size(); ++index) {
+				Assert::IsTrue(text.contains_n(text.substr(index), index));
+				for (std::size_t count = 0; count < text.size() - index; ++count) {
+					Assert::IsTrue(text.contains_n(text.substr(index, count).c_str(), index, count));
+					Assert::IsTrue(text.contains_n(text.substr(index, count).c_str(), index, count + 1));
+					if (count > 0)
+						Assert::IsFalse(text.contains_n(text.substr(index, count).c_str(), index, count - 1));
+				}
+			}
+			Assert::IsFalse(text.contains_n("z", 0));
+			Assert::IsFalse(text.contains_n("a", 0));
+			Assert::IsFalse(text.contains_n("Abcd. Efgh ij!!", 0));
+			Assert::IsTrue(text.contains_n("", 6));
+			Assert::IsTrue(text.contains_n(nullptr, 5));
+			Assert::IsFalse(text.contains_n(". Ef", 10, 4));
+			Assert::IsFalse(text.contains_n(". Ef", 4, 3));
+
+			for (std::size_t index = 0; index < text.size(); ++index) {
+				Assert::IsTrue(wtext.contains_n(wtext.substr(index), index));
+				for (std::size_t count = 0; count < wtext.size() - index; ++count) {
+					Assert::IsTrue(wtext.contains_n(wtext.substr(index, count).c_str(), index, count));
+					Assert::IsTrue(wtext.contains_n(wtext.substr(index, count).c_str(), index, count + 1));
+					if (count > 0)
+						Assert::IsFalse(wtext.contains_n(wtext.substr(index, count).c_str(), index, count - 1));
+				}
+			}
+			Assert::IsFalse(wtext.contains_n(L"z", 0));
+			Assert::IsFalse(wtext.contains_n(L"a", 0));
+			Assert::IsFalse(wtext.contains_n(L"Abcd. Efgh ij!!", 0));
+			Assert::IsTrue(wtext.contains_n(L"", 6));
+			Assert::IsTrue(wtext.contains_n(nullptr, 3));
+			Assert::IsFalse(wtext.contains_n(L". Ef", 10, 4));
+			Assert::IsFalse(wtext.contains_n(L". Ef", 4, 3));
+
+			for (auto const ch : text)
+				Assert::IsTrue(text.contains_n(ch, 0));
+			Assert::IsFalse(text.contains_n('z', 0, 21));
+			Assert::IsFalse(text.contains_n('a', 0));
+
+			for (auto const wch : wtext)
+				Assert::IsTrue(wtext.contains_n(wch, 0));
+			Assert::IsFalse(wtext.contains_n(L'z', 0));
+			Assert::IsFalse(wtext.contains_n(L'a', 0, 21));
+		}
+
 		TEST_METHOD(count)
 		{
 			pcs::CppString s("abcabcabcdefabca bca bcabca");
