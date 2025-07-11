@@ -461,7 +461,7 @@ namespace pcs // i.e. "pythonic c++ strings"
         *
         * This is the c++ implementation of Python keyword 'in' applied to strings.
         */
-        const bool contains(const CppStringT& substr) const noexcept
+        constexpr bool contains(const CppStringT& substr) const noexcept
         {
             if (substr.empty())
                 // the empty string is always contained in any string
@@ -488,7 +488,7 @@ namespace pcs // i.e. "pythonic c++ strings"
         }
 
         /** \brief Returns true if this string contains the passed C-string, or false otherwise. */
-        inline const bool contains(const CharT* substr) const noexcept
+        inline constexpr bool contains(const CharT* substr) const noexcept
         {
             if (substr == nullptr)
                 // just to avoid system error on invalid access
@@ -501,8 +501,9 @@ namespace pcs // i.e. "pythonic c++ strings"
             return contains(CppStringT(substr));
 #endif
         }
+
         /** \brief Returns true if this string contains the passed char, or false otherwise. */
-        const bool contains(const CharT& ch) const noexcept
+        inline constexpr bool contains(const CharT& ch) const noexcept
         {
 #if (defined(_HAS_CXX23) && _HAS_CXX23) || (!defined(_HAS_CXX23) && __cplusplus >= 202302L)
             // c++23 and above already defines this method
@@ -511,6 +512,45 @@ namespace pcs // i.e. "pythonic c++ strings"
             // up to c++20, we have to implement this method
             return std::ranges::any_of(*this, [ch](const value_type c) -> bool { return c == ch; });
 #endif
+        }
+
+
+        //---   contains_n()   ------------------------------------
+        /** Returns true if the passed string is found within the slice str[start:start+count-1], or false otherwise. */
+        inline constexpr bool contains_n(const CppStringT& sub, const size_type start, const size_type count = -1) const noexcept
+        {
+            try {
+                return this->substr(start, count).contains(sub);
+            }
+            catch (...) {
+                return false;
+            }
+        }
+
+        /** Returns true if the passed C-string is found within the slice str[start:start+count-1], or false otherwise. */
+        inline constexpr bool contains_n(const CharT* sub, const size_type start, const size_type count = -1) const noexcept
+        {
+            if (sub == nullptr)
+                // just to avoid system error on invalid access
+                return true;
+
+            try {
+                return this->substr(start, count).contains(sub);
+            }
+            catch (...) {
+                return false;
+            }
+        }
+
+        /** Returns true if the passed char is found within the slice str[start:start+count-1], or false otherwise. */
+        inline constexpr bool contains_n(const CharT ch, const size_type start, const size_type count = -1) const noexcept
+        {
+            try {
+                return this->substr(start, count).contains(ch);
+            }
+            catch (...) {
+                return false;
+            }
         }
 
 
