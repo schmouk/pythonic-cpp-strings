@@ -714,6 +714,65 @@ namespace cppstringstests
 			Assert::AreEqual(pcs::CppWString(L"zyxwvutsrqp").c_str(), ws.center(10, L'#').c_str(), L"--16--");
 		}
 
+		TEST_METHOD(contains)
+		{
+			pcs::CppString text("Abcd. Efgh ij!");
+			for (std::size_t index = 0; index < text.size(); ++index) {
+				Assert::IsTrue(text.contains(text.substr(index)));
+				for (std::size_t count = 0; count < text.size() - index; ++count)
+					Assert::IsTrue(text.contains(text.substr(index, count)));
+			}
+			Assert::IsFalse(text.contains("zzz"cs));
+			Assert::IsFalse(text.contains("abc"cs));
+			Assert::IsFalse(text.contains("Abcd. Efgh ij!!"cs));
+			Assert::IsTrue(text.contains(""cs));
+
+			pcs::CppWString wtext(L"Abcd. Efgh ij!");
+			for (std::size_t index = 0; index < wtext.size(); ++index) {
+				Assert::IsTrue(wtext.contains(wtext.substr(index)));
+				for (std::size_t count = 0; count < text.size() - index; ++count)
+					Assert::IsTrue(wtext.contains(wtext.substr(index, count)));
+			}
+			Assert::IsFalse(wtext.contains(L"zzz"cs));
+			Assert::IsFalse(wtext.contains(L"abc"cs));
+			Assert::IsFalse(wtext.contains(L"Abcd. Efgh ij!!"cs));
+			Assert::IsTrue(wtext.contains(L""cs));
+
+
+			for (std::size_t index = 0; index < text.size(); ++index) {
+				Assert::IsTrue(text.contains(text.substr(index).c_str()));
+				for (std::size_t count = 0; count < text.size() - index; ++count)
+					Assert::IsTrue(text.contains(text.substr(index, count).c_str()));
+			}
+			Assert::IsFalse(text.contains("z"));
+			Assert::IsFalse(text.contains("a"));
+			Assert::IsFalse(text.contains("Abcd. Efgh ij!!"));
+			Assert::IsTrue(text.contains(""));
+			Assert::IsTrue(text.contains(nullptr));
+
+			for (std::size_t index = 0; index < wtext.size(); ++index) {
+				Assert::IsTrue(wtext.contains(wtext.substr(index).c_str()));
+				for (std::size_t count = 0; count < text.size() - index; ++count)
+					Assert::IsTrue(wtext.contains(wtext.substr(index, count).c_str()));
+			}
+			Assert::IsFalse(wtext.contains(L"zzz"));
+			Assert::IsFalse(wtext.contains(L"abc"));
+			Assert::IsFalse(wtext.contains(L"Abcd. Efgh ij!!"));
+			Assert::IsTrue(wtext.contains(L""));
+			Assert::IsTrue(wtext.contains(nullptr));
+
+
+			for (auto const ch : text)
+				Assert::IsTrue(text.contains(ch));
+			Assert::IsFalse(text.contains('z'));
+			Assert::IsFalse(text.contains('a'));
+
+			for (auto const wch : wtext)
+				Assert::IsTrue(wtext.contains(wch));
+			Assert::IsFalse(wtext.contains(L'z'));
+			Assert::IsFalse(wtext.contains(L'a'));
+		}
+
 		TEST_METHOD(count)
 		{
 			pcs::CppString s("abcabcabcdefabca bca bcabca");

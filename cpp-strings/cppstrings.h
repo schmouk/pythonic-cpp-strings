@@ -457,7 +457,7 @@ namespace pcs // i.e. "pythonic c++ strings"
 
 
         //---   contains()   --------------------------------------
-        /** \brief Returns true if this string contains the passed string or char.
+        /** \brief Returns true if this string contains the passed string, or false otherwise.
         *
         * This is the c++ implementation of Python keyword 'in' applied to strings.
         */
@@ -484,6 +484,32 @@ namespace pcs // i.e. "pythonic c++ strings"
             }
 
             return false;
+#endif
+        }
+
+        /** \brief Returns true if this string contains the passed C-string, or false otherwise. */
+        inline const bool contains(const CharT* substr) const noexcept
+        {
+            if (substr == nullptr)
+                // just to avoid system error on invalid access
+                return true;
+
+#if (defined(_HAS_CXX23) && _HAS_CXX23) || (!defined(_HAS_CXX23) && __cplusplus >= 202302L)
+            // c++23 and above already defines this method
+            return MyBaseClass::contains(substr);
+#else
+            return contains(CppStringT(substr));
+#endif
+        }
+        /** \brief Returns true if this string contains the passed char, or false otherwise. */
+        const bool contains(const CharT& ch) const noexcept
+        {
+#if (defined(_HAS_CXX23) && _HAS_CXX23) || (!defined(_HAS_CXX23) && __cplusplus >= 202302L)
+            // c++23 and above already defines this method
+            return MyBaseClass::contains(ch);
+#else
+            // up to c++20, we have to implement this method
+            return std::ranges::any_of(*this, [ch](const value_type c) -> bool { return c == ch; });
 #endif
         }
 
