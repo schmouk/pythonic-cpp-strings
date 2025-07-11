@@ -560,6 +560,14 @@ namespace cppstringstests
 			pcs::CppWString ws(L"ABCdefGH");
 			Assert::AreEqual(std::size_t(8), ws.size());
 			Assert::AreEqual(pcs::CppWString(L"ABCdefGH").c_str(), ws.c_str());
+
+			pcs::CppString s0(nullptr);
+			Assert::AreEqual(std::size_t(0), s0.size());
+			Assert::AreEqual("", s0.c_str());
+
+			pcs::CppWString ws0(nullptr);
+			Assert::AreEqual(std::size_t(0), ws0.size());
+			Assert::AreEqual(L"", ws0.c_str());
 		}
 
 		TEST_METHOD(constructor_10)
@@ -571,6 +579,14 @@ namespace cppstringstests
 			pcs::CppWString ws(L"ABCdefGH", 7);
 			Assert::AreEqual(std::size_t(7), ws.size());
 			Assert::AreEqual(pcs::CppWString(L"ABCdefG").c_str(), ws.c_str());
+
+			pcs::CppString s0(nullptr, 0);
+			Assert::AreEqual(std::size_t(0), s0.size());
+			Assert::AreEqual("", s0.c_str());
+
+			pcs::CppWString ws0(nullptr, 7);
+			Assert::AreEqual(std::size_t(7), ws0.size());
+			Assert::AreEqual(L"", ws0.c_str());
 		}
 
 		TEST_METHOD(constructor_11)

@@ -380,8 +380,12 @@ namespace pcs // i.e. "pythonic c++ strings"
         inline CppStringT(MyBaseClass::size_type count, CharT ch)                           : MyBaseClass(count, ch) {}             // #6
         inline CppStringT(const CppStringT& other, size_type pos)                           : MyBaseClass(other, pos) {}            // #7
         inline CppStringT(const CppStringT& other, size_type pos, size_type count) noexcept : MyBaseClass(other, pos, count) {}     // #8
-        inline CppStringT(const CharT* s)                                                   : MyBaseClass(s) {}                     // #9
-        inline CppStringT(const CharT* s, size_type count)                                  : MyBaseClass(s, count) {}              // #10
+        inline CppStringT(const CharT* s)                                                                                           // #9
+            : MyBaseClass(s ? s : CppStringT().c_str())
+        {}
+        inline CppStringT(const CharT* s, size_type count)                                                                          // #10
+            : MyBaseClass(s ? s : CppStringT().c_str(), count)
+        {}
         inline CppStringT(std::initializer_list<CharT> ilist)                               : MyBaseClass(ilist) {}                 // #11
 
         inline CppStringT(const CharT ch)                                                   : MyBaseClass(1, ch) {}                 // #19
@@ -449,6 +453,38 @@ namespace pcs // i.e. "pythonic c++ strings"
 
             const size_type half{ (width - len) / 2 };
             return CppStringT(half, fillch) + *this + CppStringT(width - half - len, fillch);
+        }
+
+
+        //---   contains()   --------------------------------------
+        /** \brief Returns true if this string contains the passed string or char.
+        *
+        * This is the c++ implementation of Python keyword 'in' applied to strings.
+        */
+        const bool contains(const CppStringT& substr) const noexcept
+        {
+            if (substr.empty())
+                // the empty string is always contained in any string
+                return true;
+
+#if (defined(_HAS_CXX23) && _HAS_CXX23) || (!defined(_HAS_CXX23) && __cplusplus >= 202302L)
+            // c++23 and above already defines this method
+            return MyBaseClass::contains(substr);
+#else
+            // up to c++20, we have to implement this method
+            const size_type substr_width{ substr.size() };
+            const size_type width{ this->size() };
+
+            if (substr_width > width)
+                return false;
+
+            for (size_type index = 0; index <= width - substr_width; ++index) {
+                if (substr == this->substr(index, substr_width))
+                    return true;
+            }
+
+            return false;
+#endif
         }
 
 
