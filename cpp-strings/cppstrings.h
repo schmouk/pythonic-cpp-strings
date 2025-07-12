@@ -27,6 +27,7 @@
 #include <cctype>
 #include <cwctype>
 #include <format>
+#include <limits>
 #include <map>
 #include <ranges>
 #include <span>
@@ -51,6 +52,37 @@ namespace pcs // i.e. "pythonic c++ strings"
     // specializations of the base class -- these are the ones that should be instantiated by user.
     using CppString  = CppStringT<char>;                        //!< Specialization of basic class with template argument 'char'
     using CppWString = CppStringT<wchar_t>;                     //!< Specialization of basic class with template argument 'wchar_t'
+
+
+    // slices -- to be used with operator CppStringT::operator().
+    template<typename IntT = std::int64_t>
+        requires std::is_signed_v<IntT>
+    class Slice;                                               //!< Base class for slices, with start, stop and step specified values
+
+    template<typename IntT = std::int64_t>
+        requires std::is_signed_v<IntT>
+    struct StartSlice;                                          //!< struct of slices with default stop and step values
+
+    template<typename IntT = std::int64_t>
+        requires std::is_signed_v<IntT>
+    struct StopSlice;                                           //!< struct of slices with default start and step values
+
+    template<typename IntT = std::int64_t>
+        requires std::is_signed_v<IntT>
+    struct StepSlice;                                           //!< struct of slices with default start and stop values
+
+    template<typename IntT = std::int64_t>
+        requires std::is_signed_v<IntT>
+    struct StartStopSlice;                                      //!< struct of slices with default step values
+
+    template<typename IntT = std::int64_t>
+        requires std::is_signed_v<IntT>
+    struct StartStepSlice;                                      //!< struct of slices with default stop values
+
+    template<typename IntT = std::int64_t>
+        requires std::is_signed_v<IntT>
+    struct StopStepSlice;                                       //!< struct of slices with default start values
+
 
     // litteral operators
 #pragma warning(disable: 4455)
@@ -126,12 +158,12 @@ namespace pcs // i.e. "pythonic c++ strings"
     *   - char32_t (C++11)
     */
     template<class CharT, class TraitsT, class AllocatorT>
-    class CppStringT : public std::basic_string<CharT>
+    class CppStringT : public std::basic_string<CharT, TraitsT, AllocatorT>
     {
     public:
         //===   Wrappers   ========================================
-        using MyBaseClass  = std::basic_string<CharT>;
-        using MyStringView = std::basic_string_view<CharT>;
+        using MyBaseClass  = std::basic_string<CharT, TraitsT, AllocatorT>;
+        using MyStringView = std::basic_string_view<CharT, TraitsT>;
 
         using traits_type            = MyBaseClass::traits_type;
         using value_type             = MyBaseClass::value_type;
@@ -1030,8 +1062,75 @@ namespace pcs // i.e. "pythonic c++ strings"
         }
 
 
+        //---   operator ()   -------------------------------------
+        /** \brief Generates a new string according to the specified slice.
+        *
+        * A slice is a range specified as [start, stop, step]. It may
+        * also  be specified as [start, stop] in which case step = 1,
+        * or as [stop] in wich case start = 0 and step = 1.
+        * Values may be negative: negative step means reverse running
+        * and  negative  start  or stop is relative to the end of the
+        * string.
+        * Notice: the stop value specifies an out of bounds index.
+        */
+        inline CppStringT operator() (const long stop) const noexcept
+        {
+            size_type end{ stop < 0 ? this->size() + stop : stop };
+            return this->substr(0, end);
+        }
+
+        /** \brief Generates a new string according to the specified slice. */
+        inline CppStringT operator() (const long start, const long stop) const noexcept
+        {
+            const size_type length{ this->size() };
+            size_type begin{ start < 0 ? length + start : start };
+            size_type end{ stop < 0 ? length + stop : stop };
+
+            if (begin >= end)
+                return CppStringT();
+            else
+                return this->substr(begin, end - begin);
+        }
+
+        /** \brief Generates a new string according to the specified slice. */
+        CppStringT operator() (const long start, const long stop, const long step) const noexcept
+        {
+            CppStringT res{};
+
+            const size_type length{ this->size() };
+            size_type begin{ start < 0 ? length + start : start };
+            size_type end{ stop < 0 ? length + stop : stop };
+
+            if (step < 0) {
+                if (begin >= length)
+                    begin = length - 1;
+                if (end < 0)
+                    end = -1;
+
+                if (begin > end) {
+                    for (size_type i = begin; i > end; i += step)
+                        res += (*this)[i];
+                }
+            }
+            else if (step > 0) {
+                if (begin < 0)
+                    begin = 0;
+                if (end > length)
+                    end = length;
+
+                if (begin < end) {
+                    for (size_type i = begin; i < end; i += step)
+                        res += (*this)[i];
+                }
+            }
+
+            return res;
+        }
+
+        
+
         //---   operator *   --------------------------------------
-        /** Generates a new string with count times the content of this string. */
+        /** \brief Generates a new string with count times the content of this string. */
         CppStringT operator* (std::int64_t count) const noexcept
         {
             if (count <= 0)
@@ -1733,6 +1832,170 @@ namespace pcs // i.e. "pythonic c++ strings"
                 return this->ljust(width, value_type('0'));
         }
 
+    };
+
+
+    //=====   Slices   ========================================
+    //---   slices base   -------------------------------------
+    /** \brief Base class for slices, with start, stop and step specified values. */
+    template<typename IntT>
+        requires std::is_signed_v<IntT>
+    class Slice
+    {
+    public:
+        static constexpr IntT DEFAULT{ std::numeric_limits<IntT>::min()};
+
+        //---   Constructors / Destructor   -------------------
+        Slice() noexcept = default;  //!< Default constructor
+
+        Slice(const IntT start, const IntT stop, const IntT step) noexcept   //!< Valued constructor
+            : _start(start)
+            , _stop(stop)
+            , _step(step)
+        {}
+
+        virtual ~Slice() noexcept = default;  //!< Default destructor.
+
+
+        //---   iterating   -----------------------------------
+        inline const IntT begin(const CppString& str) noexcept  //!< starts iterating on specified CppString.
+        {
+            if (_start == DEFAULT)
+                _start = 0;
+            else if (_start < 0)
+                _start += str.size();
+
+            if (_stop == DEFAULT)
+                _stop = str.size();
+            else if (_stop < 0)
+                _stop += str.size();
+
+            if (_step == DEFAULT)
+                _step = 1;
+
+            return _index = _start;
+        }
+
+        inline const bool end() const noexcept  //!< returns true when iterating is over, or false otherwise.
+        {
+            return _step == 0 ? true : _step > 0 ? _index >= _stop : _index <= _stop;
+        }
+
+        inline const IntT operator++() noexcept  //!< iterates one step, pre-increment. Caution: returned index may be out of bounds. Check '!end()' before using its value.
+        {
+            return _index += _step;
+        }
+
+        inline const IntT operator++(int) noexcept  //!< iterates one step, post-increment. Caution: returned index may be out of bounds. Check '!end()' before using its value.
+        {
+            _index += _step;
+            return _index - _step;
+        }
+
+
+    private:
+        IntT _start{ 0 };
+        IntT _stop{ DEFAULT };
+        IntT _step{ 1 };
+
+        IntT _index{ 0 };
+    };
+
+
+    /** \brief Class of slices with default stop and step values. */
+    template<typename IntT>
+        requires std::is_signed_v<IntT>
+    struct StartSlice : public Slice<IntT>
+    {
+        //---   Constructors / Destructor   -------------------
+        StartSlice() noexcept = default;  //!< Default constructor
+
+        inline StartSlice(const IntT start) noexcept   //!< Valued constructor
+            : Slice(start, Slice::DEFAULT, 1)
+        {}
+
+        virtual ~StartSlice() noexcept = default;  //!< Default destructor.
+    };
+
+
+    /** \brief Class of slices with default start and step values. */
+    template<typename IntT>
+        requires std::is_signed_v<IntT>
+    struct StopSlice : public Slice<IntT>
+    {
+        //---   Constructors / Destructor   -------------------
+        StopSlice() noexcept = default;  //!< Default constructor
+
+        inline StopSlice(const IntT stop) noexcept   //!< Valued constructor
+            : Slice(Slice::DEFAULT, stop, 1)
+        {}
+
+        virtual ~StopSlice() noexcept = default;  //!< Default destructor.
+    };
+
+
+    /** \brief Class of slices with default start and stop values. */
+    template<typename IntT>
+        requires std::is_signed_v<IntT>
+    struct StepSlice : public Slice<IntT>
+    {
+        //---   Constructors / Destructor   -------------------
+        StepSlice() noexcept = default;  //!< Default constructor
+
+        inline StepSlice(const IntT step) noexcept   //!< Valued constructor
+            : Slice(Slice::DEFAULT, Slice::DEFAULT, step)
+        {}
+
+        virtual ~StepSlice() noexcept = default;  //!< Default destructor.
+    };
+
+
+    /** \brief Class of slices with default step values. */
+    template<typename IntT>
+        requires std::is_signed_v<IntT>
+    struct StartStopSlice : public Slice<IntT>
+    {
+        //---   Constructors / Destructor   -------------------
+        StartStopSlice() noexcept = default;  //!< Default constructor
+
+        inline StartStopSlice(const IntT start, const IntT stop) noexcept   //!< Valued constructor
+            : Slice(start, stop, 1)
+        {}
+
+        virtual ~StartStopSlice() noexcept = default;  //!< Default destructor.
+    };
+
+
+    /** \brief Class of slices with default stop values. */
+    template<typename IntT>
+        requires std::is_signed_v<IntT>
+    struct StartStepSlice : public Slice<IntT>
+    {
+        //---   Constructors / Destructor   -------------------
+        StartStepSlice() noexcept = default;  //!< Default constructor
+
+        inline StartStepSlice(const IntT start, const IntT step) noexcept   //!< Valued constructor
+            : Slice(start, Slice::DEFAULT, step)
+        {}
+
+        virtual ~StartStepSlice() noexcept = default;  //!< Default destructor.
+
+    };
+
+
+    /** \brief Class of slices with default start values. */
+    template<typename IntT>
+        requires std::is_signed_v<IntT>
+    struct StopStepSlice : public Slice<IntT>
+    {
+                //---   Constructors / Destructor   -------------------
+        StopStepSlice() noexcept = default;  //!< Default constructor
+
+        inline StopStepSlice(const IntT stop, const IntT step) noexcept   //!< Valued constructor
+            : Slice(Slice::DEFAULT, stop, step)
+        {}
+
+        virtual ~StopStepSlice() noexcept = default;  //!< Default destructor.
     };
 
 
