@@ -1860,20 +1860,12 @@ namespace pcs // i.e. "pythonic c++ strings"
         //---   iterating   -----------------------------------
         inline const IntT begin(const CppString& str) noexcept  //!< starts iterating on specified CppString.
         {
-            if (_start == DEFAULT)
-                _start = 0;
-            else if (_start < 0)
-                _start += str.size();
+            return _prepare_iterating(IntT(str.size()));
+        }
 
-            if (_stop == DEFAULT)
-                _stop = str.size();
-            else if (_stop < 0)
-                _stop += str.size();
-
-            if (_step == DEFAULT)
-                _step = 1;
-
-            return _index = _start;
+        inline const IntT begin(const CppWString& wstr) noexcept  //!< starts iterating on specified CppWString.
+        {
+            return _prepare_iterating(IntT(wstr.size()));
         }
 
         inline const bool end() const noexcept  //!< returns true when iterating is over, or false otherwise.
@@ -1899,6 +1891,24 @@ namespace pcs // i.e. "pythonic c++ strings"
         IntT _step{ 1 };
 
         IntT _index{ 0 };
+
+        const IntT _prepare_iterating(const IntT str_size) noexcept
+        {
+            if (_start == DEFAULT)
+                _start = 0;
+            else if (_start < 0)
+                _start += str_size;
+
+            if (_stop == DEFAULT)
+                _stop = str_size;
+            else if (_stop < 0)
+                _stop += str_size;
+
+            if (_step == DEFAULT)
+                _step = 1;
+
+            return _index = _start;
+        }
     };
 
 
