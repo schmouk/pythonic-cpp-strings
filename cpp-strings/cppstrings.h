@@ -1846,9 +1846,7 @@ namespace pcs // i.e. "pythonic c++ strings"
         static constexpr IntT DEFAULT{ std::numeric_limits<IntT>::min()};
 
         //---   Constructors / Destructor   -------------------
-        Slice() noexcept = default;  //!< Default constructor
-
-        Slice(const IntT start, const IntT stop, const IntT step) noexcept   //!< Valued constructor
+        Slice(const IntT start = DEFAULT, const IntT stop = DEFAULT, const IntT step = DEFAULT) noexcept   //!< Valued constructor
             : _start(start)
             , _stop(stop)
             , _step(step)
@@ -1873,15 +1871,21 @@ namespace pcs // i.e. "pythonic c++ strings"
             return _step == 0 ? true : _step > 0 ? _index >= _stop : _index <= _stop;
         }
 
-        inline const IntT operator++() noexcept  //!< iterates one step, pre-increment. Caution: returned index may be out of bounds. Check '!end()' before using its value.
-        {
-            return _index += _step;
-        }
-
-        inline const IntT operator++(int) noexcept  //!< iterates one step, post-increment. Caution: returned index may be out of bounds. Check '!end()' before using its value.
+        inline Slice operator++() noexcept  //!< iterates one step, pre-increment. Caution: index may be out of bounds. Check '!end()' before dereferencing the slice.
         {
             _index += _step;
-            return _index - _step;
+            return *this;
+        }
+
+        inline Slice operator++(int) noexcept  //!< iterates one step, post-increment. Caution: index may be out of bounds. Check '!end()' before dereferencing the slice.
+        {
+            _index += _step;
+            return *this;
+        }
+
+        inline const IntT operator*() noexcept  //!< dereferences the slice.
+        {
+            return _index;
         }
 
 
@@ -1896,16 +1900,38 @@ namespace pcs // i.e. "pythonic c++ strings"
         {
             if (_start == DEFAULT)
                 _start = 0;
-            else if (_start < 0)
+            else if (_start < 0) {
                 _start += str_size;
+                if (_start < 0)
+                    _start = 0;
+            }
+            else if (_start >= str_size)
+                _start = str_size - 1;
 
-            if (_stop == DEFAULT)
-                _stop = str_size;
-            else if (_stop < 0)
+            if (_stop == DEFAULT) {
+                if (_step < 0 && _step != DEFAULT)
+                    _stop = 0;
+                else
+                    _stop = str_size;
+            }
+            else if (_stop < 0) {
                 _stop += str_size;
+                if (_stop < 0)
+                    _stop = 0;
+            }
+            else if (_stop > str_size)
+                _stop = str_size;
 
             if (_step == DEFAULT)
                 _step = 1;
+            if (_step < 0) {
+                if (_start <= _stop)
+                    _step = 0;  // will force end() to true
+            }
+            else {
+                if (_start >= _stop)
+                    _step = 0;  // will force end() to true
+            }
 
             return _index = _start;
         }
@@ -1917,11 +1943,11 @@ namespace pcs // i.e. "pythonic c++ strings"
         requires std::is_signed_v<IntT>
     struct StartSlice : public Slice<IntT>
     {
-        //---   Constructors / Destructor   -------------------
-        StartSlice() noexcept = default;  //!< Default constructor
+        using MyBaseClass = Slice<IntT>;
 
-        inline StartSlice(const IntT start) noexcept   //!< Valued constructor
-            : Slice(start, Slice::DEFAULT, 1)
+        //---   Constructors / Destructor   -------------------
+        inline StartSlice(const IntT start = MyBaseClass::DEFAULT) noexcept   //!< Valued constructor
+            : MyBaseClass(start, MyBaseClass::DEFAULT, 1)
         {}
 
         virtual ~StartSlice() noexcept = default;  //!< Default destructor.
@@ -1933,11 +1959,11 @@ namespace pcs // i.e. "pythonic c++ strings"
         requires std::is_signed_v<IntT>
     struct StopSlice : public Slice<IntT>
     {
-        //---   Constructors / Destructor   -------------------
-        StopSlice() noexcept = default;  //!< Default constructor
+        using MyBaseClass = Slice<IntT>;
 
-        inline StopSlice(const IntT stop) noexcept   //!< Valued constructor
-            : Slice(Slice::DEFAULT, stop, 1)
+        //---   Constructors / Destructor   -------------------
+        inline StopSlice(const IntT stop = MyBaseClass::DEFAULT) noexcept   //!< Valued constructor
+            : MyBaseClass(MyBaseClass::DEFAULT, stop, 1)
         {}
 
         virtual ~StopSlice() noexcept = default;  //!< Default destructor.
@@ -1949,11 +1975,11 @@ namespace pcs // i.e. "pythonic c++ strings"
         requires std::is_signed_v<IntT>
     struct StepSlice : public Slice<IntT>
     {
-        //---   Constructors / Destructor   -------------------
-        StepSlice() noexcept = default;  //!< Default constructor
+        using MyBaseClass = Slice<IntT>;
 
-        inline StepSlice(const IntT step) noexcept   //!< Valued constructor
-            : Slice(Slice::DEFAULT, Slice::DEFAULT, step)
+        //---   Constructors / Destructor   -------------------
+        inline StepSlice(const IntT step = MyBaseClass::DEFAULT) noexcept   //!< Valued constructor
+            : MyBaseClass(MyBaseClass::DEFAULT, MyBaseClass::DEFAULT, step)
         {}
 
         virtual ~StepSlice() noexcept = default;  //!< Default destructor.
@@ -1965,11 +1991,11 @@ namespace pcs // i.e. "pythonic c++ strings"
         requires std::is_signed_v<IntT>
     struct StartStopSlice : public Slice<IntT>
     {
-        //---   Constructors / Destructor   -------------------
-        StartStopSlice() noexcept = default;  //!< Default constructor
+        using MyBaseClass = Slice<IntT>;
 
-        inline StartStopSlice(const IntT start, const IntT stop) noexcept   //!< Valued constructor
-            : Slice(start, stop, 1)
+        //---   Constructors / Destructor   -------------------
+        inline StartStopSlice(const IntT start = MyBaseClass::DEFAULT, const IntT stop = MyBaseClass::DEFAULT) noexcept   //!< Valued constructor
+            : MyBaseClass(start, stop, 1)
         {}
 
         virtual ~StartStopSlice() noexcept = default;  //!< Default destructor.
@@ -1981,11 +2007,11 @@ namespace pcs // i.e. "pythonic c++ strings"
         requires std::is_signed_v<IntT>
     struct StartStepSlice : public Slice<IntT>
     {
-        //---   Constructors / Destructor   -------------------
-        StartStepSlice() noexcept = default;  //!< Default constructor
+        using MyBaseClass = Slice<IntT>;
 
-        inline StartStepSlice(const IntT start, const IntT step) noexcept   //!< Valued constructor
-            : Slice(start, Slice::DEFAULT, step)
+        //---   Constructors / Destructor   -------------------
+        inline StartStepSlice(const IntT start = MyBaseClass::DEFAULT, const IntT step = MyBaseClass::DEFAULT) noexcept   //!< Valued constructor
+            : MyBaseClass(start, MyBaseClass::DEFAULT, step)
         {}
 
         virtual ~StartStepSlice() noexcept = default;  //!< Default destructor.
@@ -1998,11 +2024,11 @@ namespace pcs // i.e. "pythonic c++ strings"
         requires std::is_signed_v<IntT>
     struct StopStepSlice : public Slice<IntT>
     {
-                //---   Constructors / Destructor   -------------------
-        StopStepSlice() noexcept = default;  //!< Default constructor
+        using MyBaseClass = Slice<IntT>;
 
-        inline StopStepSlice(const IntT stop, const IntT step) noexcept   //!< Valued constructor
-            : Slice(Slice::DEFAULT, stop, step)
+        //---   Constructors / Destructor   -------------------
+        inline StopStepSlice(const IntT stop = MyBaseClass::DEFAULT, const IntT step = MyBaseClass::DEFAULT) noexcept   //!< Valued constructor
+            : MyBaseClass(MyBaseClass::DEFAULT, stop, step)
         {}
 
         virtual ~StopStepSlice() noexcept = default;  //!< Default destructor.
