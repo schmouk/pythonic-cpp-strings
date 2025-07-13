@@ -1072,62 +1072,47 @@ namespace pcs // i.e. "pythonic c++ strings"
         * and  negative  start  or stop is relative to the end of the
         * string.
         * Notice: the stop value specifies an out of bounds index.
+        * \see class Slice and all its inheriting classes.
         */
-        inline CppStringT operator() (const long stop) const noexcept
+        template<typename IntT>
+            requires std::is_signed_v<IntT>
+        CppStringT operator() (Slice<IntT> slice) const noexcept
         {
-            size_type end{ stop < 0 ? this->size() + stop : stop };
-            return this->substr(0, end);
-        }
+            // optimization on 1 by 1 step
+            if (slice.step() == 1) {
+                slice.begin(*this);
+                if (slice.start() < slice.stop())
+                    return this->substr(slice.start(), slice.stop() - slice.start() + 1);
+                else
+                    return CppStringT();
+            }
 
-        /** \brief Generates a new string according to the specified slice. */
-        inline CppStringT operator() (const long start, const long stop) const noexcept
-        {
-            const size_type length{ this->size() };
-            size_type begin{ start < 0 ? length + start : start };
-            size_type end{ stop < 0 ? length + stop : stop };
-
-            if (begin >= end)
-                return CppStringT();
-            else
-                return this->substr(begin, end - begin);
-        }
-
-        /** \brief Generates a new string according to the specified slice. */
-        CppStringT operator() (const long start, const long stop, const long step) const noexcept
-        {
             CppStringT res{};
 
-            const size_type length{ this->size() };
-            size_type begin{ start < 0 ? length + start : start };
-            size_type end{ stop < 0 ? length + stop : stop };
-
-            if (step < 0) {
-                if (begin >= length)
-                    begin = length - 1;
-                if (end < 0)
-                    end = -1;
-
-                if (begin > end) {
-                    for (size_type i = begin; i > end; i += step)
-                        res += (*this)[i];
-                }
-            }
-            else if (step > 0) {
-                if (begin < 0)
-                    begin = 0;
-                if (end > length)
-                    end = length;
-
-                if (begin < end) {
-                    for (size_type i = begin; i < end; i += step)
-                        res += (*this)[i];
-                }
+            // optimization on reversed 1 by 1 step
+            if (slice.step() == -1) {
+                slice.begin(*this);
+                if (slice.stop() < slice.start()) {
+                    res = this->substr(slice.stop(), slice.start() - slice.stop() + 1);
+                    std::ranges::reverse(res);  // notice: may use vectorization if available
+                }                
+                return res;
             }
 
+            // finally, no trivial optimization -- and naive implementation...
+            for (slice.begin(*this); !slice.end(); ++slice)
+                res += (*this)[*slice];
+            
             return res;
         }
 
-        
+        /** \brief Generates a new string according to the specified slicing values. */
+        inline CppStringT operator() (const long long start, const long long stop, const long long step = 1) const noexcept
+        {
+            Slice<long long> slice(start, stop, step);
+            return (*this)(slice);
+        }
+
 
         //---   operator *   --------------------------------------
         /** \brief Generates a new string with count times the content of this string. */
@@ -1888,6 +1873,11 @@ namespace pcs // i.e. "pythonic c++ strings"
             return _index;
         }
 
+        //---   properties   ----------------------------------
+        inline IntT start() { return _start; }  //!< Returns the start index of this slide
+        inline IntT stop()  { return _stop;  }  //!< Returns the stop index of this slide
+        inline IntT step()  { return _step;  }  //!< Returns the step value of this slide
+
 
     private:
         IntT _start{ 0 };
@@ -1898,15 +1888,21 @@ namespace pcs // i.e. "pythonic c++ strings"
 
         const IntT _prepare_iterating(const IntT str_size) noexcept
         {
-            if (_start == DEFAULT)
-                _start = 0;
+            if (_start == DEFAULT) {
+                if (_step < 0 && _step != DEFAULT)
+                    _start = str_size - 1;
+                else
+                    _start = 0;
+            }
             else if (_start < 0) {
                 _start += str_size;
                 if (_start < 0)
                     _start = 0;
             }
-            else if (_start >= str_size)
-                _start = str_size - 1;
+            else if (_start >= str_size) {
+                if (_step < 0 && _step != DEFAULT)
+                    _start = str_size - 1;
+            }
 
             if (_stop == DEFAULT) {
                 if (_step < 0 && _step != DEFAULT)
