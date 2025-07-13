@@ -23,15 +23,6 @@ namespace cppstringstests
 			Assert::AreEqual(wabcd.c_str(), CppWString(wabcd).c_str());
 		}
 
-		TEST_METHOD(_csv)
-		{
-			using namespace pcs;
-			auto abcd = "abcD"csv;
-			auto wabcd = L"abcD"csv;
-			Assert::AreEqual(abcd.c_str(), CppString(abcd).c_str());
-			Assert::AreEqual(wabcd.c_str(), CppWString(wabcd).c_str());
-		}
-
 		TEST_METHOD(is_alpha)
 		{
 			for (int ch = 0; ch <= 255; ++ch)
@@ -3063,7 +3054,7 @@ namespace cppstringstests
 			Assert::AreEqual(pcs::CppWString(L"abcd##efg").c_str(), ws.join(pcs::CppWString(L"abcd"), pcs::CppWString(L"efg")).c_str());
 			Assert::AreEqual(pcs::CppWString(L"abcd##efg##123456789").c_str(), ws.join(pcs::CppWString(L"abcd"), pcs::CppWString(L"efg"), pcs::CppWString(L"123456789")).c_str());
 			Assert::AreEqual(pcs::CppWString(L"abcd##efg##123456789##0").c_str(), ws.join(L"abcd"cs, L"efg"cs, L"123456789"cs, L"0"cs).c_str());
-			Assert::AreEqual(pcs::CppWString(L"abcd# #efg# #123456789# #0").c_str(), L"# #"csv.join(L"abcd", L"efg"cs, L"123456789"cs, L"0"cs).c_str());
+			Assert::AreEqual(pcs::CppWString(L"abcd# #efg# #123456789# #0").c_str(), L"# #"cs.join(L"abcd", L"efg"cs, L"123456789"cs, L"0"cs).c_str());
 			Assert::AreEqual(pcs::CppWString(L"abcdE").c_str(), L"##"cs.join(L"abcdE").c_str());
 			Assert::AreEqual(pcs::CppWString(L"##").c_str(), L"##"cs.join().c_str());
 			Assert::AreEqual(pcs::CppWString(L"").c_str(), L"##"cs.join(L"").c_str());

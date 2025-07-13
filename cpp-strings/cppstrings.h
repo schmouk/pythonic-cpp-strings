@@ -32,7 +32,7 @@
 #include <ranges>
 #include <span>
 #include <stdexcept>
-#include <string_view>
+//#include <string_view>
 #include <type_traits>
 #include <vector>
 
@@ -85,11 +85,11 @@ namespace pcs // i.e. "pythonic c++ strings"
 
 
     // litteral operators
+#pragma warning(push)
 #pragma warning(disable: 4455)
     inline CppString operator""cs(const char* str, std::size_t len);          //!< Forms a CppString literal. 
-    inline CppString operator""csv(const char* str, std::size_t len);         //!< Forms a CppString view literal. 
     inline CppWString operator""cs(const wchar_t* str, std::size_t len);      //!< Forms a CppWString literal. 
-    inline CppWString operator""csv(const wchar_t* str, std::size_t len);     //!< Forms a CppWString view literal.
+#pragma warning(pop)
 
     // chars classifications -- not to be directly called, see respective specializations at the very end of this module.
     template<class CharT>
@@ -163,7 +163,6 @@ namespace pcs // i.e. "pythonic c++ strings"
     public:
         //===   Wrappers   ========================================
         using MyBaseClass  = std::basic_string<CharT, TraitsT, AllocatorT>;
-        using MyStringView = std::basic_string_view<CharT, TraitsT>;
 
         using traits_type            = MyBaseClass::traits_type;
         using value_type             = MyBaseClass::value_type;
@@ -330,7 +329,7 @@ namespace pcs // i.e. "pythonic c++ strings"
             * character in key is associated in the translation table with
             * the i-th character in values.
             */
-            /** /
+            /**/
             template<class StringViewLike>
             explicit TransTable(const StringViewLike& keys, const StringViewLike& values)
             {
@@ -2032,17 +2031,12 @@ namespace pcs // i.e. "pythonic c++ strings"
 
 
     //=====   litteral operators   ============================
+#pragma warning(push)
+#pragma warning(disable: 4455)
     /** \brief  Forms a CppString literal. */
     inline CppString operator""cs(const char* str, std::size_t len)
     {
         return CppString(CppString::MyBaseClass(str, len));
-    }
-
-    /** \brief  Forms a CppString view literal. */
-    inline CppString operator""csv(const char* str, std::size_t len)
-    {
-        //return CppString(CppString::MyStringView(str, len));
-        return CppString(str, len);
     }
 
     /** \brief Forms a CppWString literal. */
@@ -2050,13 +2044,7 @@ namespace pcs // i.e. "pythonic c++ strings"
     {
         return CppWString(CppWString::MyBaseClass(str, len));
     }
-
-    /** \brief Forms a CppWString view literal. */
-    inline CppWString operator""csv(const wchar_t* str, std::size_t len)
-    {
-        //return CppWString(CppWString::MyStringView(str, len));
-        return CppWString(str, len);
-    }
+#pragma warning(pop)
 
 
     //=====   templated chars classes   ===========================
