@@ -683,6 +683,1347 @@ namespace cppstringstests
 	{
 	public:
 
+		TEST_METHOD(slice_iteration)
+		{
+			pcs::CppString txt("aBcDe");
+
+			{
+				pcs::Slice<long long> slc(0, 5, 1);
+
+				long long index{ slc.begin(txt) };
+				Assert::AreEqual(0LL, index);
+
+				long long k{ 0 };
+				for (slc.begin(txt); !slc.end(); slc++, ++k)
+					Assert::AreEqual(*slc, k);
+				Assert::AreEqual(5LL, *slc);
+
+				k = 0;
+				for (slc.begin(txt); !slc.end(); ++slc, ++k)
+					Assert::AreEqual(*slc, k);
+				Assert::AreEqual(5LL, *slc);
+			}
+
+			{
+				pcs::Slice<long long> slc(0, 5UL, char(1));
+
+				long long index{ slc.begin(txt) };
+				Assert::AreEqual(0LL, index);
+
+				long long k{ 0 };
+				for (slc.begin(txt); !slc.end(); slc++, ++k)
+					Assert::AreEqual(*slc, k);
+				Assert::AreEqual(5LL, *slc);
+
+				k = 0;
+				for (slc.begin(txt); !slc.end(); ++slc, ++k)
+					Assert::AreEqual(*slc, k);
+				Assert::AreEqual(5LL, *slc);
+			}
+
+			{
+				pcs::Slice slc(0, 11);  // Slice here defaults to Slice<int>
+
+				int index{ slc.begin(txt) };
+				Assert::AreEqual(0, index);
+
+				int k{ 0 };
+				for (slc.begin(txt); !slc.end(); slc++, ++k)
+					Assert::AreEqual(*slc, k);
+				Assert::AreEqual(5, *slc);
+
+				k = 0;
+				for (slc.begin(txt); !slc.end(); ++slc, ++k)
+					Assert::AreEqual(*slc, k);
+				Assert::AreEqual(5, *slc);
+			}
+
+			{
+				pcs::Slice slc(0, 3);  // Slice here defaults to Slice<int>
+
+				int index{ slc.begin(txt) };
+				Assert::AreEqual(0, index);
+
+				int k{ 0 };
+				for (slc.begin(txt); !slc.end(); slc++, ++k)
+					Assert::AreEqual(*slc, k);
+				Assert::AreEqual(3, *slc);
+
+				k = 0;
+				for (slc.begin(txt); !slc.end(); ++slc, ++k)
+					Assert::AreEqual(*slc, k);
+				Assert::AreEqual(3, *slc);
+			}
+
+			{
+				pcs::Slice slc(0);
+
+				int index{ slc.begin(txt) };
+				Assert::AreEqual(0, index);
+
+				int k{ 0 };
+				for (slc.begin(txt); !slc.end(); slc++, ++k)
+					Assert::AreEqual(*slc, k);
+				Assert::AreEqual(5, *slc);
+				;
+				k = 0;
+				for (slc.begin(txt); !slc.end(); ++slc, ++k)
+					Assert::AreEqual(*slc, k);
+				Assert::AreEqual(5, *slc);
+			}
+
+			{
+				pcs::Slice<long> slc;
+
+				long index{ slc.begin(txt) };
+				Assert::AreEqual(long(0), index);
+
+				long k{ 0 };
+				for (long index = slc.begin(txt); !slc.end(); slc++, ++k)
+					Assert::AreEqual(*slc, k);
+				Assert::AreEqual(5L, *slc);
+
+				k = 0;
+				for (long index = slc.begin(txt); !slc.end(); ++slc, ++k)
+					Assert::AreEqual(*slc, k);
+				Assert::AreEqual(5L, *slc);
+			}
+
+			{
+				pcs::Slice<long long> slc(-1, 0, -1);
+
+				long long index{ slc.begin(txt) };
+				Assert::AreEqual(4LL, index);
+
+				long long k{ (long long)txt.size() - 1 };
+				for (slc.begin(txt); !slc.end(); slc++, --k)
+					Assert::AreEqual(*slc, k);
+				Assert::AreEqual(0LL, *slc);
+
+				k = txt.size() - 1;
+				for (slc.begin(txt); !slc.end(); ++slc, --k)
+					Assert::AreEqual(*slc, k);
+				Assert::AreEqual(0LL, *slc);
+			}
+
+			{
+				pcs::Slice slc(-2, 1, -1);
+
+				int index{ slc.begin(txt) };
+				Assert::AreEqual(3, index);
+
+				int k{ int(txt.size()) - 2 };
+				for (slc.begin(txt); !slc.end(); slc++, --k)
+					Assert::AreEqual(*slc, k);
+				Assert::AreEqual(1, *slc);
+
+				k = int(txt.size()) - 2;
+				for (slc.begin(txt); !slc.end(); ++slc, --k)
+					Assert::AreEqual(*slc, k);
+				Assert::AreEqual(1, *slc);
+			}
+
+			{
+				pcs::Slice slc(-2, -3, -1);
+
+				int index{ slc.begin(txt) };
+				Assert::AreEqual(3, index);
+
+				int k{ int(txt.size()) - 2 };
+				for (slc.begin(txt); !slc.end(); slc++, --k)
+					Assert::AreEqual(*slc, k);
+				Assert::AreEqual(2, *slc);
+
+				k = int(txt.size()) - 2;
+				for (slc.begin(txt); !slc.end(); ++slc, --k)
+					Assert::AreEqual(*slc, k);
+				Assert::AreEqual(2, *slc);
+			}
+
+			{
+				pcs::Slice slc(-4, -2, -1);
+
+				int index{ slc.begin(txt) };
+				Assert::AreEqual(1, index);
+
+				int k{ int(txt.size()) - 4 };
+				for (slc.begin(txt); !slc.end(); slc++, --k)
+					Assert::AreEqual(*slc, k);
+				Assert::AreEqual(1, *slc);
+
+				k = int(txt.size()) - 4;
+				for (slc.begin(txt); !slc.end(); ++slc, --k)
+					Assert::AreEqual(*slc, k);
+				Assert::AreEqual(1, *slc);
+			}
+
+			{
+				pcs::Slice slc(-4, -2, 1);
+
+				int index{ slc.begin(txt) };
+				Assert::AreEqual(1, index);
+
+				int k{ int(txt.size()) - 4 };
+				for (slc.begin(txt); !slc.end(); slc++, ++k)
+					Assert::AreEqual(*slc, k);
+				Assert::AreEqual(3, *slc);
+
+				k = int(txt.size()) - 4;
+				for (slc.begin(txt); !slc.end(); ++slc, ++k)
+					Assert::AreEqual(*slc, k);
+				Assert::AreEqual(3, *slc);
+			}
+
+			{
+				pcs::Slice slc(5, -7, 0);
+
+				int index{ slc.begin(txt) };
+				Assert::AreEqual(5, index);
+
+				int k{ 4 };
+				for (slc.begin(txt); !slc.end(); slc++, ++k)
+					Assert::AreEqual(*slc, k);
+				Assert::AreEqual(5, *slc);
+
+				k = 4;
+				for (slc.begin(txt); !slc.end(); ++slc, ++k)
+					Assert::AreEqual(*slc, k);
+				Assert::AreEqual(5, *slc);
+			}
+
+			{
+				pcs::Slice slc(5, -7, -1);
+
+				int index{ slc.begin(txt) };
+				Assert::AreEqual(4, index);
+
+				int k{ 4 };
+				for (slc.begin(txt); !slc.end(); slc++, --k)
+					Assert::AreEqual(*slc, k);
+				Assert::AreEqual(0, *slc);
+
+				k = 4;
+				for (slc.begin(txt); !slc.end(); ++slc, --k)
+					Assert::AreEqual(*slc, k);
+				Assert::AreEqual(0, *slc);
+			}
+
+			{
+				pcs::Slice slc(-11, 7, 1);
+
+				int index{ slc.begin(txt) };
+				Assert::AreEqual(0, index);
+
+				int k{ 0 };
+				for (slc.begin(txt); !slc.end(); slc++, ++k)
+					Assert::AreEqual(*slc, k);
+				Assert::AreEqual(5, *slc);
+
+				k = 0;
+				for (slc.begin(txt); !slc.end(); ++slc, ++k)
+					Assert::AreEqual(*slc, k);
+				Assert::AreEqual(5, *slc);
+			}
+
+		}
+
+		TEST_METHOD(startslice_iteration)
+		{
+			pcs::CppString txt("aBcDe");
+
+			{
+				pcs::StartSlice<long long> slc;
+
+				long long index{ slc.begin(txt) };
+				Assert::AreEqual(0LL, index);
+
+				long long k{ 0 };
+				for (slc.begin(txt); !slc.end(); slc++, ++k)
+					Assert::AreEqual(*slc, k);
+				Assert::AreEqual(5LL, *slc);
+
+				k = 0;
+				for (slc.begin(txt); !slc.end(); ++slc, ++k)
+					Assert::AreEqual(*slc, k);
+				Assert::AreEqual(5LL, *slc);
+			}
+
+			{
+				pcs::StartSlice slc(0);  // Slice here defaults to Slice<int>
+
+				int index{ slc.begin(txt) };
+				Assert::AreEqual(0, index);
+
+				int k{ 0 };
+				for (slc.begin(txt); !slc.end(); slc++, ++k)
+					Assert::AreEqual(*slc, k);
+				Assert::AreEqual(5, *slc);
+
+				k = 0;
+				for (slc.begin(txt); !slc.end(); ++slc, ++k)
+					Assert::AreEqual(*slc, k);
+				Assert::AreEqual(5, *slc);
+			}
+
+			{
+				pcs::StartSlice<long long> slc(-1);
+
+				long long index{ slc.begin(txt) };
+				Assert::AreEqual(4LL, index);
+
+				long long k{ (long long)txt.size() - 1 };
+				for (slc.begin(txt); !slc.end(); slc++, ++k)
+					Assert::AreEqual(*slc, k);
+				Assert::AreEqual(5LL, *slc);
+
+				k = txt.size() - 1;
+				for (slc.begin(txt); !slc.end(); ++slc, ++k)
+					Assert::AreEqual(*slc, k);
+				Assert::AreEqual(5LL, *slc);
+			}
+
+			{
+				pcs::StartSlice slc(-2);
+
+				int index{ slc.begin(txt) };
+				Assert::AreEqual(3, index);
+
+				int k{ int(txt.size()) - 2 };
+				for (slc.begin(txt); !slc.end(); slc++, ++k)
+					Assert::AreEqual(*slc, k);
+				Assert::AreEqual(5, *slc);
+
+				k = int(txt.size()) - 2;
+				for (slc.begin(txt); !slc.end(); ++slc, ++k)
+					Assert::AreEqual(*slc, k);
+				Assert::AreEqual(5, *slc);
+			}
+
+			{
+				pcs::StartSlice slc(-4);
+
+				int index{ slc.begin(txt) };
+				Assert::AreEqual(1, index);
+
+				int k{ int(txt.size()) - 4 };
+				for (slc.begin(txt); !slc.end(); slc++, ++k)
+					Assert::AreEqual(*slc, k);
+				Assert::AreEqual(5, *slc);
+
+				k = int(txt.size()) - 4;
+				for (slc.begin(txt); !slc.end(); ++slc, ++k)
+					Assert::AreEqual(*slc, k);
+				Assert::AreEqual(5, *slc);
+			}
+
+			{
+				pcs::StartSlice slc(5);
+
+				int index{ slc.begin(txt) };
+				Assert::AreEqual(5, index);
+
+				int k{ 4 };
+				for (slc.begin(txt); !slc.end(); slc++, ++k)
+					Assert::AreEqual(*slc, k);
+				Assert::AreEqual(5, *slc);
+
+				k = 4;
+				for (slc.begin(txt); !slc.end(); ++slc, ++k)
+					Assert::AreEqual(*slc, k);
+				Assert::AreEqual(5   , *slc);
+			}
+
+			{
+				pcs::StartSlice slc(-11);
+
+				int index{ slc.begin(txt) };
+				Assert::AreEqual(0, index);
+
+				int k{ 0 };
+				for (slc.begin(txt); !slc.end(); slc++, ++k)
+					Assert::AreEqual(*slc, k);
+				Assert::AreEqual(5, *slc);
+
+				k = 0;
+				for (slc.begin(txt); !slc.end(); ++slc, ++k)
+					Assert::AreEqual(*slc, k);
+				Assert::AreEqual(5, *slc);
+			}
+
+		}
+
+		TEST_METHOD(startstepslice_iteration)
+		{
+			pcs::CppString txt("aBcDe");
+
+			{
+				pcs::StartStepSlice<long long> slc(0, 1);
+
+				long long index{ slc.begin(txt) };
+				Assert::AreEqual(0LL, index);
+
+				long long k{ 0 };
+				for (slc.begin(txt); !slc.end(); slc++, ++k)
+					Assert::AreEqual(*slc, k);
+				Assert::AreEqual(5LL, *slc);
+
+				k = 0;
+				for (slc.begin(txt); !slc.end(); ++slc, ++k)
+					Assert::AreEqual(*slc, k);
+				Assert::AreEqual(5LL, *slc);
+			}
+
+			{
+				pcs::StartStepSlice<long long> slc(0, char(1));
+
+				long long index{ slc.begin(txt) };
+				Assert::AreEqual(0LL, index);
+
+				long long k{ 0 };
+				for (slc.begin(txt); !slc.end(); slc++, ++k)
+					Assert::AreEqual(*slc, k);
+				Assert::AreEqual(5LL, *slc);
+
+				k = 0;
+				for (slc.begin(txt); !slc.end(); ++slc, ++k)
+					Assert::AreEqual(*slc, k);
+				Assert::AreEqual(5LL, *slc);
+			}
+
+			{
+				pcs::StartStepSlice slc(0, 11);  // StartStepSlice here defaults to StartStepSlice<int>
+
+				int index{ slc.begin(txt) };
+				Assert::AreEqual(0, index);
+
+				int k{ 0 };
+				for (slc.begin(txt); !slc.end(); slc++, k += 11)
+					Assert::AreEqual(*slc, k);
+				Assert::AreEqual(11, *slc);
+
+				k = 0;
+				for (slc.begin(txt); !slc.end(); ++slc, k += 11)
+					Assert::AreEqual(*slc, k);
+				Assert::AreEqual(11, *slc);
+			}
+
+			{
+				pcs::StartStepSlice slc(0, 3);  // StartStepSlice here defaults to StartStepSlice<int>
+
+				int index{ slc.begin(txt) };
+				Assert::AreEqual(0, index);
+
+				int k{ 0 };
+				for (slc.begin(txt); !slc.end(); slc++, k += 3)
+					Assert::AreEqual(*slc, k);
+				Assert::AreEqual(6, *slc);
+
+				k = 0;
+				for (slc.begin(txt); !slc.end(); ++slc, k += 3)
+					Assert::AreEqual(*slc, k);
+				Assert::AreEqual(6, *slc);
+			}
+
+			{
+				pcs::StartStepSlice slc(0);
+
+				int index{ slc.begin(txt) };
+				Assert::AreEqual(0, index);
+
+				int k{ 0 };
+				for (slc.begin(txt); !slc.end(); slc++, ++k)
+					Assert::AreEqual(*slc, k);
+				Assert::AreEqual(5, *slc);
+				;
+				k = 0;
+				for (slc.begin(txt); !slc.end(); ++slc, ++k)
+					Assert::AreEqual(*slc, k);
+				Assert::AreEqual(5, *slc);
+			}
+
+			{
+				pcs::StartStepSlice<long> slc;
+
+				long index{ slc.begin(txt) };
+				Assert::AreEqual(long(0), index);
+
+				long k{ 0 };
+				for (long index = slc.begin(txt); !slc.end(); slc++, ++k)
+					Assert::AreEqual(*slc, k);
+				Assert::AreEqual(5L, *slc);
+
+				k = 0;
+				for (long index = slc.begin(txt); !slc.end(); ++slc, ++k)
+					Assert::AreEqual(*slc, k);
+				Assert::AreEqual(5L, *slc);
+			}
+
+			{
+				pcs::StartStepSlice<long long> slc(-1, -1);
+
+				long long index{ slc.begin(txt) };
+				Assert::AreEqual(4LL, index);
+
+				long long k{ (long long)txt.size() - 1 };
+				for (slc.begin(txt); !slc.end(); slc++, --k)
+					Assert::AreEqual(*slc, k);
+				Assert::AreEqual(0LL, *slc);
+
+				k = (long long)txt.size() - 1;
+				for (slc.begin(txt); !slc.end(); ++slc, --k)
+					Assert::AreEqual(*slc, k);
+				Assert::AreEqual(0LL, *slc);
+			}
+
+			{
+				pcs::StartStepSlice slc(-2, -1);
+
+				int index{ slc.begin(txt) };
+				Assert::AreEqual(3, index);
+
+				int k{ int(txt.size()) - 2 };
+				for (slc.begin(txt); !slc.end(); slc++, --k)
+					Assert::AreEqual(*slc, k);
+				Assert::AreEqual(0, *slc);
+
+				k = int(txt.size()) - 2;
+				for (slc.begin(txt); !slc.end(); ++slc, --k)
+					Assert::AreEqual(*slc, k);
+				Assert::AreEqual(0, *slc);
+			}
+
+			{
+				pcs::StartStepSlice slc(-9, -1);
+
+				int index{ slc.begin(txt) };
+				Assert::AreEqual(0, index);
+
+				int k{ int(txt.size()) - 4 };
+				for (slc.begin(txt); !slc.end(); slc++, --k)
+					Assert::AreEqual(*slc, k);
+				Assert::AreEqual(0, *slc);
+
+				k = int(txt.size()) - 4;
+				for (slc.begin(txt); !slc.end(); ++slc, --k)
+					Assert::AreEqual(*slc, k);
+				Assert::AreEqual(0, *slc);
+			}
+
+			{
+				pcs::StartStepSlice slc(-4, -1);
+
+				int index{ slc.begin(txt) };
+				Assert::AreEqual(1, index);
+
+				int k{ int(txt.size()) - 4 };
+				for (slc.begin(txt); !slc.end(); slc++, --k)
+					Assert::AreEqual(*slc, k);
+				Assert::AreEqual(0, *slc);
+
+				k = int(txt.size()) - 4;
+				for (slc.begin(txt); !slc.end(); ++slc, --k)
+					Assert::AreEqual(*slc, k);
+				Assert::AreEqual(0, *slc);
+			}
+
+			{
+				pcs::StartStepSlice slc(-4, 1);
+
+				int index{ slc.begin(txt) };
+				Assert::AreEqual(1, index);
+
+				int k{ int(txt.size()) - 4 };
+				for (slc.begin(txt); !slc.end(); slc++, ++k)
+					Assert::AreEqual(*slc, k);
+				Assert::AreEqual(5, *slc);
+
+				k = int(txt.size()) - 4;
+				for (slc.begin(txt); !slc.end(); ++slc, ++k)
+					Assert::AreEqual(*slc, k);
+				Assert::AreEqual(5, *slc);
+			}
+
+			{
+				pcs::StartStepSlice slc(5, -7);
+
+				int index{ slc.begin(txt) };
+				Assert::AreEqual(4, index);
+
+				int k{ 4 };
+				for (slc.begin(txt); !slc.end(); slc++, k -= 7)
+					Assert::AreEqual(*slc, k);
+				Assert::AreEqual(-3, *slc);
+
+				k = 4;
+				for (slc.begin(txt); !slc.end(); ++slc, k -= 7)
+					Assert::AreEqual(*slc, k);
+				Assert::AreEqual(-3, *slc);
+			}
+
+			{
+				pcs::StartStepSlice slc(5, -1);
+
+				int index{ slc.begin(txt) };
+				Assert::AreEqual(4, index);
+
+				int k{ 4 };
+				for (slc.begin(txt); !slc.end(); slc++, --k)
+					Assert::AreEqual(*slc, k);
+				Assert::AreEqual(0, *slc);
+
+				k = 4;
+				for (slc.begin(txt); !slc.end(); ++slc, --k)
+					Assert::AreEqual(*slc, k);
+				Assert::AreEqual(0, *slc);
+			}
+
+			{
+				pcs::StartStepSlice slc(-11, 1);
+
+				int index{ slc.begin(txt) };
+				Assert::AreEqual(0, index);
+
+				int k{ 0 };
+				for (slc.begin(txt); !slc.end(); slc++, ++k)
+					Assert::AreEqual(*slc, k);
+				Assert::AreEqual(5, *slc);
+
+				k = 0;
+				for (slc.begin(txt); !slc.end(); ++slc, ++k)
+					Assert::AreEqual(*slc, k);
+				Assert::AreEqual(5, *slc);
+			}
+
+		}
+
+		TEST_METHOD(startstopslice_iteration)
+		{
+			pcs::CppString txt("aBcDe");
+
+			{
+				pcs::StartStopSlice<long long> slc(0, 5);
+
+				long long index{ slc.begin(txt) };
+				Assert::AreEqual(0LL, index);
+
+				long long k{ 0 };
+				for (slc.begin(txt); !slc.end(); slc++, ++k)
+					Assert::AreEqual(*slc, k);
+				Assert::AreEqual(5LL, *slc);
+
+				k = 0;
+				for (slc.begin(txt); !slc.end(); ++slc, ++k)
+					Assert::AreEqual(*slc, k);
+				Assert::AreEqual(5LL, *slc);
+			}
+
+			{
+				pcs::StartStopSlice<long long> slc(0, 5UL);
+
+				long long index{ slc.begin(txt) };
+				Assert::AreEqual(0LL, index);
+
+				long long k{ 0 };
+				for (slc.begin(txt); !slc.end(); slc++, ++k)
+					Assert::AreEqual(*slc, k);
+				Assert::AreEqual(5LL, *slc);
+
+				k = 0;
+				for (slc.begin(txt); !slc.end(); ++slc, ++k)
+					Assert::AreEqual(*slc, k);
+				Assert::AreEqual(5LL, *slc);
+			}
+
+			{
+				pcs::StartStopSlice slc(0, 11);  // StartStopSlice here defaults to StartStopSlice<int>
+
+				int index{ slc.begin(txt) };
+				Assert::AreEqual(0, index);
+
+				int k{ 0 };
+				for (slc.begin(txt); !slc.end(); slc++, ++k)
+					Assert::AreEqual(*slc, k);
+				Assert::AreEqual(5, *slc);
+
+				k = 0;
+				for (slc.begin(txt); !slc.end(); ++slc, ++k)
+					Assert::AreEqual(*slc, k);
+				Assert::AreEqual(5, *slc);
+			}
+
+			{
+				pcs::StartStopSlice slc(0, 3);  // StartStopSlice here defaults to StartStopSlice<int>
+
+				int index{ slc.begin(txt) };
+				Assert::AreEqual(0, index);
+
+				int k{ 0 };
+				for (slc.begin(txt); !slc.end(); slc++, ++k)
+					Assert::AreEqual(*slc, k);
+				Assert::AreEqual(3, *slc);
+
+				k = 0;
+				for (slc.begin(txt); !slc.end(); ++slc, ++k)
+					Assert::AreEqual(*slc, k);
+				Assert::AreEqual(3, *slc);
+			}
+
+			{
+				pcs::StartStopSlice slc(0);
+
+				int index{ slc.begin(txt) };
+				Assert::AreEqual(0, index);
+
+				int k{ 0 };
+				for (slc.begin(txt); !slc.end(); slc++, ++k)
+					Assert::AreEqual(*slc, k);
+				Assert::AreEqual(5, *slc);
+				;
+				k = 0;
+				for (slc.begin(txt); !slc.end(); ++slc, ++k)
+					Assert::AreEqual(*slc, k);
+				Assert::AreEqual(5, *slc);
+			}
+
+			{
+				pcs::StartStopSlice<long> slc;
+
+				long index{ slc.begin(txt) };
+				Assert::AreEqual(long(0), index);
+
+				long k{ 0 };
+				for (long index = slc.begin(txt); !slc.end(); slc++, ++k)
+					Assert::AreEqual(*slc, k);
+				Assert::AreEqual(5L, *slc);
+
+				k = 0;
+				for (long index = slc.begin(txt); !slc.end(); ++slc, ++k)
+					Assert::AreEqual(*slc, k);
+				Assert::AreEqual(5L, *slc);
+			}
+
+			{
+				pcs::StartStopSlice<long long> slc(-1, 0);
+
+				long long index{ slc.begin(txt) };
+				Assert::AreEqual(4LL, index);
+
+				long long k{ (long long)txt.size() - 1 };
+				for (slc.begin(txt); !slc.end(); slc++, ++k)
+					Assert::AreEqual(*slc, k);
+				Assert::AreEqual(4LL, *slc);
+
+				k = txt.size() - 1;
+				for (slc.begin(txt); !slc.end(); ++slc, ++k)
+					Assert::AreEqual(*slc, k);
+				Assert::AreEqual(4LL, *slc);
+			}
+
+			{
+				pcs::StartStopSlice slc(-2, 1);
+
+				int index{ slc.begin(txt) };
+				Assert::AreEqual(3, index);
+
+				int k{ int(txt.size()) - 2 };
+				for (slc.begin(txt); !slc.end(); slc++, ++k)
+					Assert::AreEqual(*slc, k);
+				Assert::AreEqual(3, *slc);
+
+				k = int(txt.size()) - 2;
+				for (slc.begin(txt); !slc.end(); ++slc, ++k)
+					Assert::AreEqual(*slc, k);
+				Assert::AreEqual(3, *slc);
+			}
+
+			{
+				pcs::StartStopSlice slc(-2, 3);
+
+				int index{ slc.begin(txt) };
+				Assert::AreEqual(3, index);
+
+				int k{ int(txt.size()) - 2 };
+				for (slc.begin(txt); !slc.end(); slc++, ++k)
+					Assert::AreEqual(*slc, k);
+				Assert::AreEqual(3, *slc);
+
+				k = int(txt.size()) - 2;
+				for (slc.begin(txt); !slc.end(); ++slc, ++k)
+					Assert::AreEqual(*slc, k);
+				Assert::AreEqual(3, *slc);
+			}
+
+			{
+				pcs::StartStopSlice slc(-4, -2);
+
+				int index{ slc.begin(txt) };
+				Assert::AreEqual(1, index);
+
+				int k{ int(txt.size()) - 4 };
+				for (slc.begin(txt); !slc.end(); slc++, ++k)
+					Assert::AreEqual(*slc, k);
+				Assert::AreEqual(int(txt.size() - 2), *slc);
+
+				k = int(txt.size()) - 4;
+				for (slc.begin(txt); !slc.end(); ++slc, ++k)
+					Assert::AreEqual(*slc, k);
+				Assert::AreEqual(int(txt.size() - 2), *slc);
+			}
+
+			{
+				pcs::StartStopSlice slc(5, -7);
+
+				int index{ slc.begin(txt) };
+				Assert::AreEqual(5, index);
+
+				int k{ 4 };
+				for (slc.begin(txt); !slc.end(); slc++, ++k)
+					Assert::AreEqual(*slc, k);
+				Assert::AreEqual(5, *slc);
+
+				k = 4;
+				for (slc.begin(txt); !slc.end(); ++slc, ++k)
+					Assert::AreEqual(*slc, k);
+				Assert::AreEqual(5, *slc);
+			}
+
+			{
+				pcs::StartStopSlice slc(-11, 7);
+
+				int index{ slc.begin(txt) };
+				Assert::AreEqual(0, index);
+
+				int k{ 0 };
+				for (slc.begin(txt); !slc.end(); slc++, ++k)
+					Assert::AreEqual(*slc, k);
+				Assert::AreEqual(5, *slc);
+
+				k = 0;
+				for (slc.begin(txt); !slc.end(); ++slc, ++k)
+					Assert::AreEqual(*slc, k);
+				Assert::AreEqual(5, *slc);
+			}
+
+		}
+
+		TEST_METHOD(stepslice_iteration)
+		{
+			pcs::CppString txt("aBcDe");
+
+			{
+				pcs::StepSlice<long long> slc;
+
+				long long index{ slc.begin(txt) };
+				Assert::AreEqual(0LL, index);
+
+				long long k{ 0 };
+				for (slc.begin(txt); !slc.end(); slc++, ++k)
+					Assert::AreEqual(*slc, k);
+				Assert::AreEqual(5LL, *slc);
+
+				k = 0;
+				for (slc.begin(txt); !slc.end(); ++slc, ++k)
+					Assert::AreEqual(*slc, k);
+				Assert::AreEqual(5LL, *slc);
+			}
+
+			{
+				pcs::StepSlice slc(1);  // StepSlice here defaults to StepSlice<int>
+
+				int index{ slc.begin(txt) };
+				Assert::AreEqual(0, index);
+
+				int k{ 0 };
+				for (slc.begin(txt); !slc.end(); slc++, ++k)
+					Assert::AreEqual(*slc, k);
+				Assert::AreEqual(5, *slc);
+
+				k = 0;
+				for (slc.begin(txt); !slc.end(); ++slc, ++k)
+					Assert::AreEqual(*slc, k);
+				Assert::AreEqual(5, *slc);
+			}
+
+			{
+				pcs::StepSlice slc(3);  // StepSlice here defaults to StepSlice<int>
+
+				int index{ slc.begin(txt) };
+				Assert::AreEqual(0, index);
+
+				int k{ 0 };
+				for (slc.begin(txt); !slc.end(); slc++, k+=3)
+					Assert::AreEqual(*slc, k);
+				Assert::AreEqual(6, *slc);
+
+				k = 0;
+				for (slc.begin(txt); !slc.end(); ++slc, k+=3)
+					Assert::AreEqual(*slc, k);
+				Assert::AreEqual(6, *slc);
+			}
+
+			{
+				pcs::StepSlice slc(0);
+
+				int index{ slc.begin(txt) };
+				Assert::AreEqual(0, index);
+
+				int k{ 0 };
+				for (slc.begin(txt); !slc.end(); slc++, ++k)
+					Assert::AreEqual(*slc, k);
+				Assert::AreEqual(0, *slc);
+				;
+				k = 0;
+				for (slc.begin(txt); !slc.end(); ++slc, ++k)
+					Assert::AreEqual(*slc, k);
+				Assert::AreEqual(0, *slc);
+			}
+
+			{
+				pcs::StepSlice<long> slc;
+
+				long index{ slc.begin(txt) };
+				Assert::AreEqual(long(0), index);
+
+				long k{ 0 };
+				for (long index = slc.begin(txt); !slc.end(); slc++, ++k)
+					Assert::AreEqual(*slc, k);
+				Assert::AreEqual(5L, *slc);
+
+				k = 0;
+				for (long index = slc.begin(txt); !slc.end(); ++slc, ++k)
+					Assert::AreEqual(*slc, k);
+				Assert::AreEqual(5L, *slc);
+			}
+
+			{
+				pcs::StepSlice<long long> slc(-1);
+
+				long long index{ slc.begin(txt) };
+				Assert::AreEqual(4LL, index);
+
+				long long k{ (long long)txt.size() - 1 };
+				for (slc.begin(txt); !slc.end(); slc++, --k)
+					Assert::AreEqual(*slc, k);
+				Assert::AreEqual(0LL, *slc);
+
+				k = txt.size() - 1;
+				for (slc.begin(txt); !slc.end(); ++slc, --k)
+					Assert::AreEqual(*slc, k);
+				Assert::AreEqual(0LL, *slc);
+			}
+
+			{
+				pcs::StepSlice slc(-2);
+
+				int index{ slc.begin(txt) };
+				Assert::AreEqual(4, index);
+
+				int k{ 4 };
+				for (slc.begin(txt); !slc.end(); slc++, k-=2)
+					Assert::AreEqual(*slc, k);
+				Assert::AreEqual(0, *slc);
+
+				k = 4;
+				for (slc.begin(txt); !slc.end(); ++slc, k-=2)
+					Assert::AreEqual(*slc, k);
+				Assert::AreEqual(0, *slc);
+			}
+
+			{
+				pcs::StepSlice slc(-4);
+
+				int index{ slc.begin(txt) };
+				Assert::AreEqual(4, index);
+
+				int k{ 4 };
+				for (slc.begin(txt); !slc.end(); slc++, k-=4)
+					Assert::AreEqual(*slc, k);
+				Assert::AreEqual(0, *slc);
+
+				k = 4;
+				for (slc.begin(txt); !slc.end(); ++slc, k-=4)
+					Assert::AreEqual(*slc, k);
+				Assert::AreEqual(0, *slc);
+			}
+
+			{
+				pcs::StepSlice slc(-11);
+
+				int index{ slc.begin(txt) };
+				Assert::AreEqual(4, index);
+
+				int k{ 4 };
+				for (slc.begin(txt); !slc.end(); slc++, k-=11)
+					Assert::AreEqual(*slc, k);
+				Assert::AreEqual(-7, *slc);
+
+				k = 4;
+				for (slc.begin(txt); !slc.end(); ++slc, k-=11)
+					Assert::AreEqual(*slc, k);
+				Assert::AreEqual(-7, *slc);
+			}
+		}
+
+		TEST_METHOD(stopslice_iteration)
+		{
+			pcs::CppString txt("aBcDe");
+
+			{
+				pcs::StopSlice<long long> slc;
+
+				long long index{ slc.begin(txt) };
+				Assert::AreEqual(0LL, index);
+
+				long long k{ 0 };
+				for (slc.begin(txt); !slc.end(); slc++, ++k)
+					Assert::AreEqual(*slc, k);
+				Assert::AreEqual(5LL, *slc);
+
+				k = 0;
+				for (slc.begin(txt); !slc.end(); ++slc, ++k)
+					Assert::AreEqual(*slc, k);
+				Assert::AreEqual(5LL, *slc);
+			}
+
+			{
+				pcs::StopSlice slc(7);  // Slice here defaults to Slice<int>
+
+				int index{ slc.begin(txt) };
+				Assert::AreEqual(0, index);
+
+				int k{ 0 };
+				for (slc.begin(txt); !slc.end(); slc++, ++k)
+					Assert::AreEqual(*slc, k);
+				Assert::AreEqual(5, *slc);
+
+				k = 0;
+				for (slc.begin(txt); !slc.end(); ++slc, ++k)
+					Assert::AreEqual(*slc, k);
+				Assert::AreEqual(5, *slc);
+			}
+
+			{
+				pcs::StopSlice<long long> slc(-1);
+
+				long long index{ slc.begin(txt) };
+				Assert::AreEqual(0LL, index);
+
+				long long k{ 0 };
+				for (slc.begin(txt); !slc.end(); slc++, ++k)
+					Assert::AreEqual(*slc, k);
+				Assert::AreEqual(4LL, *slc);
+
+				k = 0;
+				for (slc.begin(txt); !slc.end(); ++slc, ++k)
+					Assert::AreEqual(*slc, k);
+				Assert::AreEqual(4LL, *slc);
+			}
+
+			{
+				pcs::StopSlice slc(-2);
+
+				int index{ slc.begin(txt) };
+				Assert::AreEqual(0, index);
+
+				int k{ 0 };
+				for (slc.begin(txt); !slc.end(); slc++, ++k)
+					Assert::AreEqual(*slc, k);
+				Assert::AreEqual(3, *slc);
+
+				k = 0;
+				for (slc.begin(txt); !slc.end(); ++slc, ++k)
+					Assert::AreEqual(*slc, k);
+				Assert::AreEqual(3, *slc);
+			}
+
+			{
+				pcs::StopSlice slc(-4);
+
+				int index{ slc.begin(txt) };
+				Assert::AreEqual(0, index);
+
+				int k{ 0 };
+				for (slc.begin(txt); !slc.end(); slc++, ++k)
+					Assert::AreEqual(*slc, k);
+				Assert::AreEqual(1, *slc);
+
+				k = 0;
+				for (slc.begin(txt); !slc.end(); ++slc, ++k)
+					Assert::AreEqual(*slc, k);
+				Assert::AreEqual(1, *slc);
+			}
+
+			{
+				pcs::StopSlice slc(5);
+
+				int index{ slc.begin(txt) };
+				Assert::AreEqual(0, index);
+
+				int k{ 0 };
+				for (slc.begin(txt); !slc.end(); slc++, ++k)
+					Assert::AreEqual(*slc, k);
+				Assert::AreEqual(5, *slc);
+
+				k = 0;
+				for (slc.begin(txt); !slc.end(); ++slc, ++k)
+					Assert::AreEqual(*slc, k);
+				Assert::AreEqual(5, *slc);
+			}
+
+			{
+				pcs::StopSlice slc(-11);
+
+				int index{ slc.begin(txt) };
+				Assert::AreEqual(0, index);
+
+				int k{ 0 };
+				for (slc.begin(txt); !slc.end(); slc++, ++k)
+					Assert::AreEqual(*slc, k);
+				Assert::AreEqual(0, *slc);
+
+				k = 0;
+				for (slc.begin(txt); !slc.end(); ++slc, ++k)
+					Assert::AreEqual(*slc, k);
+				Assert::AreEqual(0, *slc);
+			}
+
+		}
+
+		TEST_METHOD(stopstepslice_iteration)
+		{
+			pcs::CppString txt("aBcDe");
+
+			{
+				pcs::StopStepSlice<long long> slc( 5, 1);
+
+				long long index{ slc.begin(txt) };
+				Assert::AreEqual(0LL, index);
+
+				long long k{ 0 };
+				for (slc.begin(txt); !slc.end(); slc++, ++k)
+					Assert::AreEqual(*slc, k);
+				Assert::AreEqual(5LL, *slc);
+
+				k = 0;
+				for (slc.begin(txt); !slc.end(); ++slc, ++k)
+					Assert::AreEqual(*slc, k);
+				Assert::AreEqual(5LL, *slc);
+			}
+
+			{
+				pcs::StopStepSlice<long long> slc(5UL, char(1));
+
+				long long index{ slc.begin(txt) };
+				Assert::AreEqual(0LL, index);
+
+				long long k{ 0 };
+				for (slc.begin(txt); !slc.end(); slc++, ++k)
+					Assert::AreEqual(*slc, k);
+				Assert::AreEqual(5LL, *slc);
+
+				k = 0;
+				for (slc.begin(txt); !slc.end(); ++slc, ++k)
+					Assert::AreEqual(*slc, k);
+				Assert::AreEqual(5LL, *slc);
+			}
+
+			{
+				pcs::StopStepSlice slc(11, 3);  // StopStepSlice here defaults to StopStepSlice<int>
+
+				int index{ slc.begin(txt) };
+				Assert::AreEqual(0, index);
+
+				int k{ 0 };
+				for (slc.begin(txt); !slc.end(); slc++, k+=3)
+					Assert::AreEqual(*slc, k);
+				Assert::AreEqual(6, *slc);
+
+				k = 0;
+				for (slc.begin(txt); !slc.end(); ++slc, k+=3)
+					Assert::AreEqual(*slc, k);
+				Assert::AreEqual(6, *slc);
+			}
+
+			{
+				pcs::StopStepSlice slc(3, 2);
+
+				int index{ slc.begin(txt) };
+				Assert::AreEqual(0, index);
+
+				int k{ 0 };
+				for (slc.begin(txt); !slc.end(); slc++, k+=2)
+					Assert::AreEqual(*slc, k);
+				Assert::AreEqual(4, *slc);
+
+				k = 0;
+				for (slc.begin(txt); !slc.end(); ++slc, k+=2)
+					Assert::AreEqual(*slc, k);
+				Assert::AreEqual(4, *slc);
+			}
+
+			{
+				pcs::StopStepSlice slc(7);
+
+				int index{ slc.begin(txt) };
+				Assert::AreEqual(0, index);
+
+				int k{ 0 };
+				for (slc.begin(txt); !slc.end(); slc++, ++k)
+					Assert::AreEqual(*slc, k);
+				Assert::AreEqual(5, *slc);
+				;
+				k = 0;
+				for (slc.begin(txt); !slc.end(); ++slc, ++k)
+					Assert::AreEqual(*slc, k);
+				Assert::AreEqual(5, *slc);
+			}
+
+			{
+				pcs::StopStepSlice<long> slc;
+
+				long index{ slc.begin(txt) };
+				Assert::AreEqual(long(0), index);
+
+				long k{ 0 };
+				for (long index = slc.begin(txt); !slc.end(); slc++, ++k)
+					Assert::AreEqual(*slc, k);
+				Assert::AreEqual(5L, *slc);
+
+				k = 0;
+				for (long index = slc.begin(txt); !slc.end(); ++slc, ++k)
+					Assert::AreEqual(*slc, k);
+				Assert::AreEqual(5L, *slc);
+			}
+
+			{
+				pcs::StopStepSlice<long long> slc(-1, -1);
+
+				long long index{ slc.begin(txt) };
+				Assert::AreEqual(4LL, index);
+
+				long long k{ (long long)txt.size() - 1 };
+				for (slc.begin(txt); !slc.end(); slc++, --k)
+					Assert::AreEqual(*slc, k);
+				Assert::AreEqual(4LL, *slc);
+
+				k = txt.size() - 1;
+				for (slc.begin(txt); !slc.end(); ++slc, --k)
+					Assert::AreEqual(*slc, k);
+				Assert::AreEqual(4LL, *slc);
+			}
+
+			{
+				pcs::StopStepSlice slc(-2, -1);
+
+				int index{ slc.begin(txt) };
+				Assert::AreEqual(4, index);
+
+				int k{ 4 };
+				for (slc.begin(txt); !slc.end(); slc++, --k)
+					Assert::AreEqual(*slc, k);
+				Assert::AreEqual(3, *slc);
+
+				k = 4;
+				for (slc.begin(txt); !slc.end(); ++slc, --k)
+					Assert::AreEqual(*slc, k);
+				Assert::AreEqual(3, *slc);
+			}
+
+			{
+				pcs::StopStepSlice slc(-4, -1);
+
+				int index{ slc.begin(txt) };
+				Assert::AreEqual(4, index);
+
+				int k{ 4 };
+				for (slc.begin(txt); !slc.end(); slc++, --k)
+					Assert::AreEqual(*slc, k);
+				Assert::AreEqual(1, *slc);
+
+				k = 4;
+				for (slc.begin(txt); !slc.end(); ++slc, --k)
+					Assert::AreEqual(*slc, k);
+				Assert::AreEqual(1, *slc);
+			}
+
+			{
+				pcs::StopStepSlice slc(-2, 1);
+
+				int index{ slc.begin(txt) };
+				Assert::AreEqual(0, index);
+
+				int k{ 0 };
+				for (slc.begin(txt); !slc.end(); slc++, ++k)
+					Assert::AreEqual(*slc, k);
+				Assert::AreEqual(3, *slc);
+
+				k = 0;
+				for (slc.begin(txt); !slc.end(); ++slc, ++k)
+					Assert::AreEqual(*slc, k);
+				Assert::AreEqual(3, *slc);
+			}
+
+			{
+				pcs::StopStepSlice slc(-7, 0);
+
+				int index{ slc.begin(txt) };
+				Assert::AreEqual(0, index);
+
+				int k{ 0 };
+				for (slc.begin(txt); !slc.end(); slc++, ++k)
+					Assert::AreEqual(*slc, k);
+				Assert::AreEqual(0, *slc);
+
+				k = 0;
+				for (slc.begin(txt); !slc.end(); ++slc, ++k)
+					Assert::AreEqual(*slc, k);
+				Assert::AreEqual(0, *slc);
+			}
+
+			{
+				pcs::StopStepSlice slc(-7, -1);
+
+				int index{ slc.begin(txt) };
+				Assert::AreEqual(4, index);
+
+				int k{ 4 };
+				for (slc.begin(txt); !slc.end(); slc++, --k)
+					Assert::AreEqual(*slc, k);
+				Assert::AreEqual(0, *slc);
+
+				k = 4;
+				for (slc.begin(txt); !slc.end(); ++slc, --k)
+					Assert::AreEqual(*slc, k);
+				Assert::AreEqual(0, *slc);
+			}
+
+			{
+				pcs::StopStepSlice slc(7, 2);
+
+				int index{ slc.begin(txt) };
+				Assert::AreEqual(0, index);
+
+				int k{ 0 };
+				for (slc.begin(txt); !slc.end(); slc++, k+=2)
+					Assert::AreEqual(*slc, k);
+				Assert::AreEqual(6, *slc);
+
+				k = 0;
+				for (slc.begin(txt); !slc.end(); ++slc, k+=2)
+					Assert::AreEqual(*slc, k);
+				Assert::AreEqual(6, *slc);
+			}
+
+		}
+
+	};
+
+
+	//=====   PART 5   ========================================
+	TEST_CLASS(cppstringstests_PART_5)
+	{
+	public:
+
 		TEST_METHOD(capitalize)
 		{
 			pcs::CppString s("abc def GHi jKl 032, JHGF/");
@@ -1830,6 +3171,80 @@ namespace cppstringstests
 			Assert::AreEqual(L"abcd", L"       abcd"cs.lstrip().c_str());
 			Assert::AreEqual(L"a  bcd", L"         a  bcd"cs.lstrip().c_str());
 			Assert::AreEqual(L"a  bcd   ", L"         a  bcd   "cs.lstrip().c_str());
+		}
+
+		TEST_METHOD(operator_slice)
+		{
+			pcs::CppString text("AbcdefGhijklm");
+			int text_size{ int(text.size()) };
+
+			Assert::AreEqual(text(0, text_size).c_str(), text(Slice<int>()).c_str());
+			Assert::AreEqual(text.c_str(), text(0, text_size).c_str());
+			Assert::AreEqual(text.c_str(), text(StartSlice(0)).c_str());
+			Assert::AreEqual(text.c_str(), text(StopSlice(123)).c_str());
+			Assert::AreEqual(text.c_str(), text(StepSlice(1)).c_str());
+			Assert::AreEqual(text.c_str(), text(StartStopSlice(0, 111)).c_str());
+			Assert::AreEqual(text.c_str(), text(StartStepSlice(0, 1)).c_str());
+			Assert::AreEqual(text.c_str(), text(StopStepSlice(text_size, 1)).c_str());
+
+			Assert::AreEqual("AceGikm", text(Slice(0, text_size + 2, 2)).c_str());
+			Assert::AreEqual("behk", text(Slice(1, text_size, 3)).c_str());
+
+			Assert::AreEqual("", text(Slice(5, 4, 1)).c_str());
+			Assert::AreEqual("", text(Slice(text_size, text_size + 1, 1)).c_str());
+			Assert::AreEqual("", text(Slice(text_size + 2, text_size + 5, 1)).c_str());
+			Assert::AreEqual("", text(Slice(5, 3, 2)).c_str());
+
+			pcs::CppString reversed_text{ text };
+			std::ranges::reverse(reversed_text);
+			Assert::AreEqual(reversed_text.c_str(), text(text_size, 0, -1).c_str());
+			Assert::AreEqual(reversed_text.c_str(), text(StartStepSlice(text_size, -1)).c_str());
+			Assert::AreEqual(reversed_text.c_str(), text(StopStepSlice(0, -1)).c_str());
+			Assert::AreEqual(reversed_text.c_str(), text(StepSlice(-1)).c_str());
+
+			Assert::AreEqual("mkiGec", text(Slice(text_size, 0, -2)).c_str());
+			Assert::AreEqual("mjGd", text(Slice(text_size-1, 1, -3)).c_str());
+
+			Assert::AreEqual("", text(Slice(4, 5, -1)).c_str());
+			Assert::AreEqual("", text(Slice(text_size + 1, text_size, -1)).c_str());
+			Assert::AreEqual("", text(Slice(text_size + 5, text_size + 2, -1)).c_str());
+			Assert::AreEqual("", text(Slice(3, 5, -2)).c_str());
+
+
+			pcs::CppWString wtext(L"AbcdefGhijklm");
+			text_size = int(wtext.size());
+
+			Assert::AreEqual(wtext(0, text_size).c_str(), wtext(Slice<int>()).c_str());
+			Assert::AreEqual(wtext.c_str(), wtext(0, text_size).c_str());
+			Assert::AreEqual(wtext.c_str(), wtext(StartSlice(0)).c_str());
+			Assert::AreEqual(wtext.c_str(), wtext(StopSlice(123)).c_str());
+			Assert::AreEqual(wtext.c_str(), wtext(StepSlice(1)).c_str());
+			Assert::AreEqual(wtext.c_str(), wtext(StartStopSlice(0, 111)).c_str());
+			Assert::AreEqual(wtext.c_str(), wtext(StartStepSlice(0, 1)).c_str());
+			Assert::AreEqual(wtext.c_str(), wtext(StopStepSlice(text_size, 1)).c_str());
+
+			Assert::AreEqual(L"AceGikm", wtext(Slice(0, text_size + 2, 2)).c_str());
+			Assert::AreEqual(L"behk", wtext(Slice(1, text_size, 3)).c_str());
+
+			Assert::AreEqual(L"", wtext(Slice(5, 4, 1)).c_str());
+			Assert::AreEqual(L"", wtext(Slice(text_size, text_size + 1, 1)).c_str());
+			Assert::AreEqual(L"", wtext(Slice(text_size + 2, text_size + 5, 1)).c_str());
+			Assert::AreEqual(L"", wtext(Slice(5, 3, 2)).c_str());
+
+			pcs::CppWString wreversed_text{ wtext };
+			std::ranges::reverse(wreversed_text);
+			Assert::AreEqual(wreversed_text.c_str(), wtext(text_size, 0, -1).c_str());
+			Assert::AreEqual(wreversed_text.c_str(), wtext(StartStepSlice(text_size, -1)).c_str());
+			Assert::AreEqual(wreversed_text.c_str(), wtext(StopStepSlice(0, -1)).c_str());
+			Assert::AreEqual(wreversed_text.c_str(), wtext(StepSlice(-1)).c_str());
+
+			Assert::AreEqual(L"mkiGec", wtext(Slice(text_size, 0, -2)).c_str());
+			Assert::AreEqual(L"mjGd", wtext(Slice(text_size - 1, 1, -3)).c_str());
+
+			Assert::AreEqual(L"", wtext(Slice(4, 5, -1)).c_str());
+			Assert::AreEqual(L"", wtext(Slice(text_size + 1, text_size, -1)).c_str());
+			Assert::AreEqual(L"", wtext(Slice(text_size + 5, text_size + 2, -1)).c_str());
+			Assert::AreEqual(L"", wtext(Slice(3, 5, -2)).c_str());
 		}
 
 		TEST_METHOD(operator_times)
