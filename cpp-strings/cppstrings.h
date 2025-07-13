@@ -1081,7 +1081,7 @@ namespace pcs // i.e. "pythonic c++ strings"
             if (slice.step() == 1) {
                 slice.begin(*this);
                 if (slice.start() < slice.stop())
-                    return this->substr(slice.start(), slice.stop() - slice.start() + 1);
+                    return this->substr(size_type(slice.start()), size_type(slice.stop() - slice.start() + 1));
                 else
                     return CppStringT();
             }
@@ -1092,7 +1092,7 @@ namespace pcs // i.e. "pythonic c++ strings"
             if (slice.step() == -1) {
                 slice.begin(*this);
                 if (slice.stop() < slice.start()) {
-                    res = this->substr(slice.stop(), slice.start() - slice.stop() + 1);
+                    res = this->substr(size_type(slice.stop()), size_type(slice.start() - slice.stop() + 1));
                     std::ranges::reverse(res);  // notice: may use vectorization if available
                 }                
                 return res;
@@ -1100,7 +1100,7 @@ namespace pcs // i.e. "pythonic c++ strings"
 
             // finally, no trivial optimization -- and naive implementation...
             for (slice.begin(*this); !slice.end(); ++slice)
-                res += (*this)[*slice];
+                res += (*this)[size_type(*slice)];
             
             return res;
         }
