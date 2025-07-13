@@ -723,6 +723,15 @@ namespace pcs // i.e. "pythonic c++ strings"
         }
 
 
+        //---   format()   ----------------------------------------
+        /** Formats this string according to c++20 std::format() specification. Returns it (may be discarded). */
+        template<class... ArgsT>
+        inline CppStringT format(const std::format_string<ArgsT...> frmt, ArgsT&&... args)
+        {
+            return *this = std::vformat(frmt.get(), std::make_format_args(args...));
+        }
+
+
         //---   index()   -----------------------------------------
         /** Like find(const CppStringT&), but raises NotFoundException when the substring sub is not found.
         *
