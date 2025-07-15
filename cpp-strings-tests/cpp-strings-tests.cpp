@@ -3,7 +3,6 @@
 using namespace Microsoft::VisualStudio::CppUnitTestFramework;
 
 #include "cppstrings.h"
-using namespace pcs;
 
 
 namespace cppstringstests
@@ -17,10 +16,11 @@ namespace cppstringstests
 		TEST_METHOD(_cs)
 		{
 			using namespace pcs;
-			auto abcd = "abcD"cs;
-			auto wabcd = L"abcD"cs;
-			Assert::AreEqual(abcd.c_str(), CppString(abcd).c_str());
-			Assert::AreEqual(wabcd.c_str(), CppWString(wabcd).c_str());
+			using namespace pcs;
+			auto abcd = "abcD"_cs;
+			auto wabcd = L"abcD"_cs;
+			Assert::AreEqual(abcd.c_str(), pcs::CppString(abcd).c_str());
+			Assert::AreEqual(wabcd.c_str(), pcs::CppWString(wabcd).c_str());
 		}
 
 		TEST_METHOD(is_alpha)
@@ -173,121 +173,123 @@ namespace cppstringstests
 
 		TEST_METHOD(constructor_01)
 		{
-			std::map<char, pcs::CppString> table{ {'a', "b"cs}, {'b', "a"cs} };
-			Assert::AreEqual("b"cs.c_str(), table['a'].c_str());
-			Assert::AreEqual("a"cs.c_str(), table['b'].c_str());
+			using namespace pcs;
+			std::map<char, pcs::CppString> table{ {'a', "b"_cs}, {'b', "a"_cs} };
+			Assert::AreEqual("b"_cs.c_str(), table['a'].c_str());
+			Assert::AreEqual("a"_cs.c_str(), table['b'].c_str());
 
-			std::map<wchar_t, pcs::CppWString> wtable{ {L'a', L"b"cs}, {L'b', L"a"cs} };
-			Assert::AreEqual(L"b"cs.c_str(), wtable['a'].c_str());
-			Assert::AreEqual(L"a"cs.c_str(), wtable['b'].c_str());
+			std::map<wchar_t, pcs::CppWString> wtable{ {L'a', L"b"_cs}, {L'b', L"a"_cs} };
+			Assert::AreEqual(L"b"_cs.c_str(), wtable['a'].c_str());
+			Assert::AreEqual(L"a"_cs.c_str(), wtable['b'].c_str());
 		}
 
 		TEST_METHOD(constructor_02)
 		{
-			CppString keys("abcdE");
-			CppString values("ABCDe");
+			pcs::CppString keys("abcdE");
+			pcs::CppString values("ABCDe");
 			pcs::CppString::TransTable t(keys, values);
-			Assert::AreEqual(CppString('A').c_str(), t['a'].c_str());
-			Assert::AreEqual(CppString('B').c_str(), t['b'].c_str());
-			Assert::AreEqual(CppString('C').c_str(), t['c'].c_str());
-			Assert::AreEqual(CppString('D').c_str(), t['d'].c_str());
-			Assert::AreEqual(CppString('e').c_str(), t['E'].c_str());
-			Assert::AreEqual(CppString('f').c_str(), t['f'].c_str());
+			Assert::AreEqual(pcs::CppString('A').c_str(), t['a'].c_str());
+			Assert::AreEqual(pcs::CppString('B').c_str(), t['b'].c_str());
+			Assert::AreEqual(pcs::CppString('C').c_str(), t['c'].c_str());
+			Assert::AreEqual(pcs::CppString('D').c_str(), t['d'].c_str());
+			Assert::AreEqual(pcs::CppString('e').c_str(), t['E'].c_str());
+			Assert::AreEqual(pcs::CppString('f').c_str(), t['f'].c_str());
 
-			pcs::CppWString::TransTable wt(CppWString(L"abcdE"), CppWString(L"ABCDe"));
-			Assert::AreEqual(CppWString(L'A').c_str(), wt[L'a'].c_str());
-			Assert::AreEqual(CppWString(L'B').c_str(), wt[L'b'].c_str());
-			Assert::AreEqual(CppWString(L'C').c_str(), wt[L'c'].c_str());
-			Assert::AreEqual(CppWString(L'D').c_str(), wt[L'd'].c_str());
-			Assert::AreEqual(CppWString(L'e').c_str(), wt[L'E'].c_str());
-			Assert::AreEqual(CppWString(L'f').c_str(), wt[L'f'].c_str());
+			pcs::CppWString::TransTable wt(pcs::CppWString(L"abcdE"), pcs::CppWString(L"ABCDe"));
+			Assert::AreEqual(pcs::CppWString(L'A').c_str(), wt[L'a'].c_str());
+			Assert::AreEqual(pcs::CppWString(L'B').c_str(), wt[L'b'].c_str());
+			Assert::AreEqual(pcs::CppWString(L'C').c_str(), wt[L'c'].c_str());
+			Assert::AreEqual(pcs::CppWString(L'D').c_str(), wt[L'd'].c_str());
+			Assert::AreEqual(pcs::CppWString(L'e').c_str(), wt[L'E'].c_str());
+			Assert::AreEqual(pcs::CppWString(L'f').c_str(), wt[L'f'].c_str());
 		}
 
 		TEST_METHOD(constructor_03)
 		{
-			pcs::CppString::TransTable t(CppString("abc"), CppString("ABC"), CppString("dE"));
-			Assert::AreEqual(CppString('A').c_str(), t['a'].c_str());
-			Assert::AreEqual(CppString('B').c_str(), t['b'].c_str());
-			Assert::AreEqual(CppString('C').c_str(), t['c'].c_str());
-			Assert::AreEqual(CppString().c_str(), t['d'].c_str());
-			Assert::AreEqual(CppString().c_str(), t['E'].c_str());
-			Assert::AreEqual(CppString('f').c_str(), t['f'].c_str());
+			pcs::CppString::TransTable t(pcs::CppString("abc"), pcs::CppString("ABC"), pcs::CppString("dE"));
+			Assert::AreEqual(pcs::CppString('A').c_str(), t['a'].c_str());
+			Assert::AreEqual(pcs::CppString('B').c_str(), t['b'].c_str());
+			Assert::AreEqual(pcs::CppString('C').c_str(), t['c'].c_str());
+			Assert::AreEqual(pcs::CppString().c_str(), t['d'].c_str());
+			Assert::AreEqual(pcs::CppString().c_str(), t['E'].c_str());
+			Assert::AreEqual(pcs::CppString('f').c_str(), t['f'].c_str());
 
-			pcs::CppWString::TransTable wt(CppWString(L"abc"), CppWString(L"ABC"), CppWString(L"dE"));
-			Assert::AreEqual(CppWString(L'A').c_str(), wt[L'a'].c_str());
-			Assert::AreEqual(CppWString(L'B').c_str(), wt[L'b'].c_str());
-			Assert::AreEqual(CppWString(L'C').c_str(), wt[L'c'].c_str());
-			Assert::AreEqual(CppWString().c_str(), wt[L'd'].c_str());
-			Assert::AreEqual(CppWString().c_str(), wt[L'E'].c_str());
-			Assert::AreEqual(CppWString(L'f').c_str(), wt[L'f'].c_str());
+			pcs::CppWString::TransTable wt(pcs::CppWString(L"abc"), pcs::CppWString(L"ABC"), pcs::CppWString(L"dE"));
+			Assert::AreEqual(pcs::CppWString(L'A').c_str(), wt[L'a'].c_str());
+			Assert::AreEqual(pcs::CppWString(L'B').c_str(), wt[L'b'].c_str());
+			Assert::AreEqual(pcs::CppWString(L'C').c_str(), wt[L'c'].c_str());
+			Assert::AreEqual(pcs::CppWString().c_str(), wt[L'd'].c_str());
+			Assert::AreEqual(pcs::CppWString().c_str(), wt[L'E'].c_str());
+			Assert::AreEqual(pcs::CppWString(L'f').c_str(), wt[L'f'].c_str());
 		}
 
 		TEST_METHOD(constructor_04)
 		{
-			pcs::CppString::TransTable t(CppString("abc"), { CppString("AA"), CppString("BBB"), CppString("C") });
-			Assert::AreEqual(CppString("AA").c_str(), t['a'].c_str());
-			Assert::AreEqual(CppString("BBB").c_str(), t['b'].c_str());
-			Assert::AreEqual(CppString('C').c_str(), t['c'].c_str());
-			Assert::AreEqual(CppString('z').c_str(), t['z'].c_str());
+			pcs::CppString::TransTable t(pcs::CppString("abc"), { pcs::CppString("AA"), pcs::CppString("BBB"), pcs::CppString("C") });
+			Assert::AreEqual(pcs::CppString("AA").c_str(), t['a'].c_str());
+			Assert::AreEqual(pcs::CppString("BBB").c_str(), t['b'].c_str());
+			Assert::AreEqual(pcs::CppString('C').c_str(), t['c'].c_str());
+			Assert::AreEqual(pcs::CppString('z').c_str(), t['z'].c_str());
 
-			pcs::CppWString::TransTable wt(CppWString(L"abc"), { CppWString(L"AA"), CppWString(L"BBB"), CppWString(L"C") });
-			Assert::AreEqual(CppWString(L"AA").c_str(), wt[L'a'].c_str());
-			Assert::AreEqual(CppWString(L"BBB").c_str(), wt[L'b'].c_str());
-			Assert::AreEqual(CppWString(L"C").c_str(), wt[L'c'].c_str());
-			Assert::AreEqual(CppWString(L'9').c_str(), wt[L'9'].c_str());
+			pcs::CppWString::TransTable wt(pcs::CppWString(L"abc"), { pcs::CppWString(L"AA"), pcs::CppWString(L"BBB"), pcs::CppWString(L"C") });
+			Assert::AreEqual(pcs::CppWString(L"AA").c_str(), wt[L'a'].c_str());
+			Assert::AreEqual(pcs::CppWString(L"BBB").c_str(), wt[L'b'].c_str());
+			Assert::AreEqual(pcs::CppWString(L"C").c_str(), wt[L'c'].c_str());
+			Assert::AreEqual(pcs::CppWString(L'9').c_str(), wt[L'9'].c_str());
 		}
 
 		TEST_METHOD(constructor_05)
 		{
-			pcs::CppString::TransTable t(CppString("abc"), { CppString("AA"), CppString("BBB"), CppString("C") }, "dE"cs);
-			Assert::AreEqual(CppString("AA").c_str(), t['a'].c_str());
-			Assert::AreEqual(CppString("BBB").c_str(), t['b'].c_str());
-			Assert::AreEqual(CppString('C').c_str(), t['c'].c_str());
-			Assert::AreEqual(CppString().c_str(), t['d'].c_str());
-			Assert::AreEqual(CppString().c_str(), t['E'].c_str());
-			Assert::AreEqual(CppString('z').c_str(), t['z'].c_str());
+			using namespace pcs;
+			pcs::CppString::TransTable t(pcs::CppString("abc"), { pcs::CppString("AA"), pcs::CppString("BBB"), pcs::CppString("C") }, "dE"_cs);
+			Assert::AreEqual(pcs::CppString("AA").c_str(), t['a'].c_str());
+			Assert::AreEqual(pcs::CppString("BBB").c_str(), t['b'].c_str());
+			Assert::AreEqual(pcs::CppString('C').c_str(), t['c'].c_str());
+			Assert::AreEqual(pcs::CppString().c_str(), t['d'].c_str());
+			Assert::AreEqual(pcs::CppString().c_str(), t['E'].c_str());
+			Assert::AreEqual(pcs::CppString('z').c_str(), t['z'].c_str());
 
-			pcs::CppWString::TransTable wt(CppWString(L"abc"), { CppWString(L"AA"), CppWString(L"BBB"), CppWString(L"C") }, L"dE"cs);
-			Assert::AreEqual(CppWString(L"AA").c_str(), wt[L'a'].c_str());
-			Assert::AreEqual(CppWString(L"BBB").c_str(), wt[L'b'].c_str());
-			Assert::AreEqual(CppWString(L"C").c_str(), wt[L'c'].c_str());
-			Assert::AreEqual(CppWString().c_str(), wt[L'd'].c_str());
-			Assert::AreEqual(CppWString().c_str(), wt[L'E'].c_str());
-			Assert::AreEqual(CppWString(L'e').c_str(), wt[L'e'].c_str());
+			pcs::CppWString::TransTable wt(pcs::CppWString(L"abc"), { pcs::CppWString(L"AA"), pcs::CppWString(L"BBB"), pcs::CppWString(L"C") }, L"dE"_cs);
+			Assert::AreEqual(pcs::CppWString(L"AA").c_str(), wt[L'a'].c_str());
+			Assert::AreEqual(pcs::CppWString(L"BBB").c_str(), wt[L'b'].c_str());
+			Assert::AreEqual(pcs::CppWString(L"C").c_str(), wt[L'c'].c_str());
+			Assert::AreEqual(pcs::CppWString().c_str(), wt[L'd'].c_str());
+			Assert::AreEqual(pcs::CppWString().c_str(), wt[L'E'].c_str());
+			Assert::AreEqual(pcs::CppWString(L'e').c_str(), wt[L'e'].c_str());
 		}
 
 		TEST_METHOD(constructor_06)
 		{
 			pcs::CppString::TransTable t("abC", "ABc");
-			Assert::AreEqual(CppString('A').c_str(), t['a'].c_str());
-			Assert::AreEqual(CppString('B').c_str(), t['b'].c_str());
-			Assert::AreEqual(CppString('c').c_str(), t['C'].c_str());
-			Assert::AreEqual(CppString('c').c_str(), t['c'].c_str());
+			Assert::AreEqual(pcs::CppString('A').c_str(), t['a'].c_str());
+			Assert::AreEqual(pcs::CppString('B').c_str(), t['b'].c_str());
+			Assert::AreEqual(pcs::CppString('c').c_str(), t['C'].c_str());
+			Assert::AreEqual(pcs::CppString('c').c_str(), t['c'].c_str());
 
 			pcs::CppWString::TransTable wt(L"abC", L"ABc");
-			Assert::AreEqual(CppWString(L'A').c_str(), wt[L'a'].c_str());
-			Assert::AreEqual(CppWString(L'B').c_str(), wt[L'b'].c_str());
-			Assert::AreEqual(CppWString(L'c').c_str(), wt[L'C'].c_str());
-			Assert::AreEqual(CppWString(L'c').c_str(), wt[L'c'].c_str());
+			Assert::AreEqual(pcs::CppWString(L'A').c_str(), wt[L'a'].c_str());
+			Assert::AreEqual(pcs::CppWString(L'B').c_str(), wt[L'b'].c_str());
+			Assert::AreEqual(pcs::CppWString(L'c').c_str(), wt[L'C'].c_str());
+			Assert::AreEqual(pcs::CppWString(L'c').c_str(), wt[L'c'].c_str());
 		}
 
 		TEST_METHOD(constructor_07)
 		{
 			pcs::CppString::TransTable t("abc", "ABC", "dE");
-			Assert::AreEqual(CppString('A').c_str(), t['a'].c_str());
-			Assert::AreEqual(CppString('B').c_str(), t['b'].c_str());
-			Assert::AreEqual(CppString('C').c_str(), t['c'].c_str());
-			Assert::AreEqual(CppString().c_str(), t['d'].c_str());
-			Assert::AreEqual(CppString().c_str(), t['E'].c_str());
-			Assert::AreEqual(CppString('e').c_str(), t['e'].c_str());
+			Assert::AreEqual(pcs::CppString('A').c_str(), t['a'].c_str());
+			Assert::AreEqual(pcs::CppString('B').c_str(), t['b'].c_str());
+			Assert::AreEqual(pcs::CppString('C').c_str(), t['c'].c_str());
+			Assert::AreEqual(pcs::CppString().c_str(), t['d'].c_str());
+			Assert::AreEqual(pcs::CppString().c_str(), t['E'].c_str());
+			Assert::AreEqual(pcs::CppString('e').c_str(), t['e'].c_str());
 
 			pcs::CppWString::TransTable wt(L"abc", L"ABC", L"dE");
-			Assert::AreEqual(CppWString(L'A').c_str(), wt[L'a'].c_str());
-			Assert::AreEqual(CppWString(L'B').c_str(), wt[L'b'].c_str());
-			Assert::AreEqual(CppWString(L'C').c_str(), wt[L'c'].c_str());
-			Assert::AreEqual(CppWString().c_str(), wt[L'd'].c_str());
-			Assert::AreEqual(CppWString().c_str(), wt[L'E'].c_str());
-			Assert::AreEqual(CppWString(L'A').c_str(), wt[L'A'].c_str());
+			Assert::AreEqual(pcs::CppWString(L'A').c_str(), wt[L'a'].c_str());
+			Assert::AreEqual(pcs::CppWString(L'B').c_str(), wt[L'b'].c_str());
+			Assert::AreEqual(pcs::CppWString(L'C').c_str(), wt[L'c'].c_str());
+			Assert::AreEqual(pcs::CppWString().c_str(), wt[L'd'].c_str());
+			Assert::AreEqual(pcs::CppWString().c_str(), wt[L'E'].c_str());
+			Assert::AreEqual(pcs::CppWString(L'A').c_str(), wt[L'A'].c_str());
 		}
 
 		TEST_METHOD(constructor_08)
@@ -295,18 +297,18 @@ namespace cppstringstests
 			std::string keys("abC");
 			std::vector<std::string> values{ "AA", "BBB", "c" };
 			pcs::CppString::TransTable t(keys.begin(), keys.end(), values.begin(), values.end());
-			Assert::AreEqual(CppString("AA").c_str(), t['a'].c_str());
-			Assert::AreEqual(CppString("BBB").c_str(), t['b'].c_str());
-			Assert::AreEqual(CppString('c').c_str(), t['C'].c_str());
-			Assert::AreEqual(CppString('c').c_str(), t['c'].c_str());
+			Assert::AreEqual(pcs::CppString("AA").c_str(), t['a'].c_str());
+			Assert::AreEqual(pcs::CppString("BBB").c_str(), t['b'].c_str());
+			Assert::AreEqual(pcs::CppString('c').c_str(), t['C'].c_str());
+			Assert::AreEqual(pcs::CppString('c').c_str(), t['c'].c_str());
 
 			std::wstring wkeys(L"abC");
 			std::vector<std::wstring> wvalues{ L"AA", L"BBB", L"c" };
 			pcs::CppWString::TransTable wt(wkeys.begin(), wkeys.end(), wvalues.begin(), wvalues.end());
-			Assert::AreEqual(CppWString(L"AA").c_str(), wt[L'a'].c_str());
-			Assert::AreEqual(CppWString(L"BBB").c_str(), wt[L'b'].c_str());
-			Assert::AreEqual(CppWString(L'c').c_str(), wt[L'C'].c_str());
-			Assert::AreEqual(CppWString(L'c').c_str(), wt[L'c'].c_str());
+			Assert::AreEqual(pcs::CppWString(L"AA").c_str(), wt[L'a'].c_str());
+			Assert::AreEqual(pcs::CppWString(L"BBB").c_str(), wt[L'b'].c_str());
+			Assert::AreEqual(pcs::CppWString(L'c').c_str(), wt[L'C'].c_str());
+			Assert::AreEqual(pcs::CppWString(L'c').c_str(), wt[L'c'].c_str());
 		}
 
 		TEST_METHOD(constructor_09)
@@ -315,23 +317,23 @@ namespace cppstringstests
 			std::vector<std::string> values{ "AA", "BBB", "c" };
 			std::string not_translated("dE");
 			pcs::CppString::TransTable t(keys.begin(), keys.end(), values.begin(), values.end(), not_translated.cbegin(), not_translated.cend());
-			Assert::AreEqual(CppString("AA").c_str(), t['a'].c_str());
-			Assert::AreEqual(CppString("BBB").c_str(), t['b'].c_str());
-			Assert::AreEqual(CppString('c').c_str(), t['C'].c_str());
-			Assert::AreEqual(CppString().c_str(), t['d'].c_str());
-			Assert::AreEqual(CppString().c_str(), t['E'].c_str());
-			Assert::AreEqual(CppString('c').c_str(), t['c'].c_str());
+			Assert::AreEqual(pcs::CppString("AA").c_str(), t['a'].c_str());
+			Assert::AreEqual(pcs::CppString("BBB").c_str(), t['b'].c_str());
+			Assert::AreEqual(pcs::CppString('c').c_str(), t['C'].c_str());
+			Assert::AreEqual(pcs::CppString().c_str(), t['d'].c_str());
+			Assert::AreEqual(pcs::CppString().c_str(), t['E'].c_str());
+			Assert::AreEqual(pcs::CppString('c').c_str(), t['c'].c_str());
 
 			std::wstring wkeys(L"abC");
 			std::vector<std::wstring> wvalues{ L"AA", L"BBB", L"c" };
 			std::wstring wnot_translated(L"dE");
 			pcs::CppWString::TransTable wt(wkeys.begin(), wkeys.end(), wvalues.begin(), wvalues.end(), wnot_translated.cbegin(), wnot_translated.cend());
-			Assert::AreEqual(CppWString(L"AA").c_str(), wt[L'a'].c_str());
-			Assert::AreEqual(CppWString(L"BBB").c_str(), wt[L'b'].c_str());
-			Assert::AreEqual(CppWString(L'c').c_str(), wt[L'C'].c_str());
-			Assert::AreEqual(CppWString().c_str(), wt[L'd'].c_str());
-			Assert::AreEqual(CppWString().c_str(), wt[L'E'].c_str());
-			Assert::AreEqual(CppWString(L'c').c_str(), wt[L'c'].c_str());
+			Assert::AreEqual(pcs::CppWString(L"AA").c_str(), wt[L'a'].c_str());
+			Assert::AreEqual(pcs::CppWString(L"BBB").c_str(), wt[L'b'].c_str());
+			Assert::AreEqual(pcs::CppWString(L'c').c_str(), wt[L'C'].c_str());
+			Assert::AreEqual(pcs::CppWString().c_str(), wt[L'd'].c_str());
+			Assert::AreEqual(pcs::CppWString().c_str(), wt[L'E'].c_str());
+			Assert::AreEqual(pcs::CppWString(L'c').c_str(), wt[L'c'].c_str());
 		}
 
 		TEST_METHOD(constructor_empty)
@@ -345,126 +347,126 @@ namespace cppstringstests
 
 		TEST_METHOD(constructor_copy)
 		{
-			pcs::CppString::TransTable ct(CppString("abc"), CppString("ABC"), CppString("dE"));
+			pcs::CppString::TransTable ct(pcs::CppString("abc"), pcs::CppString("ABC"), pcs::CppString("dE"));
 			pcs::CppString::TransTable t(ct);
-			Assert::AreEqual(CppString('A').c_str(), t['a'].c_str());
-			Assert::AreEqual(CppString('B').c_str(), t['b'].c_str());
-			Assert::AreEqual(CppString('C').c_str(), t['c'].c_str());
-			Assert::AreEqual(CppString().c_str(), t['d'].c_str());
-			Assert::AreEqual(CppString().c_str(), t['E'].c_str());
-			Assert::AreEqual(CppString('f').c_str(), t['f'].c_str());
+			Assert::AreEqual(pcs::CppString('A').c_str(), t['a'].c_str());
+			Assert::AreEqual(pcs::CppString('B').c_str(), t['b'].c_str());
+			Assert::AreEqual(pcs::CppString('C').c_str(), t['c'].c_str());
+			Assert::AreEqual(pcs::CppString().c_str(), t['d'].c_str());
+			Assert::AreEqual(pcs::CppString().c_str(), t['E'].c_str());
+			Assert::AreEqual(pcs::CppString('f').c_str(), t['f'].c_str());
 
-			pcs::CppWString::TransTable wct(CppWString(L"abc"), CppWString(L"ABC"), CppWString(L"dE"));
+			pcs::CppWString::TransTable wct(pcs::CppWString(L"abc"), pcs::CppWString(L"ABC"), pcs::CppWString(L"dE"));
 			pcs::CppWString::TransTable wt(wct);
-			Assert::AreEqual(CppWString(L'A').c_str(), wt[L'a'].c_str());
-			Assert::AreEqual(CppWString(L'B').c_str(), wt[L'b'].c_str());
-			Assert::AreEqual(CppWString(L'C').c_str(), wt[L'c'].c_str());
-			Assert::AreEqual(CppWString().c_str(), wt[L'd'].c_str());
-			Assert::AreEqual(CppWString().c_str(), wt[L'E'].c_str());
-			Assert::AreEqual(CppWString(L'f').c_str(), wt[L'f'].c_str());
+			Assert::AreEqual(pcs::CppWString(L'A').c_str(), wt[L'a'].c_str());
+			Assert::AreEqual(pcs::CppWString(L'B').c_str(), wt[L'b'].c_str());
+			Assert::AreEqual(pcs::CppWString(L'C').c_str(), wt[L'c'].c_str());
+			Assert::AreEqual(pcs::CppWString().c_str(), wt[L'd'].c_str());
+			Assert::AreEqual(pcs::CppWString().c_str(), wt[L'E'].c_str());
+			Assert::AreEqual(pcs::CppWString(L'f').c_str(), wt[L'f'].c_str());
 		}
 
 		TEST_METHOD(constructor_move)
 		{
-			pcs::CppString::TransTable mt(CppString("abc"), CppString("ABC"), CppString("dE"));
+			pcs::CppString::TransTable mt(pcs::CppString("abc"), pcs::CppString("ABC"), pcs::CppString("dE"));
 			pcs::CppString::TransTable t(std::move(mt));
-			Assert::AreEqual(CppString('A').c_str(), t['a'].c_str());
-			Assert::AreEqual(CppString('B').c_str(), t['b'].c_str());
-			Assert::AreEqual(CppString('C').c_str(), t['c'].c_str());
-			Assert::AreEqual(CppString().c_str(), t['d'].c_str());
-			Assert::AreEqual(CppString().c_str(), t['E'].c_str());
-			Assert::AreEqual(CppString('f').c_str(), t['f'].c_str());
+			Assert::AreEqual(pcs::CppString('A').c_str(), t['a'].c_str());
+			Assert::AreEqual(pcs::CppString('B').c_str(), t['b'].c_str());
+			Assert::AreEqual(pcs::CppString('C').c_str(), t['c'].c_str());
+			Assert::AreEqual(pcs::CppString().c_str(), t['d'].c_str());
+			Assert::AreEqual(pcs::CppString().c_str(), t['E'].c_str());
+			Assert::AreEqual(pcs::CppString('f').c_str(), t['f'].c_str());
 
-			pcs::CppWString::TransTable wmt(CppWString(L"abc"), CppWString(L"ABC"), CppWString(L"dE"));
+			pcs::CppWString::TransTable wmt(pcs::CppWString(L"abc"), pcs::CppWString(L"ABC"), pcs::CppWString(L"dE"));
 			pcs::CppWString::TransTable wt(std::move(wmt));
-			Assert::AreEqual(CppWString(L'A').c_str(), wt[L'a'].c_str());
-			Assert::AreEqual(CppWString(L'B').c_str(), wt[L'b'].c_str());
-			Assert::AreEqual(CppWString(L'C').c_str(), wt[L'c'].c_str());
-			Assert::AreEqual(CppWString().c_str(), wt[L'd'].c_str());
-			Assert::AreEqual(CppWString().c_str(), wt[L'E'].c_str());
-			Assert::AreEqual(CppWString(L'f').c_str(), wt[L'f'].c_str());
+			Assert::AreEqual(pcs::CppWString(L'A').c_str(), wt[L'a'].c_str());
+			Assert::AreEqual(pcs::CppWString(L'B').c_str(), wt[L'b'].c_str());
+			Assert::AreEqual(pcs::CppWString(L'C').c_str(), wt[L'c'].c_str());
+			Assert::AreEqual(pcs::CppWString().c_str(), wt[L'd'].c_str());
+			Assert::AreEqual(pcs::CppWString().c_str(), wt[L'E'].c_str());
+			Assert::AreEqual(pcs::CppWString(L'f').c_str(), wt[L'f'].c_str());
 		}
 
 		TEST_METHOD(assign_copy)
 		{
-			pcs::CppString::TransTable ct(CppString("abc"), CppString("ABC"), CppString("dE"));
+			pcs::CppString::TransTable ct(pcs::CppString("abc"), pcs::CppString("ABC"), pcs::CppString("dE"));
 			pcs::CppString::TransTable t = ct;
-			Assert::AreEqual(CppString('A').c_str(), t['a'].c_str());
-			Assert::AreEqual(CppString('B').c_str(), t['b'].c_str());
-			Assert::AreEqual(CppString('C').c_str(), t['c'].c_str());
-			Assert::AreEqual(CppString().c_str(), t['d'].c_str());
-			Assert::AreEqual(CppString().c_str(), t['E'].c_str());
-			Assert::AreEqual(CppString('f').c_str(), t['f'].c_str());
+			Assert::AreEqual(pcs::CppString('A').c_str(), t['a'].c_str());
+			Assert::AreEqual(pcs::CppString('B').c_str(), t['b'].c_str());
+			Assert::AreEqual(pcs::CppString('C').c_str(), t['c'].c_str());
+			Assert::AreEqual(pcs::CppString().c_str(), t['d'].c_str());
+			Assert::AreEqual(pcs::CppString().c_str(), t['E'].c_str());
+			Assert::AreEqual(pcs::CppString('f').c_str(), t['f'].c_str());
 
-			pcs::CppWString::TransTable wct(CppWString(L"abc"), CppWString(L"ABC"), CppWString(L"dE"));
+			pcs::CppWString::TransTable wct(pcs::CppWString(L"abc"), pcs::CppWString(L"ABC"), pcs::CppWString(L"dE"));
 			pcs::CppWString::TransTable wt = wct;
-			Assert::AreEqual(CppWString(L'A').c_str(), wt[L'a'].c_str());
-			Assert::AreEqual(CppWString(L'B').c_str(), wt[L'b'].c_str());
-			Assert::AreEqual(CppWString(L'C').c_str(), wt[L'c'].c_str());
-			Assert::AreEqual(CppWString().c_str(), wt[L'd'].c_str());
-			Assert::AreEqual(CppWString().c_str(), wt[L'E'].c_str());
-			Assert::AreEqual(CppWString(L'f').c_str(), wt[L'f'].c_str());
+			Assert::AreEqual(pcs::CppWString(L'A').c_str(), wt[L'a'].c_str());
+			Assert::AreEqual(pcs::CppWString(L'B').c_str(), wt[L'b'].c_str());
+			Assert::AreEqual(pcs::CppWString(L'C').c_str(), wt[L'c'].c_str());
+			Assert::AreEqual(pcs::CppWString().c_str(), wt[L'd'].c_str());
+			Assert::AreEqual(pcs::CppWString().c_str(), wt[L'E'].c_str());
+			Assert::AreEqual(pcs::CppWString(L'f').c_str(), wt[L'f'].c_str());
 		}
 
 		TEST_METHOD(assign_move)
 		{
-			pcs::CppString::TransTable mt(CppString("abc"), CppString("ABC"), CppString("dE"));
+			pcs::CppString::TransTable mt(pcs::CppString("abc"), pcs::CppString("ABC"), pcs::CppString("dE"));
 			pcs::CppString::TransTable t = std::move(mt);
-			Assert::AreEqual(CppString('A').c_str(), t['a'].c_str());
-			Assert::AreEqual(CppString('B').c_str(), t['b'].c_str());
-			Assert::AreEqual(CppString('C').c_str(), t['c'].c_str());
-			Assert::AreEqual(CppString().c_str(), t['d'].c_str());
-			Assert::AreEqual(CppString().c_str(), t['E'].c_str());
-			Assert::AreEqual(CppString('f').c_str(), t['f'].c_str());
+			Assert::AreEqual(pcs::CppString('A').c_str(), t['a'].c_str());
+			Assert::AreEqual(pcs::CppString('B').c_str(), t['b'].c_str());
+			Assert::AreEqual(pcs::CppString('C').c_str(), t['c'].c_str());
+			Assert::AreEqual(pcs::CppString().c_str(), t['d'].c_str());
+			Assert::AreEqual(pcs::CppString().c_str(), t['E'].c_str());
+			Assert::AreEqual(pcs::CppString('f').c_str(), t['f'].c_str());
 
-			pcs::CppWString::TransTable wmt(CppWString(L"abc"), CppWString(L"ABC"), CppWString(L"dE"));
+			pcs::CppWString::TransTable wmt(pcs::CppWString(L"abc"), pcs::CppWString(L"ABC"), pcs::CppWString(L"dE"));
 			pcs::CppWString::TransTable wt = std::move(wmt);
-			Assert::AreEqual(CppWString(L'A').c_str(), wt[L'a'].c_str());
-			Assert::AreEqual(CppWString(L'B').c_str(), wt[L'b'].c_str());
-			Assert::AreEqual(CppWString(L'C').c_str(), wt[L'c'].c_str());
-			Assert::AreEqual(CppWString().c_str(), wt[L'd'].c_str());
-			Assert::AreEqual(CppWString().c_str(), wt[L'E'].c_str());
-			Assert::AreEqual(CppWString(L'f').c_str(), wt[L'f'].c_str());
+			Assert::AreEqual(pcs::CppWString(L'A').c_str(), wt[L'a'].c_str());
+			Assert::AreEqual(pcs::CppWString(L'B').c_str(), wt[L'b'].c_str());
+			Assert::AreEqual(pcs::CppWString(L'C').c_str(), wt[L'c'].c_str());
+			Assert::AreEqual(pcs::CppWString().c_str(), wt[L'd'].c_str());
+			Assert::AreEqual(pcs::CppWString().c_str(), wt[L'E'].c_str());
+			Assert::AreEqual(pcs::CppWString(L'f').c_str(), wt[L'f'].c_str());
 		}
 
 		TEST_METHOD(assign_map)
 		{
-			pcs::CppString::TransTable ct(CppString("abc"), CppString("ABC"), CppString("dE"));
+			pcs::CppString::TransTable ct(pcs::CppString("abc"), pcs::CppString("ABC"), pcs::CppString("dE"));
 			pcs::CppString::TransTable t = ct.get_table();
-			Assert::AreEqual(CppString('A').c_str(), t['a'].c_str());
-			Assert::AreEqual(CppString('B').c_str(), t['b'].c_str());
-			Assert::AreEqual(CppString('C').c_str(), t['c'].c_str());
-			Assert::AreEqual(CppString().c_str(), t['d'].c_str());
-			Assert::AreEqual(CppString().c_str(), t['E'].c_str());
-			Assert::AreEqual(CppString('f').c_str(), t['f'].c_str());
+			Assert::AreEqual(pcs::CppString('A').c_str(), t['a'].c_str());
+			Assert::AreEqual(pcs::CppString('B').c_str(), t['b'].c_str());
+			Assert::AreEqual(pcs::CppString('C').c_str(), t['c'].c_str());
+			Assert::AreEqual(pcs::CppString().c_str(), t['d'].c_str());
+			Assert::AreEqual(pcs::CppString().c_str(), t['E'].c_str());
+			Assert::AreEqual(pcs::CppString('f').c_str(), t['f'].c_str());
 
-			pcs::CppWString::TransTable wct(CppWString(L"abc"), CppWString(L"ABC"), CppWString(L"dE"));
+			pcs::CppWString::TransTable wct(pcs::CppWString(L"abc"), pcs::CppWString(L"ABC"), pcs::CppWString(L"dE"));
 			pcs::CppWString::TransTable wt = wct.get_table();
-			Assert::AreEqual(CppWString(L'A').c_str(), wt[L'a'].c_str());
-			Assert::AreEqual(CppWString(L'B').c_str(), wt[L'b'].c_str());
-			Assert::AreEqual(CppWString(L'C').c_str(), wt[L'c'].c_str());
-			Assert::AreEqual(CppWString().c_str(), wt[L'd'].c_str());
-			Assert::AreEqual(CppWString().c_str(), wt[L'E'].c_str());
-			Assert::AreEqual(CppWString(L'f').c_str(), wt[L'f'].c_str());
+			Assert::AreEqual(pcs::CppWString(L'A').c_str(), wt[L'a'].c_str());
+			Assert::AreEqual(pcs::CppWString(L'B').c_str(), wt[L'b'].c_str());
+			Assert::AreEqual(pcs::CppWString(L'C').c_str(), wt[L'c'].c_str());
+			Assert::AreEqual(pcs::CppWString().c_str(), wt[L'd'].c_str());
+			Assert::AreEqual(pcs::CppWString().c_str(), wt[L'E'].c_str());
+			Assert::AreEqual(pcs::CppWString(L'f').c_str(), wt[L'f'].c_str());
 		}
 
 		TEST_METHOD(indexing)
 		{
-			pcs::CppString::TransTable t(CppString("abc"), CppString("ABC"), CppString("dE"));
-			Assert::AreEqual(CppString('A').c_str(), t['a'].c_str());
-			Assert::AreEqual(CppString('B').c_str(), t['b'].c_str());
-			Assert::AreEqual(CppString('C').c_str(), t['c'].c_str());
-			Assert::AreEqual(CppString().c_str(), t['d'].c_str());
-			Assert::AreEqual(CppString().c_str(), t['E'].c_str());
-			Assert::AreEqual(CppString(',').c_str(), t[','].c_str());
+			pcs::CppString::TransTable t(pcs::CppString("abc"), pcs::CppString("ABC"), pcs::CppString("dE"));
+			Assert::AreEqual(pcs::CppString('A').c_str(), t['a'].c_str());
+			Assert::AreEqual(pcs::CppString('B').c_str(), t['b'].c_str());
+			Assert::AreEqual(pcs::CppString('C').c_str(), t['c'].c_str());
+			Assert::AreEqual(pcs::CppString().c_str(), t['d'].c_str());
+			Assert::AreEqual(pcs::CppString().c_str(), t['E'].c_str());
+			Assert::AreEqual(pcs::CppString(',').c_str(), t[','].c_str());
 
-			pcs::CppWString::TransTable wt(CppWString(L"abc"), CppWString(L"ABC"), CppWString(L"dE"));
-			Assert::AreEqual(CppWString(L'A').c_str(), wt[L'a'].c_str());
-			Assert::AreEqual(CppWString(L'B').c_str(), wt[L'b'].c_str());
-			Assert::AreEqual(CppWString(L'C').c_str(), wt[L'c'].c_str());
-			Assert::AreEqual(CppWString().c_str(), wt[L'd'].c_str());
-			Assert::AreEqual(CppWString().c_str(), wt[L'E'].c_str());
-			Assert::AreEqual(CppWString(L'\n').c_str(), wt[L'\n'].c_str());
+			pcs::CppWString::TransTable wt(pcs::CppWString(L"abc"), pcs::CppWString(L"ABC"), pcs::CppWString(L"dE"));
+			Assert::AreEqual(pcs::CppWString(L'A').c_str(), wt[L'a'].c_str());
+			Assert::AreEqual(pcs::CppWString(L'B').c_str(), wt[L'b'].c_str());
+			Assert::AreEqual(pcs::CppWString(L'C').c_str(), wt[L'c'].c_str());
+			Assert::AreEqual(pcs::CppWString().c_str(), wt[L'd'].c_str());
+			Assert::AreEqual(pcs::CppWString().c_str(), wt[L'E'].c_str());
+			Assert::AreEqual(pcs::CppWString(L'\n').c_str(), wt[L'\n'].c_str());
 		}
 	};
 
@@ -2048,16 +2050,17 @@ namespace cppstringstests
 
 		TEST_METHOD(contains)
 		{
+			using namespace pcs;
 			pcs::CppString text("Abcd. Efgh ij!");
 			for (std::size_t index = 0; index < text.size(); ++index) {
 				Assert::IsTrue(text.contains(text.substr(index)));
 				for (std::size_t count = 0; count < text.size() - index; ++count)
 					Assert::IsTrue(text.contains(text.substr(index, count)));
 			}
-			Assert::IsFalse(text.contains("zzz"cs));
-			Assert::IsFalse(text.contains("abc"cs));
-			Assert::IsFalse(text.contains("Abcd. Efgh ij!!"cs));
-			Assert::IsTrue(text.contains(""cs));
+			Assert::IsFalse(text.contains("zzz"_cs));
+			Assert::IsFalse(text.contains("abc"_cs));
+			Assert::IsFalse(text.contains("Abcd. Efgh ij!!"_cs));
+			Assert::IsTrue(text.contains(""_cs));
 
 			pcs::CppWString wtext(L"Abcd. Efgh ij!");
 			for (std::size_t index = 0; index < wtext.size(); ++index) {
@@ -2065,10 +2068,10 @@ namespace cppstringstests
 				for (std::size_t count = 0; count < text.size() - index; ++count)
 					Assert::IsTrue(wtext.contains(wtext.substr(index, count)));
 			}
-			Assert::IsFalse(wtext.contains(L"zzz"cs));
-			Assert::IsFalse(wtext.contains(L"abc"cs));
-			Assert::IsFalse(wtext.contains(L"Abcd. Efgh ij!!"cs));
-			Assert::IsTrue(wtext.contains(L""cs));
+			Assert::IsFalse(wtext.contains(L"zzz"_cs));
+			Assert::IsFalse(wtext.contains(L"abc"_cs));
+			Assert::IsFalse(wtext.contains(L"Abcd. Efgh ij!!"_cs));
+			Assert::IsTrue(wtext.contains(L""_cs));
 
 			for (std::size_t index = 0; index < text.size(); ++index) {
 				Assert::IsTrue(text.contains(text.substr(index).c_str()));
@@ -2105,6 +2108,7 @@ namespace cppstringstests
 
 		TEST_METHOD(contains_n)
 		{
+			using namespace pcs;
 			pcs::CppString text("Abcd. Efgh ij!");
 			for (std::size_t index = 0; index < text.size(); ++index) {
 				Assert::IsTrue(text.contains_n(text.substr(index), index));
@@ -2115,12 +2119,12 @@ namespace cppstringstests
 						Assert::IsFalse(text.contains_n(text.substr(index, count), index, count - 1));
 				}
 			}
-			Assert::IsFalse(text.contains_n("zzz"cs, 0));
-			Assert::IsFalse(text.contains_n("abc"cs, 0));
-			Assert::IsFalse(text.contains_n("Abcd. Efgh ij!!"cs, 0));
-			Assert::IsTrue(text.contains_n(""cs, 6));
-			Assert::IsFalse(text.contains_n(". Ef"cs, 10, 4));
-			Assert::IsFalse(text.contains_n(". Ef"cs, 4, 3));
+			Assert::IsFalse(text.contains_n("zzz"_cs, 0));
+			Assert::IsFalse(text.contains_n("abc"_cs, 0));
+			Assert::IsFalse(text.contains_n("Abcd. Efgh ij!!"_cs, 0));
+			Assert::IsTrue(text.contains_n(""_cs, 6));
+			Assert::IsFalse(text.contains_n(". Ef"_cs, 10, 4));
+			Assert::IsFalse(text.contains_n(". Ef"_cs, 4, 3));
 
 			pcs::CppWString wtext(L"Abcd. Efgh ij!");
 			for (std::size_t index = 0; index < wtext.size(); ++index) {
@@ -2132,12 +2136,12 @@ namespace cppstringstests
 						Assert::IsFalse(wtext.contains_n(wtext.substr(index, count), index, count - 1));
 				}
 			}
-			Assert::IsFalse(wtext.contains_n(L"zzz"cs, 0));
-			Assert::IsFalse(wtext.contains_n(L"abc"cs, 0));
-			Assert::IsFalse(wtext.contains_n(L"Abcd. Efgh ij!!"cs, 0));
-			Assert::IsTrue(wtext.contains_n(L""cs, 6));
-			Assert::IsFalse(wtext.contains_n(L". Ef"cs, 10, 4));
-			Assert::IsFalse(wtext.contains_n(L". Ef"cs, 4, 3));
+			Assert::IsFalse(wtext.contains_n(L"zzz"_cs, 0));
+			Assert::IsFalse(wtext.contains_n(L"abc"_cs, 0));
+			Assert::IsFalse(wtext.contains_n(L"Abcd. Efgh ij!!"_cs, 0));
+			Assert::IsTrue(wtext.contains_n(L""_cs, 6));
+			Assert::IsFalse(wtext.contains_n(L". Ef"_cs, 10, 4));
+			Assert::IsFalse(wtext.contains_n(L". Ef"_cs, 4, 3));
 
 			for (std::size_t index = 0; index < text.size(); ++index) {
 				Assert::IsTrue(text.contains_n(text.substr(index), index));
@@ -2290,23 +2294,23 @@ namespace cppstringstests
 		{
 			pcs::CppString s("a\tbc\tdef\tghij\t\r\tk\nl\tm\r\nno\tpqr \ts.");
 			pcs::CppString ts = s.expand_tabs(4);
-			Assert::AreEqual(CppString("a   bc  def ghij    \r    k\nl   m\r\nno  pqr     s.").c_str(), ts.c_str());
+			Assert::AreEqual(pcs::CppString("a   bc  def ghij    \r    k\nl   m\r\nno  pqr     s.").c_str(), ts.c_str());
 			ts = s.expand_tabs(3);
-			Assert::AreEqual(CppString("a  bc def   ghij  \r   k\nl  m\r\nno pqr   s.").c_str(), ts.c_str());
+			Assert::AreEqual(pcs::CppString("a  bc def   ghij  \r   k\nl  m\r\nno pqr   s.").c_str(), ts.c_str());
 			ts = s.expand_tabs(2);
-			Assert::AreEqual(CppString("a bc  def ghij  \r  k\nl m\r\nno  pqr   s.").c_str(), ts.c_str());
+			Assert::AreEqual(pcs::CppString("a bc  def ghij  \r  k\nl m\r\nno  pqr   s.").c_str(), ts.c_str());
 			ts = s.expand_tabs(1);
-			Assert::AreEqual(CppString("a bc def ghij \r k\nl m\r\nno pqr  s.").c_str(), ts.c_str());
+			Assert::AreEqual(pcs::CppString("a bc def ghij \r k\nl m\r\nno pqr  s.").c_str(), ts.c_str());
 
 			pcs::CppWString ws(L"a\tbc\tdef\tghij\t\r\tk\nl\tm\r\nno\tpqr \ts.");
 			pcs::CppWString wts = ws.expand_tabs(4);
-			Assert::AreEqual(CppWString(L"a   bc  def ghij    \r    k\nl   m\r\nno  pqr     s.").c_str(), wts.c_str());
+			Assert::AreEqual(pcs::CppWString(L"a   bc  def ghij    \r    k\nl   m\r\nno  pqr     s.").c_str(), wts.c_str());
 			wts = ws.expand_tabs(3);
-			Assert::AreEqual(CppWString(L"a  bc def   ghij  \r   k\nl  m\r\nno pqr   s.").c_str(), wts.c_str());
+			Assert::AreEqual(pcs::CppWString(L"a  bc def   ghij  \r   k\nl  m\r\nno pqr   s.").c_str(), wts.c_str());
 			wts = ws.expand_tabs(2);
-			Assert::AreEqual(CppWString(L"a bc  def ghij  \r  k\nl m\r\nno  pqr   s.").c_str(), wts.c_str());
+			Assert::AreEqual(pcs::CppWString(L"a bc  def ghij  \r  k\nl m\r\nno  pqr   s.").c_str(), wts.c_str());
 			wts = ws.expand_tabs(1);
-			Assert::AreEqual(CppWString(L"a bc def ghij \r k\nl m\r\nno pqr  s.").c_str(), wts.c_str());
+			Assert::AreEqual(pcs::CppWString(L"a bc def ghij \r k\nl m\r\nno pqr  s.").c_str(), wts.c_str());
 		}
 
 		TEST_METHOD(find)
@@ -2330,7 +2334,7 @@ namespace cppstringstests
 				else
 					Assert::AreEqual(found_pos, test_str.find(ch, 2, pcs::CppString::size_type(5 + 2 - 1)) - 2);
 
-				CppString s(ch);
+				pcs::CppString s(ch);
 				Assert::AreEqual(test_str.MyBaseClass::find(s), test_str.find(s));
 				found_pos = test_str.substr(2).MyBaseClass::find(s);
 				if (found_pos == pcs::CppString::npos)
@@ -2384,7 +2388,7 @@ namespace cppstringstests
 				else
 					Assert::AreEqual(found_pos, wtest.find(wch, 2, pcs::CppWString::size_type(5 + 2 - 1)) - 2);
 
-				CppWString ws(wch);
+				pcs::CppWString ws(wch);
 				Assert::AreEqual(wtest.MyBaseClass::find(ws), wtest.find(ws));
 
 				found_pos = wtest.substr(2).MyBaseClass::find(ws);
@@ -2446,7 +2450,7 @@ namespace cppstringstests
 				else
 					Assert::AreEqual(found_pos, test_str.find_n(ch, 2, pcs::CppString::size_type(5)) - 2);
 
-				CppString s(ch);
+				pcs::CppString s(ch);
 				Assert::AreEqual(test_str.MyBaseClass::find(s), test_str.find_n(s, size_t(-1)));
 				found_pos = test_str.substr(2).MyBaseClass::find(s);
 				if (found_pos == pcs::CppString::npos)
@@ -2501,7 +2505,7 @@ namespace cppstringstests
 				else
 					Assert::AreEqual(found_pos, wtest.find_n(wch, 2, pcs::CppString::size_type(5)) - 2);
 
-				CppWString ws(wch);
+				pcs::CppWString ws(wch);
 				Assert::AreEqual(wtest.MyBaseClass::find(ws), wtest.find_n(ws, size_t(-1)));
 				found_pos = wtest.substr(2).MyBaseClass::find(ws);
 				if (found_pos == pcs::CppString::npos)
@@ -2728,7 +2732,7 @@ namespace cppstringstests
 			}
 			catch (const string_type::NotFoundException e) { /* ok case! */ }
 
-			CppString s(ch);
+			pcs::CppString s(ch);
 			Assert::AreEqual(test_str.substr(0, 20).MyBaseClass::find(s), test_str.index_n(s, 20));
 			Assert::AreEqual(test_str.substr(3, 5).MyBaseClass::find(s), test_str.index_n(s, 3, 5) - 3);
 			s = 'z';
@@ -2818,14 +2822,14 @@ namespace cppstringstests
 
 		TEST_METHOD(isalpha)
 		{
-			Assert::IsFalse(CppString().isalpha());
+			Assert::IsFalse(pcs::CppString().isalpha());
 			for (int c = 0; c <= 255; ++c) {
 				const char ch{ char(c) };
 				pcs::CppString s(3, ch);
 				Assert::AreEqual(pcs::is_alpha(ch), s.isalpha());
 			}
 
-			Assert::IsFalse(CppWString().isalpha());
+			Assert::IsFalse(pcs::CppWString().isalpha());
 			for (int c = 0; c <= 0xffff; ++c) {
 				const wchar_t wch{ wchar_t(c) };
 				pcs::CppWString ws(3, wch);
@@ -2835,14 +2839,14 @@ namespace cppstringstests
 
 		TEST_METHOD(isascii)
 		{
-			Assert::IsTrue(CppString().isascii());
+			Assert::IsTrue(pcs::CppString().isascii());
 			for (int c = 0; c <= 255; ++c) {
 				const char ch{ char(c) };
 				pcs::CppString s(3, ch);
 				Assert::AreEqual(pcs::is_ascii(ch), s.isascii());
 			}
 
-			Assert::IsTrue(CppWString().isascii());
+			Assert::IsTrue(pcs::CppWString().isascii());
 			for (int c = 0; c <= 0xffff; ++c) {
 				const wchar_t wch{ wchar_t(c) };
 				pcs::CppWString ws(3, wch);
@@ -2852,14 +2856,14 @@ namespace cppstringstests
 
 		TEST_METHOD(isdecimal)
 		{
-			Assert::IsFalse(CppString().isdecimal());
+			Assert::IsFalse(pcs::CppString().isdecimal());
 			for (int c = 0; c <= 255; ++c) {
 				const char ch{ char(c) };
 				pcs::CppString s(5, ch);
 				Assert::AreEqual(pcs::is_decimal(ch), s.isdecimal());
 			}
 
-			Assert::IsFalse(CppWString().isdecimal());
+			Assert::IsFalse(pcs::CppWString().isdecimal());
 			for (int c = 0; c <= 0xffff; ++c) {
 				const wchar_t wch{ wchar_t(c) };
 				pcs::CppWString ws(5, wch);
@@ -2869,14 +2873,14 @@ namespace cppstringstests
 
 		TEST_METHOD(isdigit)
 		{
-			Assert::IsFalse(CppString().isdigit());
+			Assert::IsFalse(pcs::CppString().isdigit());
 			for (int c = 0; c <= 255; ++c) {
 				const char ch{ char(c) };
 				pcs::CppString s(5, ch);
 				Assert::AreEqual(pcs::is_digit(ch), s.isdigit());
 			}
 
-			Assert::IsFalse(CppWString().isdigit());
+			Assert::IsFalse(pcs::CppWString().isdigit());
 			for (int c = 0; c <= 0xffff; ++c) {
 				const wchar_t wch{ wchar_t(c) };
 				pcs::CppWString ws(5, wch);
@@ -2911,14 +2915,14 @@ namespace cppstringstests
 
 		TEST_METHOD(islower)
 		{
-			Assert::IsFalse(CppString().islower());
+			Assert::IsFalse(pcs::CppString().islower());
 			for (int c = 0; c <= 255; ++c) {
 				const char ch{ char(c) };
 				pcs::CppString s(5, ch);
 				Assert::AreEqual(pcs::is_lower(ch), s.islower());
 			}
 
-			Assert::IsFalse(CppWString().islower());
+			Assert::IsFalse(pcs::CppWString().islower());
 			for (int c = 0; c <= 0xffff; ++c) {
 				const wchar_t wch{ wchar_t(c) };
 				pcs::CppWString ws(5, wch);
@@ -2928,14 +2932,14 @@ namespace cppstringstests
 
 		TEST_METHOD(isnumeric)
 		{
-			Assert::IsFalse(CppString().isnumeric());
+			Assert::IsFalse(pcs::CppString().isnumeric());
 			for (int c = 0; c <= 255; ++c) {
 				const char ch{ char(c) };
 				pcs::CppString s(5, ch);
 				Assert::AreEqual(pcs::is_numeric(ch), s.isnumeric());
 			}
 
-			Assert::IsFalse(CppWString().isnumeric());
+			Assert::IsFalse(pcs::CppWString().isnumeric());
 			for (int c = 0; c <= 0xffff; ++c) {
 				const wchar_t wch{ wchar_t(c) };
 				pcs::CppWString ws(5, wch);
@@ -2945,14 +2949,14 @@ namespace cppstringstests
 
 		TEST_METHOD(isprintable)
 		{
-			Assert::IsTrue(CppString().isprintable());
+			Assert::IsTrue(pcs::CppString().isprintable());
 			for (int c = 0; c <= 255; ++c) {
 				const char ch{ char(c) };
 				pcs::CppString s(5, ch);
 				Assert::AreEqual(pcs::is_printable(ch), s.isprintable());
 			}
 
-			Assert::IsTrue(CppWString().isprintable());
+			Assert::IsTrue(pcs::CppWString().isprintable());
 			for (int c = 0; c <= 0xffff; ++c) {
 				const wchar_t wch{ wchar_t(c) };
 				pcs::CppWString ws(5, wch);
@@ -2962,33 +2966,33 @@ namespace cppstringstests
 
 		TEST_METHOD(ispunctuation)
 		{
-			Assert::IsFalse(CppString().ispunctuation());
+			Assert::IsFalse(pcs::CppString().ispunctuation());
 			for (int c = 0; c <= 255; ++c) {
 				const char ch{ char(c) };
 				pcs::CppString s(3, ch);
 				Assert::IsFalse(s.ispunctuation());
-				Assert::AreEqual(pcs::is_punctuation(ch), CppString(ch).ispunctuation());
+				Assert::AreEqual(pcs::is_punctuation(ch), pcs::CppString(ch).ispunctuation());
 			}
 
-			Assert::IsFalse(CppWString().ispunctuation());
+			Assert::IsFalse(pcs::CppWString().ispunctuation());
 			for (int c = 0; c <= 0xffff; ++c) {
 				const wchar_t wch{ wchar_t(c) };
 				pcs::CppWString ws(3, wch);
 				Assert::IsFalse(ws.ispunctuation());
-				Assert::AreEqual(pcs::is_punctuation(wch), CppWString(wch).ispunctuation());
+				Assert::AreEqual(pcs::is_punctuation(wch), pcs::CppWString(wch).ispunctuation());
 			}
 		}
 
 		TEST_METHOD(isspace)
 		{
-			Assert::IsFalse(CppString().isspace());
+			Assert::IsFalse(pcs::CppString().isspace());
 			for (int c = 0; c <= 255; ++c) {
 				const char ch{ char(c) };
 				pcs::CppString s(5, ch);
 				Assert::AreEqual(pcs::is_space(ch), s.isspace());
 			}
 
-			Assert::IsFalse(CppWString().isspace());
+			Assert::IsFalse(pcs::CppWString().isspace());
 			for (int c = 0; c <= 0xffff; ++c) {
 				const wchar_t wch{ wchar_t(c) };
 				pcs::CppWString ws(5, wch);
@@ -3009,14 +3013,14 @@ namespace cppstringstests
 
 		TEST_METHOD(isupper)
 		{
-			Assert::IsFalse(CppString().isupper());
+			Assert::IsFalse(pcs::CppString().isupper());
 			for (int c = 0; c <= 255; ++c) {
 				const char ch{ char(c) };
 				pcs::CppString s(5, ch);
 				Assert::AreEqual(pcs::is_upper(ch), s.isupper());
 			}
 
-			Assert::IsFalse(CppWString().isupper());
+			Assert::IsFalse(pcs::CppWString().isupper());
 			for (int c = 0; c <= 0xffff; ++c) {
 				const wchar_t wch{ wchar_t(c) };
 				pcs::CppWString ws(5, wch);
@@ -3026,14 +3030,14 @@ namespace cppstringstests
 
 		TEST_METHOD(is_words_sep)
 		{
-			Assert::IsFalse(CppString().is_words_sep());
+			Assert::IsFalse(pcs::CppString().is_words_sep());
 			for (int c = 32; c <= 255; ++c) {
 				const char ch{ char(c) };
 				pcs::CppString s(5, ch);
 				Assert::AreEqual(pcs::is_space(ch) || pcs::is_punctuation(ch), s.is_words_sep());
 			}
 
-			Assert::IsFalse(CppWString().is_words_sep());
+			Assert::IsFalse(pcs::CppWString().is_words_sep());
 			for (int c = 0; c <= 0xffff; ++c) {
 				const wchar_t wch{ wchar_t(c) };
 				pcs::CppWString ws(5, wch);
@@ -3044,40 +3048,41 @@ namespace cppstringstests
 		TEST_METHOD(join)
 		{
 			pcs::CppString s("##");
-			std::array<CppString, 2> arr{ "abcd", "efg" };
+			std::array<pcs::CppString, 2> arr{ "abcd", "efg" };
 			Assert::AreEqual(pcs::CppString("abcd##efg").c_str(), s.join(arr).c_str());
-			Assert::AreEqual(pcs::CppString("abcd##efg##123456789").c_str(), s.join(std::array<CppString, 3>{ "abcd", "efg", "123456789" }).c_str());
+			Assert::AreEqual(pcs::CppString("abcd##efg##123456789").c_str(), s.join(std::array<pcs::CppString, 3>{ "abcd", "efg", "123456789" }).c_str());
 
 			pcs::CppWString ws(L"##");
-			std::array<CppWString, 2> warr{ L"abcd", L"efg" };
+			std::array<pcs::CppWString, 2> warr{ L"abcd", L"efg" };
 			Assert::AreEqual(pcs::CppWString(L"abcd##efg").c_str(), ws.join(warr).c_str());
-			Assert::AreEqual(pcs::CppWString(L"abcd##efg##123456789").c_str(), ws.join(std::array<CppWString, 3>{ L"abcd", L"efg", L"123456789" }).c_str());
+			Assert::AreEqual(pcs::CppWString(L"abcd##efg##123456789").c_str(), ws.join(std::array<pcs::CppWString, 3>{ L"abcd", L"efg", L"123456789" }).c_str());
 
-			std::vector<CppString> vec{ "abcd", "efg" };
+			std::vector<pcs::CppString> vec{ "abcd", "efg" };
 			Assert::AreEqual(pcs::CppString("abcd##efg").c_str(), s.join(vec).c_str());
 			vec.push_back("123456789");
 			Assert::AreEqual(pcs::CppString("abcd##efg##123456789").c_str(), s.join(vec).c_str());
 
-			std::vector<CppWString> wvec{ L"abcd", L"efg" };
+			std::vector<pcs::CppWString> wvec{ L"abcd", L"efg" };
 			Assert::AreEqual(pcs::CppWString(L"abcd##efg").c_str(), ws.join(wvec).c_str());
 			wvec.push_back(L"123456789");
 			Assert::AreEqual(pcs::CppWString(L"abcd##efg##123456789").c_str(), ws.join(wvec).c_str());
 
+			using namespace pcs;
 			Assert::AreEqual(pcs::CppString("abcd##efg").c_str(), s.join(pcs::CppString("abcd"), pcs::CppString("efg")).c_str());
 			Assert::AreEqual(pcs::CppString("abcd##efg##123456789").c_str(), s.join(pcs::CppString("abcd"), pcs::CppString("efg"), pcs::CppString("123456789")).c_str());
 			Assert::AreEqual(pcs::CppString("abcd##efg##123456789##0").c_str(), s.join("abcd", "efg", "123456789", "0").c_str());
-			Assert::AreEqual(pcs::CppString("abcd# #efg# #123456789# #0").c_str(), "# #"cs.join("abcd", "efg", "123456789", "0").c_str());
-			Assert::AreEqual("abcdE", "##"cs.join("abcdE").c_str());
-			Assert::AreEqual("##", "##"cs.join().c_str());
-			Assert::AreEqual("", "##"cs.join("").c_str());
+			Assert::AreEqual(pcs::CppString("abcd# #efg# #123456789# #0").c_str(), "# #"_cs.join("abcd", "efg", "123456789", "0").c_str());
+			Assert::AreEqual("abcdE", "##"_cs.join("abcdE").c_str());
+			Assert::AreEqual("##", "##"_cs.join().c_str());
+			Assert::AreEqual("", "##"_cs.join("").c_str());
 
 			Assert::AreEqual(pcs::CppWString(L"abcd##efg").c_str(), ws.join(pcs::CppWString(L"abcd"), pcs::CppWString(L"efg")).c_str());
 			Assert::AreEqual(pcs::CppWString(L"abcd##efg##123456789").c_str(), ws.join(pcs::CppWString(L"abcd"), pcs::CppWString(L"efg"), pcs::CppWString(L"123456789")).c_str());
-			Assert::AreEqual(pcs::CppWString(L"abcd##efg##123456789##0").c_str(), ws.join(L"abcd"cs, L"efg"cs, L"123456789"cs, L"0"cs).c_str());
-			Assert::AreEqual(pcs::CppWString(L"abcd# #efg# #123456789# #0").c_str(), L"# #"cs.join(L"abcd", L"efg"cs, L"123456789"cs, L"0"cs).c_str());
-			Assert::AreEqual(pcs::CppWString(L"abcdE").c_str(), L"##"cs.join(L"abcdE").c_str());
-			Assert::AreEqual(pcs::CppWString(L"##").c_str(), L"##"cs.join().c_str());
-			Assert::AreEqual(pcs::CppWString(L"").c_str(), L"##"cs.join(L"").c_str());
+			Assert::AreEqual(pcs::CppWString(L"abcd##efg##123456789##0").c_str(), ws.join(L"abcd"_cs, L"efg"_cs, L"123456789"_cs, L"0"_cs).c_str());
+			Assert::AreEqual(pcs::CppWString(L"abcd# #efg# #123456789# #0").c_str(), L"# #"_cs.join(L"abcd", L"efg"_cs, L"123456789"_cs, L"0"_cs).c_str());
+			Assert::AreEqual(pcs::CppWString(L"abcdE").c_str(), L"##"_cs.join(L"abcdE").c_str());
+			Assert::AreEqual(pcs::CppWString(L"##").c_str(), L"##"_cs.join().c_str());
+			Assert::AreEqual(pcs::CppWString(L"").c_str(), L"##"_cs.join(L"").c_str());
 		}
 
 		TEST_METHOD(ljust)
@@ -3129,10 +3134,10 @@ namespace cppstringstests
 				Assert::AreEqual(wchar_t(std::tolower(wch)), pcs::CppWString::lower(wch));
 			}
 
-			CppString s(255, '\0');
+			pcs::CppString s(255, '\0');
 			for (int i : std::views::iota(0, 256))
-				s[i] = CppString::value_type(i);
-			CppString res{ s.lower() };
+				s[i] = pcs::CppString::value_type(i);
+			pcs::CppString res{ s.lower() };
 			for (auto const [cs, cr] : std::views::zip(s, res)) {
 				if (std::islower(cs))
 					Assert::IsTrue(std::islower(cr));
@@ -3142,10 +3147,10 @@ namespace cppstringstests
 					Assert::AreEqual(cs, cr);
 			}
 
-			CppWString ws(0xffff, '\0');
+			pcs::CppWString ws(0xffff, '\0');
 			for (int i : std::views::iota(0, 0x1'0000))
-				ws[i] = CppWString::value_type(i);
-			CppWString wres{ ws.lower() };
+				ws[i] = pcs::CppWString::value_type(i);
+			pcs::CppWString wres{ ws.lower() };
 			for (auto const [wcs, wcr] : std::views::zip(ws, wres)) {
 				if (std::islower(wcs))
 					Assert::IsTrue(std::islower(wcr));
@@ -3159,29 +3164,30 @@ namespace cppstringstests
 
 		TEST_METHOD(lstrip)
 		{
+			using namespace pcs;
 			pcs::CppString s("abcd");
 			Assert::AreEqual("cd", s.lstrip("baCD").c_str());
 			Assert::AreEqual("abcd", s.lstrip("xyz").c_str());
 			Assert::AreEqual("abcd", s.lstrip("").c_str());
-			Assert::AreEqual("cd", "abbabaabcd"cs.lstrip("baCD").c_str());
-			Assert::AreEqual("cdab", "abbabaabcdab"cs.lstrip("baCD").c_str());
-			Assert::AreEqual("abcd", " abcd"cs.lstrip().c_str());
-			Assert::AreEqual("abcd", "  abcd"cs.lstrip().c_str());
-			Assert::AreEqual("abcd", "       abcd"cs.lstrip().c_str());
-			Assert::AreEqual("a  bcd", "         a  bcd"cs.lstrip().c_str());
-			Assert::AreEqual("a  bcd   ", "         a  bcd   "cs.lstrip().c_str());
+			Assert::AreEqual("cd", "abbabaabcd"_cs.lstrip("baCD").c_str());
+			Assert::AreEqual("cdab", "abbabaabcdab"_cs.lstrip("baCD").c_str());
+			Assert::AreEqual("abcd", " abcd"_cs.lstrip().c_str());
+			Assert::AreEqual("abcd", "  abcd"_cs.lstrip().c_str());
+			Assert::AreEqual("abcd", "       abcd"_cs.lstrip().c_str());
+			Assert::AreEqual("a  bcd", "         a  bcd"_cs.lstrip().c_str());
+			Assert::AreEqual("a  bcd   ", "         a  bcd   "_cs.lstrip().c_str());
 
 			pcs::CppWString ws(L"abcd");
 			Assert::AreEqual(L"cd", ws.lstrip(L"baCD").c_str());
 			Assert::AreEqual(L"abcd", ws.lstrip(L"xyz").c_str());
 			Assert::AreEqual(L"abcd", ws.lstrip(L"").c_str());
-			Assert::AreEqual(L"cd", L"abbabaabcd"cs.lstrip(L"baCD").c_str());
-			Assert::AreEqual(L"cdab", L"abbabaabcdab"cs.lstrip(L"baCD").c_str());
-			Assert::AreEqual(L"abcd", L" abcd"cs.lstrip().c_str());
-			Assert::AreEqual(L"abcd", L"  abcd"cs.lstrip().c_str());
-			Assert::AreEqual(L"abcd", L"       abcd"cs.lstrip().c_str());
-			Assert::AreEqual(L"a  bcd", L"         a  bcd"cs.lstrip().c_str());
-			Assert::AreEqual(L"a  bcd   ", L"         a  bcd   "cs.lstrip().c_str());
+			Assert::AreEqual(L"cd", L"abbabaabcd"_cs.lstrip(L"baCD").c_str());
+			Assert::AreEqual(L"cdab", L"abbabaabcdab"_cs.lstrip(L"baCD").c_str());
+			Assert::AreEqual(L"abcd", L" abcd"_cs.lstrip().c_str());
+			Assert::AreEqual(L"abcd", L"  abcd"_cs.lstrip().c_str());
+			Assert::AreEqual(L"abcd", L"       abcd"_cs.lstrip().c_str());
+			Assert::AreEqual(L"a  bcd", L"         a  bcd"_cs.lstrip().c_str());
+			Assert::AreEqual(L"a  bcd   ", L"         a  bcd   "_cs.lstrip().c_str());
 		}
 
 		TEST_METHOD(operator_slice)
@@ -3189,73 +3195,73 @@ namespace cppstringstests
 			pcs::CppString text("AbcdefGhijklm");
 			int text_size{ int(text.size()) };
 
-			Assert::AreEqual(text(0, text_size).c_str(), text(Slice<int>()).c_str());
+			Assert::AreEqual(text(0, text_size).c_str(), text(pcs::Slice<int>()).c_str());
 			Assert::AreEqual(text.c_str(), text(0, text_size).c_str());
-			Assert::AreEqual(text.c_str(), text(StartSlice(0)).c_str());
-			Assert::AreEqual(text.c_str(), text(StopSlice(123)).c_str());
-			Assert::AreEqual(text.c_str(), text(StepSlice(1)).c_str());
-			Assert::AreEqual(text.c_str(), text(StartStopSlice(0, 111)).c_str());
-			Assert::AreEqual(text.c_str(), text(StartStepSlice(0, 1)).c_str());
-			Assert::AreEqual(text.c_str(), text(StopStepSlice(text_size, 1)).c_str());
+			Assert::AreEqual(text.c_str(), text(pcs::StartSlice(0)).c_str());
+			Assert::AreEqual(text.c_str(), text(pcs::StopSlice(123)).c_str());
+			Assert::AreEqual(text.c_str(), text(pcs::StepSlice(1)).c_str());
+			Assert::AreEqual(text.c_str(), text(pcs::StartStopSlice(0, 111)).c_str());
+			Assert::AreEqual(text.c_str(), text(pcs::StartStepSlice(0, 1)).c_str());
+			Assert::AreEqual(text.c_str(), text(pcs::StopStepSlice(text_size, 1)).c_str());
 
-			Assert::AreEqual("AceGikm", text(Slice(0, text_size + 2, 2)).c_str());
-			Assert::AreEqual("behk", text(Slice(1, text_size, 3)).c_str());
+			Assert::AreEqual("AceGikm", text(pcs::Slice(0, text_size + 2, 2)).c_str());
+			Assert::AreEqual("behk", text(pcs::Slice(1, text_size, 3)).c_str());
 
-			Assert::AreEqual("", text(Slice(5, 4, 1)).c_str());
-			Assert::AreEqual("", text(Slice(text_size, text_size + 1, 1)).c_str());
-			Assert::AreEqual("", text(Slice(text_size + 2, text_size + 5, 1)).c_str());
-			Assert::AreEqual("", text(Slice(5, 3, 2)).c_str());
+			Assert::AreEqual("", text(pcs::Slice(5, 4, 1)).c_str());
+			Assert::AreEqual("", text(pcs::Slice(text_size, text_size + 1, 1)).c_str());
+			Assert::AreEqual("", text(pcs::Slice(text_size + 2, text_size + 5, 1)).c_str());
+			Assert::AreEqual("", text(pcs::Slice(5, 3, 2)).c_str());
 
 			pcs::CppString reversed_text{ text };
 			std::ranges::reverse(reversed_text);
 			Assert::AreEqual(reversed_text.c_str(), text(text_size, 0, -1).c_str());
-			Assert::AreEqual(reversed_text.c_str(), text(StartStepSlice(text_size, -1)).c_str());
-			Assert::AreEqual(reversed_text.c_str(), text(StopStepSlice(0, -1)).c_str());
-			Assert::AreEqual(reversed_text.c_str(), text(StepSlice(-1)).c_str());
+			Assert::AreEqual(reversed_text.c_str(), text(pcs::StartStepSlice(text_size, -1)).c_str());
+			Assert::AreEqual(reversed_text.c_str(), text(pcs::StopStepSlice(0, -1)).c_str());
+			Assert::AreEqual(reversed_text.c_str(), text(pcs::StepSlice(-1)).c_str());
 
-			Assert::AreEqual("mkiGec", text(Slice(text_size, 0, -2)).c_str());
-			Assert::AreEqual("mjGd", text(Slice(text_size-1, 1, -3)).c_str());
+			Assert::AreEqual("mkiGec", text(pcs::Slice(text_size, 0, -2)).c_str());
+			Assert::AreEqual("mjGd", text(pcs::Slice(text_size-1, 1, -3)).c_str());
 
-			Assert::AreEqual("", text(Slice(4, 5, -1)).c_str());
-			Assert::AreEqual("", text(Slice(text_size + 1, text_size, -1)).c_str());
-			Assert::AreEqual("", text(Slice(text_size + 5, text_size + 2, -1)).c_str());
-			Assert::AreEqual("", text(Slice(3, 5, -2)).c_str());
+			Assert::AreEqual("", text(pcs::Slice(4, 5, -1)).c_str());
+			Assert::AreEqual("", text(pcs::Slice(text_size + 1, text_size, -1)).c_str());
+			Assert::AreEqual("", text(pcs::Slice(text_size + 5, text_size + 2, -1)).c_str());
+			Assert::AreEqual("", text(pcs::Slice(3, 5, -2)).c_str());
 
 
 			pcs::CppWString wtext(L"AbcdefGhijklm");
 			text_size = int(wtext.size());
 
-			Assert::AreEqual(wtext(0, text_size).c_str(), wtext(Slice<int>()).c_str());
+			Assert::AreEqual(wtext(0, text_size).c_str(), wtext(pcs::Slice<int>()).c_str());
 			Assert::AreEqual(wtext.c_str(), wtext(0, text_size).c_str());
-			Assert::AreEqual(wtext.c_str(), wtext(StartSlice(0)).c_str());
-			Assert::AreEqual(wtext.c_str(), wtext(StopSlice(123)).c_str());
-			Assert::AreEqual(wtext.c_str(), wtext(StepSlice(1)).c_str());
-			Assert::AreEqual(wtext.c_str(), wtext(StartStopSlice(0, 111)).c_str());
-			Assert::AreEqual(wtext.c_str(), wtext(StartStepSlice(0, 1)).c_str());
-			Assert::AreEqual(wtext.c_str(), wtext(StopStepSlice(text_size, 1)).c_str());
+			Assert::AreEqual(wtext.c_str(), wtext(pcs::StartSlice(0)).c_str());
+			Assert::AreEqual(wtext.c_str(), wtext(pcs::StopSlice(123)).c_str());
+			Assert::AreEqual(wtext.c_str(), wtext(pcs::StepSlice(1)).c_str());
+			Assert::AreEqual(wtext.c_str(), wtext(pcs::StartStopSlice(0, 111)).c_str());
+			Assert::AreEqual(wtext.c_str(), wtext(pcs::StartStepSlice(0, 1)).c_str());
+			Assert::AreEqual(wtext.c_str(), wtext(pcs::StopStepSlice(text_size, 1)).c_str());
 
-			Assert::AreEqual(L"AceGikm", wtext(Slice(0, text_size + 2, 2)).c_str());
-			Assert::AreEqual(L"behk", wtext(Slice(1, text_size, 3)).c_str());
+			Assert::AreEqual(L"AceGikm", wtext(pcs::Slice(0, text_size + 2, 2)).c_str());
+			Assert::AreEqual(L"behk", wtext(pcs::Slice(1, text_size, 3)).c_str());
 
-			Assert::AreEqual(L"", wtext(Slice(5, 4, 1)).c_str());
-			Assert::AreEqual(L"", wtext(Slice(text_size, text_size + 1, 1)).c_str());
-			Assert::AreEqual(L"", wtext(Slice(text_size + 2, text_size + 5, 1)).c_str());
-			Assert::AreEqual(L"", wtext(Slice(5, 3, 2)).c_str());
+			Assert::AreEqual(L"", wtext(pcs::Slice(5, 4, 1)).c_str());
+			Assert::AreEqual(L"", wtext(pcs::Slice(text_size, text_size + 1, 1)).c_str());
+			Assert::AreEqual(L"", wtext(pcs::Slice(text_size + 2, text_size + 5, 1)).c_str());
+			Assert::AreEqual(L"", wtext(pcs::Slice(5, 3, 2)).c_str());
 
 			pcs::CppWString wreversed_text{ wtext };
 			std::ranges::reverse(wreversed_text);
 			Assert::AreEqual(wreversed_text.c_str(), wtext(text_size, 0, -1).c_str());
-			Assert::AreEqual(wreversed_text.c_str(), wtext(StartStepSlice(text_size, -1)).c_str());
-			Assert::AreEqual(wreversed_text.c_str(), wtext(StopStepSlice(0, -1)).c_str());
-			Assert::AreEqual(wreversed_text.c_str(), wtext(StepSlice(-1)).c_str());
+			Assert::AreEqual(wreversed_text.c_str(), wtext(pcs::StartStepSlice(text_size, -1)).c_str());
+			Assert::AreEqual(wreversed_text.c_str(), wtext(pcs::StopStepSlice(0, -1)).c_str());
+			Assert::AreEqual(wreversed_text.c_str(), wtext(pcs::StepSlice(-1)).c_str());
 
-			Assert::AreEqual(L"mkiGec", wtext(Slice(text_size, 0, -2)).c_str());
-			Assert::AreEqual(L"mjGd", wtext(Slice(text_size - 1, 1, -3)).c_str());
+			Assert::AreEqual(L"mkiGec", wtext(pcs::Slice(text_size, 0, -2)).c_str());
+			Assert::AreEqual(L"mjGd", wtext(pcs::Slice(text_size - 1, 1, -3)).c_str());
 
-			Assert::AreEqual(L"", wtext(Slice(4, 5, -1)).c_str());
-			Assert::AreEqual(L"", wtext(Slice(text_size + 1, text_size, -1)).c_str());
-			Assert::AreEqual(L"", wtext(Slice(text_size + 5, text_size + 2, -1)).c_str());
-			Assert::AreEqual(L"", wtext(Slice(3, 5, -2)).c_str());
+			Assert::AreEqual(L"", wtext(pcs::Slice(4, 5, -1)).c_str());
+			Assert::AreEqual(L"", wtext(pcs::Slice(text_size + 1, text_size, -1)).c_str());
+			Assert::AreEqual(L"", wtext(pcs::Slice(text_size + 5, text_size + 2, -1)).c_str());
+			Assert::AreEqual(L"", wtext(pcs::Slice(3, 5, -2)).c_str());
 		}
 
 		TEST_METHOD(operator_times)
@@ -3278,7 +3284,7 @@ namespace cppstringstests
 		TEST_METHOD(partition)
 		{
 			pcs::CppString s("abcd#123efg");
-			std::vector<CppString> res{ s.partition("#123") };
+			std::vector<pcs::CppString> res{ s.partition("#123") };
 			Assert::AreEqual("abcd", res[0].c_str());
 			Assert::AreEqual("#123", res[1].c_str());
 			Assert::AreEqual("efg", res[2].c_str());
@@ -3294,13 +3300,14 @@ namespace cppstringstests
 			Assert::AreEqual("", res[1].c_str());
 			Assert::AreEqual("", res[2].c_str());
 
-			res = ""cs.partition("A");
+			using namespace pcs;
+			res = ""_cs.partition("A");
 			Assert::AreEqual("", res[0].c_str());
 			Assert::AreEqual("", res[1].c_str());
 			Assert::AreEqual("", res[2].c_str());
 
 			pcs::CppWString ws(L"abcd#123efg");
-			std::vector<CppWString> wres{ ws.partition(L"#123") };
+			std::vector<pcs::CppWString> wres{ ws.partition(L"#123") };
 			Assert::AreEqual(L"abcd", wres[0].c_str());
 			Assert::AreEqual(L"#123", wres[1].c_str());
 			Assert::AreEqual(L"efg", wres[2].c_str());
@@ -3316,7 +3323,7 @@ namespace cppstringstests
 			Assert::AreEqual(L"", wres[1].c_str());
 			Assert::AreEqual(L"", wres[2].c_str());
 
-			wres = L""cs.partition(L"A");
+			wres = L""_cs.partition(L"A");
 			Assert::AreEqual(L"", wres[0].c_str());
 			Assert::AreEqual(L"", wres[1].c_str());
 			Assert::AreEqual(L"", wres[2].c_str());
@@ -3324,36 +3331,38 @@ namespace cppstringstests
 
 		TEST_METHOD(removeprefix)
 		{
+			using namespace pcs;
 			pcs::CppString s("abcd");
 			Assert::AreEqual("cd", s.removeprefix("ab").c_str());
 			Assert::AreEqual("abcd", s.removeprefix("ba").c_str());
 			Assert::AreEqual("abcd", s.removeprefix("").c_str());
-			Assert::AreEqual("abaabcd", "abbabaabcd"cs.removeprefix("abb").c_str());
-			Assert::AreEqual("cdab", "abcdab"cs.removeprefix("ab").c_str());
+			Assert::AreEqual("abaabcd", "abbabaabcd"_cs.removeprefix("abb").c_str());
+			Assert::AreEqual("cdab", "abcdab"_cs.removeprefix("ab").c_str());
 
 			pcs::CppWString ws(L"abcd");
 			Assert::AreEqual(L"cd", ws.removeprefix(L"ab").c_str());
 			Assert::AreEqual(L"abcd", ws.removeprefix(L"ba").c_str());
 			Assert::AreEqual(L"abcd", ws.removeprefix(L"").c_str());
-			Assert::AreEqual(L"abaabcd", L"abbabaabcd"cs.removeprefix(L"abb").c_str());
-			Assert::AreEqual(L"cdab", L"abcdab"cs.removeprefix(L"ab").c_str());
+			Assert::AreEqual(L"abaabcd", L"abbabaabcd"_cs.removeprefix(L"abb").c_str());
+			Assert::AreEqual(L"cdab", L"abcdab"_cs.removeprefix(L"ab").c_str());
 		}
 
 		TEST_METHOD(removesuffix)
 		{
+			using namespace pcs;
 			pcs::CppString s("abcd");
 			Assert::AreEqual("ab", s.removesuffix("cd").c_str());
 			Assert::AreEqual("abcd", s.removesuffix("dc").c_str());
 			Assert::AreEqual("abcd", s.removesuffix("").c_str());
-			Assert::AreEqual("abbaba", "abbabaabcd"cs.removesuffix("abcd").c_str());
-			Assert::AreEqual("abcd", "abcdab"cs.removesuffix("ab").c_str());
+			Assert::AreEqual("abbaba", "abbabaabcd"_cs.removesuffix("abcd").c_str());
+			Assert::AreEqual("abcd", "abcdab"_cs.removesuffix("ab").c_str());
 
 			pcs::CppWString ws(L"abcd");
 			Assert::AreEqual(L"ab", ws.removesuffix(L"cd").c_str());
 			Assert::AreEqual(L"abcd", ws.removesuffix(L"dc").c_str());
 			Assert::AreEqual(L"abcd", ws.removesuffix(L"").c_str());
-			Assert::AreEqual(L"abbaba", L"abbabaabcd"cs.removesuffix(L"abcd").c_str());
-			Assert::AreEqual(L"abcd", L"abcdab"cs.removesuffix(L"ab").c_str());
+			Assert::AreEqual(L"abbaba", L"abbabaabcd"_cs.removesuffix(L"abcd").c_str());
+			Assert::AreEqual(L"abcd", L"abcdab"_cs.removesuffix(L"ab").c_str());
 		}
 
 		TEST_METHOD(replace)
@@ -3414,7 +3423,7 @@ namespace cppstringstests
 				else
 					Assert::AreEqual(found_pos, test_str.rfind(ch, 2, pcs::CppString::size_type(5 + 2 - 1)) - 2);
 
-				CppString s(ch);
+				pcs::CppString s(ch);
 				Assert::AreEqual(test_str.MyBaseClass::rfind(s), test_str.rfind(s));
 				found_pos = test_str.substr(2).MyBaseClass::rfind(s);
 				if (found_pos == pcs::CppString::npos)
@@ -3466,7 +3475,7 @@ namespace cppstringstests
 				else
 					Assert::AreEqual(found_pos, wtest.rfind(wch, 2, pcs::CppString::size_type(5 + 2 - 1)) - 2);
 
-				CppWString ws(wch);
+				pcs::CppWString ws(wch);
 				Assert::AreEqual(wtest.MyBaseClass::rfind(ws), wtest.rfind(ws));
 
 				found_pos = wtest.substr(2).MyBaseClass::rfind(ws);
@@ -3525,7 +3534,7 @@ namespace cppstringstests
 				else
 					Assert::AreEqual(found_pos, test_str.rfind_n(ch, 2, pcs::CppString::size_type(5)) - 2);
 
-				CppString s(ch);
+				pcs::CppString s(ch);
 				Assert::AreEqual(test_str.MyBaseClass::rfind(s), test_str.rfind_n(s, size_t(-1)));
 				found_pos = test_str.substr(2).MyBaseClass::rfind(s);
 				if (found_pos == pcs::CppString::npos)
@@ -3580,7 +3589,7 @@ namespace cppstringstests
 				else
 					Assert::AreEqual(found_pos, wtest.rfind_n(wch, 2, pcs::CppString::size_type(5)) - 2);
 
-				CppWString ws(wch);
+				pcs::CppWString ws(wch);
 				Assert::AreEqual(wtest.MyBaseClass::rfind(ws), wtest.rfind_n(ws, size_t(-1)));
 				found_pos = wtest.substr(2).MyBaseClass::rfind(ws);
 				if (found_pos == pcs::CppString::npos)
@@ -3787,7 +3796,7 @@ namespace cppstringstests
 			}
 			catch (const string_type::NotFoundException e) { /* ok case! */ }
 
-			CppString s(ch);
+			pcs::CppString s(ch);
 			Assert::AreEqual(test_str.substr(0, 20).MyBaseClass::rfind(s), test_str.rindex_n(s, 20));
 			Assert::AreEqual(test_str.substr(3, 5).MyBaseClass::rfind(s), test_str.rindex_n(s, 3, 5) - 3);
 			s = 'z';
@@ -3897,7 +3906,7 @@ namespace cppstringstests
 		TEST_METHOD(rpartition)
 		{
 			pcs::CppString s("abcd#123efg#123hij");
-			std::vector<CppString> res{ s.rpartition("#123") };
+			std::vector<pcs::CppString> res{ s.rpartition("#123") };
 			Assert::AreEqual("abcd#123efg", res[0].c_str());
 			Assert::AreEqual("#123", res[1].c_str());
 			Assert::AreEqual("hij", res[2].c_str());
@@ -3913,13 +3922,14 @@ namespace cppstringstests
 			Assert::AreEqual("", res[1].c_str());
 			Assert::AreEqual("", res[2].c_str());
 
-			res = ""cs.rpartition("A");
+			using namespace pcs;
+			res = ""_cs.rpartition("A");
 			Assert::AreEqual("", res[0].c_str());
 			Assert::AreEqual("", res[1].c_str());
 			Assert::AreEqual("", res[2].c_str());
 
 			pcs::CppWString ws(L"abcd#123efg#123hij");
-			std::vector<CppWString> wres{ ws.rpartition(L"#123") };
+			std::vector<pcs::CppWString> wres{ ws.rpartition(L"#123") };
 			Assert::AreEqual(L"abcd#123efg", wres[0].c_str());
 			Assert::AreEqual(L"#123", wres[1].c_str());
 			Assert::AreEqual(L"hij", wres[2].c_str());
@@ -3935,7 +3945,7 @@ namespace cppstringstests
 			Assert::AreEqual(L"", wres[1].c_str());
 			Assert::AreEqual(L"", wres[2].c_str());
 
-			wres = L""cs.rpartition(L"A");
+			wres = L""_cs.rpartition(L"A");
 			Assert::AreEqual(L"", wres[0].c_str());
 			Assert::AreEqual(L"", wres[1].c_str());
 			Assert::AreEqual(L"", wres[2].c_str());
@@ -3944,7 +3954,7 @@ namespace cppstringstests
 		TEST_METHOD(rsplit)
 		{
 			pcs::CppString s(" abcd efg   hij klmn  ");
-			std::vector<CppString> res{ s.rsplit() };
+			std::vector<pcs::CppString> res{ s.rsplit() };
 			Assert::AreEqual("", res[0].c_str());
 			Assert::AreEqual("abcd", res[1].c_str());
 			Assert::AreEqual("efg", res[2].c_str());
@@ -4051,7 +4061,7 @@ namespace cppstringstests
 			Assert::AreEqual("", res[7].c_str());
 			Assert::AreEqual("", res[8].c_str());
 
-			s = pcs::CppString(5, ' ');  //"     "cs;
+			s = pcs::CppString(5, ' ');  //"     "_cs;
 			res = s.rsplit();
 			Assert::AreEqual(pcs::CppString::size_type(6), res.size());
 			Assert::AreEqual("", res[0].c_str());
@@ -4062,7 +4072,8 @@ namespace cppstringstests
 			Assert::AreEqual("", res[5].c_str());
 
 
-			s = " abcd#123efg#123hij #123#123klmn  "cs;
+			using namespace pcs;
+			s = " abcd#123efg#123hij #123#123klmn  "_cs;
 			res = s.rsplit("#123");
 			Assert::AreEqual(pcs::CppString::size_type(5), res.size());
 			Assert::AreEqual(" abcd", res[0].c_str());
@@ -4071,7 +4082,7 @@ namespace cppstringstests
 			Assert::AreEqual("", res[3].c_str());
 			Assert::AreEqual("klmn  ", res[4].c_str());
 
-			s = "#123#123abcd#123123efg#123hij #123#123klmn  #123#123"cs;
+			s = "#123#123abcd#123123efg#123hij #123#123klmn  #123#123"_cs;
 			res = s.rsplit("#123");
 			Assert::AreEqual(pcs::CppString::size_type(9), res.size());
 			Assert::AreEqual("", res[0].c_str());
@@ -4178,7 +4189,7 @@ namespace cppstringstests
 
 
 			pcs::CppWString ws(L" abcd efg   hij klmn  ");
-			std::vector<CppWString> wres{ ws.rsplit() };
+			std::vector<pcs::CppWString> wres{ ws.rsplit() };
 			Assert::AreEqual(L"", wres[0].c_str());
 			Assert::AreEqual(L"abcd", wres[1].c_str());
 			Assert::AreEqual(L"efg", wres[2].c_str());
@@ -4285,7 +4296,7 @@ namespace cppstringstests
 			Assert::AreEqual(L"", wres[7].c_str());
 			Assert::AreEqual(L"", wres[8].c_str());
 
-			ws = pcs::CppWString(5, ' ');  //L"     "cs;
+			ws = pcs::CppWString(5, ' ');  //L"     "_cs;
 			wres = ws.rsplit();
 			Assert::AreEqual(pcs::CppWString::size_type(6), wres.size());
 			Assert::AreEqual(L"", wres[0].c_str());
@@ -4295,7 +4306,7 @@ namespace cppstringstests
 			Assert::AreEqual(L"", wres[4].c_str());
 			Assert::AreEqual(L"", wres[5].c_str());
 
-			ws = L" abcd#123efg#123hij #123#123klmn  "cs;
+			ws = L" abcd#123efg#123hij #123#123klmn  "_cs;
 			wres = ws.rsplit(L"#123");
 			Assert::AreEqual(pcs::CppWString::size_type(5), wres.size());
 			Assert::AreEqual(L" abcd", wres[0].c_str());
@@ -4304,7 +4315,7 @@ namespace cppstringstests
 			Assert::AreEqual(L"", wres[3].c_str());
 			Assert::AreEqual(L"klmn  ", wres[4].c_str());
 
-			ws = L"#123#123abcd#123123efg#123hij #123#123klmn  #123#123"cs;
+			ws = L"#123#123abcd#123123efg#123hij #123#123klmn  #123#123"_cs;
 			wres = ws.rsplit(L"#123");
 			Assert::AreEqual(pcs::CppWString::size_type(9), wres.size());
 			Assert::AreEqual(L"", wres[0].c_str());
@@ -4416,23 +4427,24 @@ namespace cppstringstests
 			pcs::CppString sres{ s.rstrip() };
 			Assert::AreEqual(" abcd efg", sres.c_str());
 
-			s = " abcd efg  hij"cs;
+			using namespace pcs;
+			s = " abcd efg  hij"_cs;
 			sres = s.rstrip();
 			Assert::AreEqual(" abcd efg  hij", sres.c_str());
 
-			s = ""cs;
+			s = ""_cs;
 			sres = s.rstrip();
 			Assert::AreEqual("", sres.c_str());
 
-			s = "     "cs;
+			s = "     "_cs;
 			sres = s.rstrip();
 			Assert::AreEqual("", sres.c_str());
 
-			s = "#124abcd#124efg#1241#24#142"cs;
+			s = "#124abcd#124efg#1241#24#142"_cs;
 			sres = s.rstrip("#124");
 			Assert::AreEqual("#124abcd#124efg", sres.c_str());
 
-			s = "#124abcd#124efg#124#124hij"cs;
+			s = "#124abcd#124efg#124#124hij"_cs;
 			sres = s.rstrip("#124");
 			Assert::AreEqual("#124abcd#124efg#124#124hij", sres.c_str());
 
@@ -4444,23 +4456,23 @@ namespace cppstringstests
 			pcs::CppWString wsres{ ws.rstrip() };
 			Assert::AreEqual(L" abcd efg", wsres.c_str());
 
-			ws = L" abcd efg  hij"cs;
+			ws = L" abcd efg  hij"_cs;
 			wsres = ws.rstrip();
 			Assert::AreEqual(L" abcd efg  hij", wsres.c_str());
 
-			ws = L""cs;
+			ws = L""_cs;
 			wsres = ws.rstrip();
 			Assert::AreEqual(L"", wsres.c_str());
 
-			ws = L"     "cs;
+			ws = L"     "_cs;
 			wsres = ws.rstrip();
 			Assert::AreEqual(L"", wsres.c_str());
 
-			ws = L"#124abcd#124efg#124#124#124"cs;
+			ws = L"#124abcd#124efg#124#124#124"_cs;
 			wsres = ws.rstrip(L"#124");
 			Assert::AreEqual(L"#124abcd#124efg", wsres.c_str());
 
-			ws = L"#124abcd#124efg#124#124hij"cs;
+			ws = L"#124abcd#124efg#124#124hij"_cs;
 			wsres = ws.rstrip(L"#124");
 			Assert::AreEqual(L"#124abcd#124efg#124#124hij", wsres.c_str());
 
@@ -4472,7 +4484,7 @@ namespace cppstringstests
 		TEST_METHOD(split)
 		{
 			pcs::CppString s(" abcd efg   hij klmn  ");
-			std::vector<CppString> res{ s.rsplit() };
+			std::vector<pcs::CppString> res{ s.rsplit() };
 			Assert::AreEqual("", res[0].c_str());
 			Assert::AreEqual("abcd", res[1].c_str());
 			Assert::AreEqual("efg", res[2].c_str());
@@ -4590,7 +4602,8 @@ namespace cppstringstests
 			Assert::AreEqual("", res[5].c_str());
 
 
-			s = " abcd#124efg#124hij #124#124klmn  "cs;
+			using namespace pcs;
+			s = " abcd#124efg#124hij #124#124klmn  "_cs;
 			res = s.split("#124");
 			Assert::AreEqual(" abcd", res[0].c_str());
 			Assert::AreEqual("efg", res[1].c_str());
@@ -4598,7 +4611,7 @@ namespace cppstringstests
 			Assert::AreEqual("", res[3].c_str());
 			Assert::AreEqual("klmn  ", res[4].c_str());
 
-			s = "#124#124abcd#124124efg#124hij #124#124klmn  #124#124"cs;
+			s = "#124#124abcd#124124efg#124hij #124#124klmn  #124#124"_cs;
 			res = s.split("#124");
 			Assert::AreEqual(pcs::CppString::size_type(9), res.size());
 			Assert::AreEqual("", res[0].c_str());
@@ -4705,7 +4718,7 @@ namespace cppstringstests
 
 
 			pcs::CppWString ws(L" abcd efg   hij klmn  ");
-			std::vector<CppWString> wres{ ws.split() };
+			std::vector<pcs::CppWString> wres{ ws.split() };
 			Assert::AreEqual(L"", wres[0].c_str());
 			Assert::AreEqual(L"abcd", wres[1].c_str());
 			Assert::AreEqual(L"efg", wres[2].c_str());
@@ -4813,7 +4826,7 @@ namespace cppstringstests
 			Assert::AreEqual(L"", wres[7].c_str());
 			Assert::AreEqual(L"", wres[8].c_str());
 
-			ws = pcs::CppWString(5, ' ');  //L"     "cs;
+			ws = pcs::CppWString(5, ' ');  //L"     "_cs;
 			wres = ws.split();
 			Assert::AreEqual(pcs::CppWString::size_type(6), wres.size());
 			Assert::AreEqual(L"", wres[0].c_str());
@@ -4823,7 +4836,7 @@ namespace cppstringstests
 			Assert::AreEqual(L"", wres[4].c_str());
 			Assert::AreEqual(L"", wres[5].c_str());
 
-			ws = L" abcd#124efg#124hij #124#124klmn  "cs;
+			ws = L" abcd#124efg#124hij #124#124klmn  "_cs;
 			wres = ws.split(L"#124");
 			Assert::AreEqual(L" abcd", wres[0].c_str());
 			Assert::AreEqual(L"efg", wres[1].c_str());
@@ -4831,7 +4844,7 @@ namespace cppstringstests
 			Assert::AreEqual(L"", wres[3].c_str());
 			Assert::AreEqual(L"klmn  ", wres[4].c_str());
 
-			ws = L"#124#124abcd#124124efg#124hij #124#124klmn  #124#124"cs;
+			ws = L"#124#124abcd#124124efg#124hij #124#124klmn  #124#124"_cs;
 			wres = ws.split(L"#124");
 			Assert::AreEqual(L"", wres[0].c_str());
 			Assert::AreEqual(L"", wres[1].c_str());
@@ -4941,9 +4954,9 @@ namespace cppstringstests
 #pragma warning(push)
 #pragma warning(disable: 4566)  // to get no warning when current page code is not compatible with next unicode points
 			{
-				CppString wtext{ "\vabc\013cde\fefg\x0cghi\x1cijk\x1dklm\x1dmno\r\n\nopq\rqrs\vstu\ruvw\nwxy\r\nzzz\x0c.\r" };
-				std::vector<CppString> lines{ wtext.splitlines() };
-				std::vector<CppString> expected{ "", "abc", "cde", "efg", "ghi", "ijk", "klm", "mno", "", "opq", "qrs", "stu", "uvw", "wxy", "zzz", "." };
+				pcs::CppString wtext{ "\vabc\013cde\fefg\x0cghi\x1cijk\x1dklm\x1dmno\r\n\nopq\rqrs\vstu\ruvw\nwxy\r\nzzz\x0c.\r" };
+				std::vector<pcs::CppString> lines{ wtext.splitlines() };
+				std::vector<pcs::CppString> expected{ "", "abc", "cde", "efg", "ghi", "ijk", "klm", "mno", "", "opq", "qrs", "stu", "uvw", "wxy", "zzz", "." };
 				auto exp_it{ expected.cbegin() };
 				auto lin_it{ lines.cbegin() };
 				for (; lin_it != lines.cend() && exp_it != expected.cend(); ++lin_it, ++exp_it) {
@@ -4954,9 +4967,9 @@ namespace cppstringstests
 			}
 
 			{
-				CppString wtext{ "\vabc\013cde\fefg\x0cghi\x1cijk\x1dklm\x1dmno\r\n\nopq\rqrs\vstu\ruvw\nwxy\r\nzzz\x0c.\r\n" };
-				std::vector<CppString> lines{ wtext.splitlines() };
-				std::vector<CppString> expected{ "", "abc", "cde", "efg", "ghi", "ijk", "klm", "mno", "", "opq", "qrs", "stu", "uvw", "wxy", "zzz", "." };
+				pcs::CppString wtext{ "\vabc\013cde\fefg\x0cghi\x1cijk\x1dklm\x1dmno\r\n\nopq\rqrs\vstu\ruvw\nwxy\r\nzzz\x0c.\r\n" };
+				std::vector<pcs::CppString> lines{ wtext.splitlines() };
+				std::vector<pcs::CppString> expected{ "", "abc", "cde", "efg", "ghi", "ijk", "klm", "mno", "", "opq", "qrs", "stu", "uvw", "wxy", "zzz", "." };
 				auto exp_it{ expected.cbegin() };
 				auto lin_it{ lines.cbegin() };
 				for (; lin_it != lines.cend() && exp_it != expected.cend(); ++lin_it, ++exp_it) {
@@ -4967,9 +4980,9 @@ namespace cppstringstests
 			}
 
 			{
-				CppString wtext{ "\vabc\013cde\fefg\x0cghi\x1cijk\x1dklm\x1dmno\r\n\nopq\rqrs\vstu\ruvw\nwxy\r\nzzz\x0c.\n\r" };
-				std::vector<CppString> lines{ wtext.splitlines() };
-				std::vector<CppString> expected{ "", "abc", "cde", "efg", "ghi", "ijk", "klm", "mno", "", "opq", "qrs", "stu", "uvw", "wxy", "zzz", ".", "" };
+				pcs::CppString wtext{ "\vabc\013cde\fefg\x0cghi\x1cijk\x1dklm\x1dmno\r\n\nopq\rqrs\vstu\ruvw\nwxy\r\nzzz\x0c.\n\r" };
+				std::vector<pcs::CppString> lines{ wtext.splitlines() };
+				std::vector<pcs::CppString> expected{ "", "abc", "cde", "efg", "ghi", "ijk", "klm", "mno", "", "opq", "qrs", "stu", "uvw", "wxy", "zzz", ".", "" };
 				auto exp_it{ expected.cbegin() };
 				auto lin_it{ lines.cbegin() };
 				for (; lin_it != lines.cend() && exp_it != expected.cend(); ++lin_it, ++exp_it) {
@@ -4980,9 +4993,9 @@ namespace cppstringstests
 			}
 
 			{
-				CppString wtext{ "\vabc\013cde\fefg\x0cghi\x1cijk\x1dklm\x1dmno\r\n\nopq\rqrs\vstu\ruvw\nwxy\r\nzzz\x0c.\r" };
-				std::vector<CppString> lines{ wtext.splitlines(true) };
-				std::vector<CppString> expected{
+				pcs::CppString wtext{ "\vabc\013cde\fefg\x0cghi\x1cijk\x1dklm\x1dmno\r\n\nopq\rqrs\vstu\ruvw\nwxy\r\nzzz\x0c.\r" };
+				std::vector<pcs::CppString> lines{ wtext.splitlines(true) };
+				std::vector<pcs::CppString> expected{
 					"\v", "abc\013", "cde\f", "efg\x0c", "ghi\x1c", "ijk\x1d", "klm\x1d", "mno\r\n",
 					"\n", "opq\r", "qrs\v", "stu\r", "uvw\n", "wxy\r\n", "zzz\x0c", ".\r"
 				};
@@ -4996,9 +5009,9 @@ namespace cppstringstests
 			}
 
 			{
-				CppString wtext{ "\vabc\013cde\fefg\x0cghi\x1cijk\x1dklm\x1dmno\r\n\nopq\rqrs\vstu\ruvw\nwxy\r\nzzz\x0c.\r\n" };
-				std::vector<CppString> lines{ wtext.splitlines(true) };
-				std::vector<CppString> expected{
+				pcs::CppString wtext{ "\vabc\013cde\fefg\x0cghi\x1cijk\x1dklm\x1dmno\r\n\nopq\rqrs\vstu\ruvw\nwxy\r\nzzz\x0c.\r\n" };
+				std::vector<pcs::CppString> lines{ wtext.splitlines(true) };
+				std::vector<pcs::CppString> expected{
 					"\v", "abc\013", "cde\f", "efg\x0c", "ghi\x1c", "ijk\x1d", "klm\x1d", "mno\r\n",
 					"\n", "opq\r", "qrs\v", "stu\r", "uvw\n", "wxy\r\n", "zzz\x0c", ".\r\n"
 				};
@@ -5012,9 +5025,9 @@ namespace cppstringstests
 			}
 
 			{
-				CppString wtext{ "\vabc\013cde\fefg\x0cghi\x1cijk\x1dklm\x1dmno\r\n\nopq\rqrs\vstu\ruvw\nwxy\r\nzzz\x0c.\n\r" };
-				std::vector<CppString> lines{ wtext.splitlines(true) };
-				std::vector<CppString> expected{
+				pcs::CppString wtext{ "\vabc\013cde\fefg\x0cghi\x1cijk\x1dklm\x1dmno\r\n\nopq\rqrs\vstu\ruvw\nwxy\r\nzzz\x0c.\n\r" };
+				std::vector<pcs::CppString> lines{ wtext.splitlines(true) };
+				std::vector<pcs::CppString> expected{
 					"\v", "abc\013", "cde\f", "efg\x0c", "ghi\x1c", "ijk\x1d", "klm\x1d", "mno\r\n",
 					"\n", "opq\r", "qrs\v", "stu\r", "uvw\n", "wxy\r\n", "zzz\x0c", ".\n", "\r"
 				};
@@ -5029,9 +5042,9 @@ namespace cppstringstests
 
 
 			{
-				CppWString wtext{ L"\vabc\013cde\fefg\x0cghi\x1cijk\x1dklm\x1dmno\r\n\nopq\rqrs\vstu\ruvw\nwxy\r\nzzz\x0c.\r" };
-				std::vector<CppWString> wlines{ wtext.splitlines() };
-				std::vector<CppWString> wexpected{ L"", L"abc", L"cde", L"efg", L"ghi", L"ijk", L"klm", L"mno", L"", L"opq", L"qrs", L"stu", L"uvw", L"wxy", L"zzz", L"."};
+				pcs::CppWString wtext{ L"\vabc\013cde\fefg\x0cghi\x1cijk\x1dklm\x1dmno\r\n\nopq\rqrs\vstu\ruvw\nwxy\r\nzzz\x0c.\r" };
+				std::vector<pcs::CppWString> wlines{ wtext.splitlines() };
+				std::vector<pcs::CppWString> wexpected{ L"", L"abc", L"cde", L"efg", L"ghi", L"ijk", L"klm", L"mno", L"", L"opq", L"qrs", L"stu", L"uvw", L"wxy", L"zzz", L"."};
 				auto exp_it{ wexpected.cbegin() };
 				auto lin_it{ wlines.cbegin() };
 				for (; lin_it != wlines.cend() && exp_it != wexpected.cend(); ++lin_it, ++exp_it) {
@@ -5042,9 +5055,9 @@ namespace cppstringstests
 			}
 
 			{
-				CppWString wtext{ L"\vabc\013cde\fefg\x0cghi\x1cijk\x1dklm\x1dmno\r\n\nopq\rqrs\vstu\ruvw\nwxy\r\nzzz\x0c.\r\n" };
-				std::vector<CppWString> wlines{ wtext.splitlines() };
-				std::vector<CppWString> wexpected{ L"", L"abc", L"cde", L"efg", L"ghi", L"ijk", L"klm", L"mno", L"", L"opq", L"qrs", L"stu", L"uvw", L"wxy", L"zzz", L"."};
+				pcs::CppWString wtext{ L"\vabc\013cde\fefg\x0cghi\x1cijk\x1dklm\x1dmno\r\n\nopq\rqrs\vstu\ruvw\nwxy\r\nzzz\x0c.\r\n" };
+				std::vector<pcs::CppWString> wlines{ wtext.splitlines() };
+				std::vector<pcs::CppWString> wexpected{ L"", L"abc", L"cde", L"efg", L"ghi", L"ijk", L"klm", L"mno", L"", L"opq", L"qrs", L"stu", L"uvw", L"wxy", L"zzz", L"."};
 				auto exp_it{ wexpected.cbegin() };
 				auto lin_it{ wlines.cbegin() };
 				for (; lin_it != wlines.cend() && exp_it != wexpected.cend(); ++lin_it, ++exp_it) {
@@ -5055,9 +5068,9 @@ namespace cppstringstests
 			}
 
 			{
-				CppWString wtext{ L"\vabc\013cde\fefg\x0cghi\x1cijk\x1dklm\x1dmno\r\n\nopq\rqrs\vstu\ruvw\nwxy\r\nzzz\x0c.\n\r" };
-				std::vector<CppWString> wlines{ wtext.splitlines() };
-				std::vector<CppWString> wexpected{ L"", L"abc", L"cde", L"efg", L"ghi", L"ijk", L"klm", L"mno", L"", L"opq", L"qrs", L"stu", L"uvw", L"wxy", L"zzz", L".", L""};
+				pcs::CppWString wtext{ L"\vabc\013cde\fefg\x0cghi\x1cijk\x1dklm\x1dmno\r\n\nopq\rqrs\vstu\ruvw\nwxy\r\nzzz\x0c.\n\r" };
+				std::vector<pcs::CppWString> wlines{ wtext.splitlines() };
+				std::vector<pcs::CppWString> wexpected{ L"", L"abc", L"cde", L"efg", L"ghi", L"ijk", L"klm", L"mno", L"", L"opq", L"qrs", L"stu", L"uvw", L"wxy", L"zzz", L".", L""};
 				auto exp_it{ wexpected.cbegin() };
 				auto lin_it{ wlines.cbegin() };
 				for (; lin_it != wlines.cend() && exp_it != wexpected.cend(); ++lin_it, ++exp_it) {
@@ -5068,9 +5081,9 @@ namespace cppstringstests
 			}
 
 			{
-				CppWString wtext{ L"\vabc\013cde\fefg\x0cghi\x1cijk\x1dklm\x1dmno\r\n\nopq\rqrs\vstu\ruvw\nwxy\r\nzzz\x0c.\r" };
-				std::vector<CppWString> wlines{ wtext.splitlines(true) };
-				std::vector<CppWString> wexpected{
+				pcs::CppWString wtext{ L"\vabc\013cde\fefg\x0cghi\x1cijk\x1dklm\x1dmno\r\n\nopq\rqrs\vstu\ruvw\nwxy\r\nzzz\x0c.\r" };
+				std::vector<pcs::CppWString> wlines{ wtext.splitlines(true) };
+				std::vector<pcs::CppWString> wexpected{
 					L"\v", L"abc\013", L"cde\f", L"efg\x0c", L"ghi\x1c", L"ijk\x1d", L"klm\x1d", L"mno\r\n",
 					L"\n", L"opq\r", L"qrs\v", L"stu\r", L"uvw\n", L"wxy\r\n", L"zzz\x0c", L".\r"
 				};
@@ -5084,9 +5097,9 @@ namespace cppstringstests
 			}
 
 			{
-				CppWString wtext{ L"\vabc\013cde\fefg\x0cghi\x1cijk\x1dklm\x1dmno\r\n\nopq\rqrs\vstu\ruvw\nwxy\r\nzzz\x0c.\r\n" };
-				std::vector<CppWString> wlines{ wtext.splitlines(true) };
-				std::vector<CppWString> wexpected{
+				pcs::CppWString wtext{ L"\vabc\013cde\fefg\x0cghi\x1cijk\x1dklm\x1dmno\r\n\nopq\rqrs\vstu\ruvw\nwxy\r\nzzz\x0c.\r\n" };
+				std::vector<pcs::CppWString> wlines{ wtext.splitlines(true) };
+				std::vector<pcs::CppWString> wexpected{
 					L"\v", L"abc\013", L"cde\f", L"efg\x0c", L"ghi\x1c", L"ijk\x1d", L"klm\x1d", L"mno\r\n",
 					L"\n", L"opq\r", L"qrs\v", L"stu\r", L"uvw\n", L"wxy\r\n", L"zzz\x0c", L".\r\n"
 				};
@@ -5100,9 +5113,9 @@ namespace cppstringstests
 			}
 
 			{
-				CppWString wtext{ L"\vabc\013cde\fefg\x0cghi\x1cijk\x1dklm\x1dmno\r\n\nopq\rqrs\vstu\ruvw\nwxy\r\nzzz\x0c.\n\r" };
-				std::vector<CppWString> wlines{ wtext.splitlines(true) };
-				std::vector<CppWString> wexpected{
+				pcs::CppWString wtext{ L"\vabc\013cde\fefg\x0cghi\x1cijk\x1dklm\x1dmno\r\n\nopq\rqrs\vstu\ruvw\nwxy\r\nzzz\x0c.\n\r" };
+				std::vector<pcs::CppWString> wlines{ wtext.splitlines(true) };
+				std::vector<pcs::CppWString> wexpected{
 					L"\v", L"abc\013", L"cde\f", L"efg\x0c", L"ghi\x1c", L"ijk\x1d", L"klm\x1d", L"mno\r\n",
 					L"\n", L"opq\r", L"qrs\v", L"stu\r", L"uvw\n", L"wxy\r\n", L"zzz\x0c", L".\n", L"\r"
 				};
@@ -5121,7 +5134,7 @@ namespace cppstringstests
 
 		TEST_METHOD(startswith)
 		{
-			CppString text("Abcdef");
+			pcs::CppString text("Abcdef");
 			const size_t len{ text.size() };
 
 			Assert::IsTrue(text.startswith("A"));
@@ -5181,7 +5194,7 @@ namespace cppstringstests
 			Assert::IsFalse(text.startswith({ "def", "ghi", "Abcd" }, 0, len - 4));
 
 
-			CppWString wtext(L"Abcdef");
+			pcs::CppWString wtext(L"Abcdef");
 
 			Assert::IsTrue(wtext.startswith(L"A"));
 			Assert::IsTrue(wtext.startswith(L"Ab"));
@@ -5242,7 +5255,7 @@ namespace cppstringstests
 
 		TEST_METHOD(startswith_n)
 		{
-			CppString text("Abcdef");
+			pcs::CppString text("Abcdef");
 			const size_t len{ text.size() };
 
 			Assert::IsTrue(text.startswith_n("A", 2));
@@ -5302,7 +5315,7 @@ namespace cppstringstests
 			Assert::IsFalse(text.startswith_n({ "def", "ghi", "Abcd" }, 0, len - 4));
 
 
-			CppWString wtext(L"Abcdef");
+			pcs::CppWString wtext(L"Abcdef");
 			const size_t wlen{ wtext.size() };
 
 			Assert::IsTrue(wtext.startswith_n(L"A", 2));
@@ -5364,7 +5377,7 @@ namespace cppstringstests
 
 		TEST_METHOD(strip)
 		{
-			CppString text("abcdefedcbaea");
+			pcs::CppString text("abcdefedcbaea");
 
 			Assert::AreEqual("bcdefedcbae", text.strip("a").c_str());
 			Assert::AreEqual("cdefedcbae", text.strip("ba").c_str());
@@ -5376,7 +5389,7 @@ namespace cppstringstests
 			Assert::AreEqual("abcdefedcbaea", text.strip("ghijZ").c_str());
 			Assert::AreEqual("abcdefedcbaea", text.strip("ABc").c_str());
 
-			CppWString wtext(L"abcdefedcbaea");
+			pcs::CppWString wtext(L"abcdefedcbaea");
 
 			Assert::AreEqual(L"bcdefedcbae", wtext.strip(L"a").c_str());
 			Assert::AreEqual(L"cdefedcbae", wtext.strip(L"ba").c_str());
@@ -5391,7 +5404,7 @@ namespace cppstringstests
 
 		TEST_METHOD(substr)
 		{
-			CppString text("AbcDefGhi");
+			pcs::CppString text("AbcDefGhi");
 
 			Assert::AreEqual("AbcDefGhi", text.substr(0, 9).c_str());
 			Assert::AreEqual("bcDefGhi", text.substr(1, 8).c_str());
@@ -5429,7 +5442,7 @@ namespace cppstringstests
 			Assert::AreEqual("", text.substr(10, 15).c_str());
 			Assert::AreEqual("", text.substr(21).c_str());
 
-			CppWString wtext(L"AbcDefGhi");
+			pcs::CppWString wtext(L"AbcDefGhi");
 
 			Assert::AreEqual(L"AbcDefGhi", wtext.substr(0, 9).c_str());
 			Assert::AreEqual(L"bcDefGhi", wtext.substr(1, 8).c_str());
@@ -5470,10 +5483,10 @@ namespace cppstringstests
 
 		TEST_METHOD(swapcase)
 		{
-			CppString s(255, '\0');
+			pcs::CppString s(255, '\0');
 			for (int i : std::views::iota(0, 256))
-				s[i] = CppString::value_type(i);
-			CppString res{ s.swapcase() };
+				s[i] = pcs::CppString::value_type(i);
+			pcs::CppString res{ s.swapcase() };
 			for (auto const [s, r] : std::views::zip(s, res)) {
 				if (std::islower(s))
 					Assert::IsTrue(std::isupper(r));
@@ -5483,10 +5496,10 @@ namespace cppstringstests
 					Assert::AreEqual(s, r);
 			}
 
-			CppWString ws(0xffff, '\0');
+			pcs::CppWString ws(0xffff, '\0');
 			for (int i : std::views::iota(0, 0x1'0000))
-				ws[i] = CppWString::value_type(i);
-			CppWString wres{ ws.swapcase() };
+				ws[i] = pcs::CppWString::value_type(i);
+			pcs::CppWString wres{ ws.swapcase() };
 			for (auto const [ws, wr] : std::views::zip(ws, wres)) {
 				if (std::islower(ws))
 					Assert::IsTrue(std::isupper(wr));
@@ -5499,28 +5512,28 @@ namespace cppstringstests
 
 		TEST_METHOD(title)
 		{
-			CppString text("to bE  TiTlEd - cheCKing,errors, in Case oF aNy fOUNd");
-			CppString expected("To Be  Titled - Checking,errors, In Case Of Any Found");
-			CppString res{ text.title() };
+			pcs::CppString text("to bE  TiTlEd - cheCKing,errors, in Case oF aNy fOUNd");
+			pcs::CppString expected("To Be  Titled - Checking,errors, In Case Of Any Found");
+			pcs::CppString res{ text.title() };
 			Assert::AreEqual(expected.c_str(), res.c_str());
 
-			CppWString wtext(L"to bE  TiTlEd - cheCKing,errors, in Case oF aNy fOUNd\u2026\x86");
-			CppWString wexpected(L"To Be  Titled - Checking,errors, In Case Of Any Found\u2026\x86");
-			CppWString wres{ wtext.title() };
+			pcs::CppWString wtext(L"to bE  TiTlEd - cheCKing,errors, in Case oF aNy fOUNd\u2026\x86");
+			pcs::CppWString wexpected(L"To Be  Titled - Checking,errors, In Case Of Any Found\u2026\x86");
+			pcs::CppWString wres{ wtext.title() };
 			Assert::AreEqual(wexpected.c_str(), wres.c_str());
 
 		}
 
 		TEST_METHOD(translate)
 		{
-			CppString::TransTable trans_table("oizeaslbgOIZEASLG", "012345789012345789");
-			CppString text("This is a big 'Oiseau' that can be seen in 'Le Zoo'");
-			CppString expected("Th15 15 4 819 '01534u' th4t c4n 83 533n 1n '73 200'");
+			pcs::CppString::TransTable trans_table("oizeaslbgOIZEASLG", "012345789012345789");
+			pcs::CppString text("This is a big 'Oiseau' that can be seen in 'Le Zoo'");
+			pcs::CppString expected("Th15 15 4 819 '01534u' th4t c4n 83 533n 1n '73 200'");
 			Assert::AreEqual(expected.c_str(), text.translate(trans_table).c_str());
 
-			CppWString::TransTable wtrans_table(L"oizeaslbgOIZEASLG", L"012345789012345789");
-			CppWString wtext(L"This is a big 'Oiseau' that can be seen in 'Le Zoo'");
-			CppWString wexpected(L"Th15 15 4 819 '01534u' th4t c4n 83 533n 1n '73 200'");
+			pcs::CppWString::TransTable wtrans_table(L"oizeaslbgOIZEASLG", L"012345789012345789");
+			pcs::CppWString wtext(L"This is a big 'Oiseau' that can be seen in 'Le Zoo'");
+			pcs::CppWString wexpected(L"Th15 15 4 819 '01534u' th4t c4n 83 533n 1n '73 200'");
 			Assert::AreEqual(wexpected.c_str(), wtext.translate(wtrans_table).c_str());
 		}
 
@@ -5546,10 +5559,10 @@ namespace cppstringstests
 				Assert::AreEqual(wchar_t(std::toupper(wch)), pcs::CppWString::upper(wch));
 			}
 
-			CppString s(255, '\0');
+			pcs::CppString s(255, '\0');
 			for (int i : std::views::iota(0, 256))
-				s[i] = CppString::value_type(i);
-			CppString res{ s.upper() };
+				s[i] = pcs::CppString::value_type(i);
+			pcs::CppString res{ s.upper() };
 			for (auto const [cs, cr] : std::views::zip(s, res)) {
 				if (std::islower(cs))
 					Assert::IsTrue(std::isupper(cr));
@@ -5559,10 +5572,10 @@ namespace cppstringstests
 					Assert::AreEqual(cs, cr);
 			}
 
-			CppWString ws(0xffff, '\0');
+			pcs::CppWString ws(0xffff, '\0');
 			for (int i : std::views::iota(0, 0x1'0000))
-				ws[i] = CppWString::value_type(i);
-			CppWString wres{ ws.upper() };
+				ws[i] = pcs::CppWString::value_type(i);
+			pcs::CppWString wres{ ws.upper() };
 			for (auto const [wcs, wcr] : std::views::zip(ws, wres)) {
 				if (std::islower(wcs))
 					Assert::IsTrue(std::isupper(wcr));
@@ -5576,7 +5589,7 @@ namespace cppstringstests
 
 		TEST_METHOD(zfill)
 		{
-			CppString s("1.23");
+			pcs::CppString s("1.23");
 			Assert::AreEqual("1.23", s.zfill(0).c_str());
 			Assert::AreEqual("1.23", s.zfill(1).c_str());
 			Assert::AreEqual("1.23", s.zfill(2).c_str());
@@ -5616,7 +5629,7 @@ namespace cppstringstests
 			Assert::AreEqual("00*1.23", s.zfill(7).c_str());
 
 
-			CppWString ws(L"1.23");
+			pcs::CppWString ws(L"1.23");
 			Assert::AreEqual(L"1.23", ws.zfill(0).c_str());
 			Assert::AreEqual(L"1.23", ws.zfill(1).c_str());
 			Assert::AreEqual(L"1.23", ws.zfill(2).c_str());

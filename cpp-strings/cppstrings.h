@@ -36,13 +36,9 @@
 #include <vector>
 
 
+
 namespace pcs // i.e. "pythonic c++ strings"
 {
-#if defined(_MSC_VER)
-#   pragma warning(push)
-#   pragma warning(disable: 4455)  // to avoid boring warnings with litteral operators definitions
-#endif
-
     //=============================================================
     // Forward declarations
 
@@ -56,6 +52,16 @@ namespace pcs // i.e. "pythonic c++ strings"
     // specializations of the base class -- these are the ones that should be instantiated by user.
     using CppString  = CppStringT<char>;                        //!< Specialization of basic class with template argument 'char'
     using CppWString = CppStringT<wchar_t>;                     //!< Specialization of basic class with template argument 'wchar_t'
+
+
+#if defined(_MSC_VER)
+#   pragma warning(push)
+#   pragma warning(disable: 4455)  // to avoid boring warnings with litteral operators definitions
+#endif
+
+    // litteral operators
+    inline CppString operator""_cs(const char* str, std::size_t len);          //!< Forms a CppString literal. 
+    inline CppWString operator""_cs(const wchar_t* str, std::size_t len);      //!< Forms a CppWString literal. 
 
 
     // slices -- to be used with operator CppStringT::operator().
@@ -86,11 +92,6 @@ namespace pcs // i.e. "pythonic c++ strings"
     template<typename IntT = std::int64_t>
         requires std::is_signed_v<IntT>
     struct StopStepSlice;                                       //!< struct of slices with default start values
-
-
-    // litteral operators
-    inline CppString operator""cs(const char* str, std::size_t len);          //!< Forms a CppString literal. 
-    inline CppWString operator""cs(const wchar_t* str, std::size_t len);      //!< Forms a CppWString literal. 
 
 
     // chars classifications -- not to be directly called, see respective specializations at the very end of this module.
@@ -1825,6 +1826,20 @@ namespace pcs // i.e. "pythonic c++ strings"
     };
 
 
+    //=====   litteral operators   ============================
+    /** \brief  Forms a CppString literal. */
+    inline CppString operator""_cs(const char* str, std::size_t len)
+    {
+        return CppString(CppString::MyBaseClass(str, len));
+    }
+
+    /** \brief Forms a CppWString literal. */
+    inline CppWString operator""_cs(const wchar_t* str, std::size_t len)
+    {
+        return CppWString(CppWString::MyBaseClass(str, len));
+    }
+
+
     //=====   Slices   ========================================
     //---   slices base   -------------------------------------
     /** \brief Base class for slices, with start, stop and step specified values. */
@@ -2035,20 +2050,6 @@ namespace pcs // i.e. "pythonic c++ strings"
 
         virtual ~StopStepSlice() noexcept = default;  //!< Default destructor.
     };
-
-
-    //=====   litteral operators   ============================
-    /** \brief  Forms a CppString literal. */
-    inline CppString operator""cs(const char* str, std::size_t len)
-    {
-        return CppString(CppString::MyBaseClass(str, len));
-    }
-
-    /** \brief Forms a CppWString literal. */
-    inline CppWString operator""cs(const wchar_t* str, std::size_t len)
-    {
-        return CppWString(CppWString::MyBaseClass(str, len));
-    }
 
 
     //=====   templated chars classes   ===========================
@@ -2344,7 +2345,6 @@ namespace pcs // i.e. "pythonic c++ strings"
     {
         return std::towupper(ch);
     }
-
 
 #if defined(_MSC_VER)
 #   pragma warning(pop)  // to avoid boring warnings with litteral operators definitions
