@@ -2541,6 +2541,26 @@ namespace cppstringstests
 
 		}
 
+		TEST_METHOD(format)
+		{
+			pcs::CppString s;
+			s.format("{:d}, {:d}, {:s}", 1, 2, "Abc");
+			Assert::AreEqual("1, 2, Abc", s.c_str());
+
+			const int x{ 5 };
+			const unsigned long long y{ 6 };
+			const double pi{ 3.141592653529 };
+			const std::string t{ "abc." };
+			Assert::AreEqual("56 3.1415927abc.", (s.format("{}{}{:10.7f}{:s}", x, y, pi, t)).c_str());
+
+			pcs::CppWString ws;
+			ws.format(L"{:d}, {:d}, {}", 1, 2, L"Abc");
+			Assert::AreEqual(L"1, 2, Abc", ws.c_str());
+
+			const std::wstring wt{ L"abc." };
+			Assert::AreEqual(L"56 3.1415927abc.", (ws.format(L"{}{}{:10.7f}{:s}", x, y, pi, wt)).c_str());
+		}
+
 		TEST_METHOD(index_char)
 		{
 			using string_type = pcs::CppString;
