@@ -501,7 +501,7 @@ namespace pcs // i.e. "pythonic c++ strings"
 
 
         //---   contains_n()   ------------------------------------
-        /** Returns true if the passed string is found within the slice str[start:start+count-1], or false otherwise.
+        /** \brief Returns true if the passed string is found within the slice str[start:start+count-1], or false otherwise.
         *
         * This is a c++ implementation of Python keyword 'in' applied to Python sliced strings.
         */
@@ -553,25 +553,25 @@ namespace pcs // i.e. "pythonic c++ strings"
 
 
         //---   endswith()   --------------------------------------
-        /** Returns true if the string ends with the specified suffix, otherwise returns false. Test begins at start position and stops at end position. */
+        /** \brief Returns true if the string ends with the specified suffix, otherwise returns false. Test begins at start position and stops at end position. */
         inline const bool endswith(const CppStringT& suffix, const size_type start, const size_type end) const noexcept
         {
             return this->substr(start, end - start + 1).MyBaseClass::ends_with(suffix);
         }
 
-        /** Returns true if the string ends with the specified suffix, otherwise returns false. Test begins at start of string and stops at end position. */
+        /** \brief Returns true if the string ends with the specified suffix, otherwise returns false. Test begins at start of string and stops at end position. */
         inline const bool endswith(const CppStringT& suffix, const size_type end) const noexcept
         {
             return this->substr(0, end).MyBaseClass::ends_with(suffix);
         }
 
-        /** Returns true if the string ends with the specified suffix, otherwise returns false. Test runs on the whole string. */
+        /** \brief Returns true if the string ends with the specified suffix, otherwise returns false. Test runs on the whole string. */
         inline const bool endswith(const CppStringT& suffix) const noexcept
         {
             return static_cast<const bool>(MyBaseClass::ends_with(suffix));
         }
 
-        /** Returns true if the string ends with any of the specified suffixes, otherwise returns false. Test begins at start position and stops at end position. */
+        /** \brief Returns true if the string ends with any of the specified suffixes, otherwise returns false. Test begins at start position and stops at end position. */
         const bool endswith(const std::initializer_list<CppStringT>& suffixes, const size_type start, const size_type end) const noexcept
         {
             if (start > end)
@@ -587,19 +587,19 @@ namespace pcs // i.e. "pythonic c++ strings"
 
 
         //---   endswith_n()   ------------------------------------
-        /** Returns true if the string ends with the specified suffix, otherwise returns false. Test begins at start position and stops after count positions. */
+        /** \brief Returns true if the string ends with the specified suffix, otherwise returns false. Test begins at start position and stops after count positions. */
         inline const bool endswith_n(const CppStringT& suffix, const size_type start, const size_type count) const noexcept
         {
             return endswith(suffix, start, start + count - 1);
         }
 
-        /** Returns true if the string ends with the specified suffix, otherwise returns false. Test begins at position 0 and stops after count positions. */
+        /** \brief Returns true if the string ends with the specified suffix, otherwise returns false. Test begins at position 0 and stops after count positions. */
         inline const bool endswith_n(const CppStringT& suffix, const size_type count) const noexcept
         {
             return endswith(suffix, 0, count - 1);
         }
 
-        /** Returns true if the string ends with any of the specified suffixes, otherwise returns false. Test begins at start position and stops after count positions. */
+        /** \brief Returns true if the string ends with any of the specified suffixes, otherwise returns false. Test begins at start position and stops after count positions. */
         inline const bool endswith_n(const std::initializer_list<CppStringT>& suffixes, const size_type start, const size_type count) const noexcept
         {
             return endswith(suffixes, start, start + count - 1);
@@ -607,7 +607,7 @@ namespace pcs // i.e. "pythonic c++ strings"
 
 
         //---   expand_tabs()   -----------------------------------
-        /** Returns a copy of the string where all tab characters are replaced by one or more spaces, depending on the current column and the given tab size. */
+        /** \brief Returns a copy of the string where all tab characters are replaced by one or more spaces, depending on the current column and the given tab size. */
         CppStringT expand_tabs(const size_type tabsize = 8) const noexcept
         {
             const size_type tabsize_{ tabsize == 0 ? 1 : tabsize };
@@ -636,7 +636,7 @@ namespace pcs // i.e. "pythonic c++ strings"
 
 
         //---   find()   ------------------------------------------
-        /** Returns the lowest index in the string where substring sub is found within the slice str[start:end], or -1 (i.e. 'npos') if sub is not found.
+        /** \brief Returns the lowest index in the string where substring sub is found within the slice str[start:end], or -1 (i.e. 'npos') if sub is not found.
         *
         * Note: this method should be used only if you need to know the position of
         * sub.  To check if sub is a substring or not, use the method contains().
@@ -659,7 +659,7 @@ namespace pcs // i.e. "pythonic c++ strings"
 
 
         //---   find_n()   ----------------------------------------
-        /** Returns the lowest index in the string where substring sub is found within the slice str[start:start+count-1], or -1 (i.e. 'npos') if sub is not found.
+        /** \brief Returns the lowest index in the string where substring sub is found within the slice str[start:start+count-1], or -1 (i.e. 'npos') if sub is not found.
         *
         * Note: this method should be used only if you need to know the position of
         * sub.  To check if sub is a substring or not, use the method contains_n().
@@ -686,7 +686,7 @@ namespace pcs // i.e. "pythonic c++ strings"
             }
         }
 
-        /** Returns the lowest index in the string where substring sub is found within the slice str[0:count-1], or -1 (i.e. 'npos') if sub is not found.
+        /** \brief Returns the lowest index in the string where substring sub is found within the slice str[0:count-1], or -1 (i.e. 'npos') if sub is not found.
         *
         * Note: this method should be used only if you need to know the position of
         * sub.  To check if sub is a substring or not, use the method contains_n().
@@ -705,7 +705,7 @@ namespace pcs // i.e. "pythonic c++ strings"
 
 
         //---   format()   ----------------------------------------
-        /** Formats this string according to c++20 std::format() specification. Returns this string. */
+        /** \brief Formats this string according to c++20 std::format() specification. Returns this string. */
         template<typename T, class... ArgsT>
         inline CppStringT& format(
             const std::basic_format_string<T, std::type_identity_t<ArgsT>...> frmt,
@@ -735,7 +735,7 @@ namespace pcs // i.e. "pythonic c++ strings"
 
 
         //---   index()   -----------------------------------------
-        /** Like find(const CppStringT&), but raises NotFoundException when the substring sub is not found.
+        /** \brief Like find(const CppStringT&), but raises NotFoundException when the substring sub is not found.
         *
         * \see index_n(), rindex() and rindex_n().
         * \see find(), find_n(), rfind() and rfind_n().
@@ -751,7 +751,7 @@ namespace pcs // i.e. "pythonic c++ strings"
 
 
         //---   index_n()   ---------------------------------------
-        /** Like find_n(sub, start, count), but raises NotFoundException when the substring is not found.
+        /** \brief Like find_n(sub, start, count), but raises NotFoundException when the substring is not found.
         *
         * \see index_n(), rindex() and rindex_n().
         * \see find(), find_n(), rfind() and rfind_n().
@@ -761,7 +761,7 @@ namespace pcs // i.e. "pythonic c++ strings"
             return index(sub, start, start + count - 1);
         }
 
-        /** Like find_n(sub, count), but raises NotFoundException when the substring is not found.
+        /** \brief Like find_n(sub, count), but raises NotFoundException when the substring is not found.
         *
         * \see index_n(), rindex() and rindex_n().
         * \see find(), find_n(), rfind() and rfind_n().
@@ -1139,7 +1139,7 @@ namespace pcs // i.e. "pythonic c++ strings"
 
 
         //---   partition()   -------------------------------------
-        /** Splits the string at the first occurrence of sep, and returns a 3-items vector containing the part before the separator, the separator itself, and the part after the separator.
+        /** \brief Splits the string at the first occurrence of sep, and returns a 3-items vector containing the part before the separator, the separator itself, and the part after the separator.
         *
         * If the separator is not  found,  returns  a  3-items  vector
         * containing the string itself, followed by two empty strings.
@@ -1209,7 +1209,7 @@ namespace pcs // i.e. "pythonic c++ strings"
 
 
         //---   rfind()   -----------------------------------------
-        /** Returns the highest index in the string where substring sub is found within the slice str[start:end], or -1 (i.e. 'npos') if sub is not found.
+        /** \brief Returns the highest index in the string where substring sub is found within the slice str[start:end], or -1 (i.e. 'npos') if sub is not found.
         *
         * Note that this is an offset from the start of the string, not the end.
         *
@@ -1236,7 +1236,7 @@ namespace pcs // i.e. "pythonic c++ strings"
         }
 
 
-        /** Returns the highest index in the string where substring sub is found starting at start position in string, or -1 (i.e. 'npos') if sub is not found.
+        /** \brief Returns the highest index in the string where substring sub is found starting at start position in string, or -1 (i.e. 'npos') if sub is not found.
         *
         * Note that this is an offset from the start of the string, not the end.
         *
@@ -1256,7 +1256,7 @@ namespace pcs // i.e. "pythonic c++ strings"
         }
 
 
-        /** Returns the highest index in the string where C-substring sub is found in the whole string, or -1 (i.e. 'npos') if sub is not found.
+        /** \brief Returns the highest index in the string where C-substring sub is found in the whole string, or -1 (i.e. 'npos') if sub is not found.
         *
         * Note that this is an offset from the start of the string, not the end.
         *
@@ -1277,7 +1277,7 @@ namespace pcs // i.e. "pythonic c++ strings"
 
 
         //---   rfind_n()   ---------------------------------------
-        /** Returns the highest index in the string where substring sub is found within the slice str[start:start+count-1], or -1 (i.e. 'npos') if sub is not found.
+        /** \brief Returns the highest index in the string where substring sub is found within the slice str[start:start+count-1], or -1 (i.e. 'npos') if sub is not found.
         *
         * Note: this method should be used only if you need to  know  the  position
         * of sub. To check if sub is a substring or not, use the method contains_n().
@@ -1290,7 +1290,7 @@ namespace pcs // i.e. "pythonic c++ strings"
             return rfind(sub, start, start + count - 1);
         }
 
-        /** Returns the highest index in the string where substring sub is found within the slice str[0:count-1], or -1 (i.e. 'npos') if sub is not found.
+        /** \brief Returns the highest index in the string where substring sub is found within the slice str[0:count-1], or -1 (i.e. 'npos') if sub is not found.
          *
          * Note: this method should be used only if you need to  know  the  position
          * of sub. To check if sub is a substring or not, use the method contains_n().
@@ -1308,7 +1308,7 @@ namespace pcs // i.e. "pythonic c++ strings"
 
 
         //---   rindex()   ----------------------------------------
-        /** Like rfind(sub, start, end), but raises NotFoundException when the substring is not found.
+        /** \brief Like rfind(sub, start, end), but raises NotFoundException when the substring is not found.
         *
         * \see index(), index_n() and rindex_n().
         * \see find(), find_n(), rfind() and rfind_n().
@@ -1322,7 +1322,7 @@ namespace pcs // i.e. "pythonic c++ strings"
                 return ret_value;
         }
 
-        /** Like rfind(sub, start), but raises NotFoundException when the substring is not found.
+        /** \brief Like rfind(sub, start), but raises NotFoundException when the substring is not found.
          *
          * \see index(), index_n() and rindex_n().
          * \see find(), find_n(), rfind() and rfind_n().
@@ -1332,7 +1332,7 @@ namespace pcs // i.e. "pythonic c++ strings"
             return rindex(sub, start, this->size() - 1);
         }
 
-        /** Like rfind(sub), but raises NotFoundException when the substring is not found.
+        /** \brief Like rfind(sub), but raises NotFoundException when the substring is not found.
          *
          * \see index(), index_n() and rindex_n().
          * \see find(), find_n(), rfind() and rfind_n().
@@ -1344,7 +1344,7 @@ namespace pcs // i.e. "pythonic c++ strings"
 
 
         //---   rindex_n()   --------------------------------------
-        /** Like rfind_n(sub, start, count), but raises NotFoundException when the substring is not found.
+        /** \brief Like rfind_n(sub, start, count), but raises NotFoundException when the substring is not found.
         *
         * \see index_n(), rindex() and rindex_n().
         * \see find(), find_n(), rfind() and rfind_n().
@@ -1354,7 +1354,7 @@ namespace pcs // i.e. "pythonic c++ strings"
             return rindex(sub, start, start + count - 1);
         }
 
-        /** Like rfind_n(sub, count), but raises NotFoundException when the substring is not found.
+        /** \brief Like rfind_n(sub, count), but raises NotFoundException when the substring is not found.
         *
         * \see index_n(), rindex() and rindex_n().
         * \see find(), find_n(), rfind() and rfind_n().
@@ -1381,7 +1381,7 @@ namespace pcs // i.e. "pythonic c++ strings"
 
 
         //---   rpartition()   -------------------------------------
-        /** Splits the string at the last occurrence of sep, and returns a 3-items vector containing the part before the separator, the separator itself, and the part after the separator.
+        /** \brief Splits the string at the last occurrence of sep, and returns a 3-items vector containing the part before the separator, the separator itself, and the part after the separator.
         *
         * If the separator is not  found,  returns  a  3-items  vector
         * containing the string itself, followed by two empty strings.
@@ -1650,25 +1650,25 @@ namespace pcs // i.e. "pythonic c++ strings"
 
 
         //---   startswith()   ------------------------------------
-        /** Returns true if the string starts with the specified prefix, otherwise returns false. Test begins at start position and stops at end position. */
+        /** \brief Returns true if the string starts with the specified prefix, otherwise returns false. Test begins at start position and stops at end position. */
         inline const bool startswith(const CppStringT& prefix, const size_type start, const size_type end) const noexcept
         {
             return this->substr(start, end - start + 1).MyBaseClass::starts_with(prefix);
         }
 
-        /** Returns true if the string starts with the specified prefix, otherwise returns false. Test begins at start position and stops at end of string. */
+        /** \brief Returns true if the string starts with the specified prefix, otherwise returns false. Test begins at start position and stops at end of string. */
         inline const bool startswith(const CppStringT& prefix, const size_type start) const noexcept
         {
             return startswith(prefix, start, this->size() - 1);
         }
 
-        /** Returns true if the string starts with the specified prefix, otherwise returns false. Test runs on the whole string. */
+        /** \brief Returns true if the string starts with the specified prefix, otherwise returns false. Test runs on the whole string. */
         inline const bool startswith(const CppStringT& prefix) const noexcept
         {
             return this->starts_with(prefix);
         }
 
-        /** Returns true if the string starts with any of the specified prefixes, otherwise returns false. Test begins at start position and stops at end of string. */
+        /** \brief Returns true if the string starts with any of the specified prefixes, otherwise returns false. Test begins at start position and stops at end of string. */
         inline const bool startswith(const std::initializer_list<CppStringT>& prefixes, const size_type start, const size_type end) const noexcept
         {
             if (start > end)
@@ -1684,19 +1684,19 @@ namespace pcs // i.e. "pythonic c++ strings"
 
 
         //---   startswith_n()   ----------------------------------
-        /** Returns true if the string starts with the specified suffix, otherwise returns false. Test begins at start position and stops after count positions. */
+        /** \brief Returns true if the string starts with the specified suffix, otherwise returns false. Test begins at start position and stops after count positions. */
         inline const bool startswith_n(const CppStringT& prefix, const size_type start, const size_type count) const noexcept
         {
             return this->substr(start, count).MyBaseClass::starts_with(prefix);
         }
 
-        /** Returns true if the string starts with the specified suffix, otherwise returns false. Test begins at position 0 and stops after count positions. */
+        /** \brief Returns true if the string starts with the specified suffix, otherwise returns false. Test begins at position 0 and stops after count positions. */
         inline const bool startswith_n(const CppStringT& prefix, const size_type count) const noexcept
         {
             return this->substr(0, count).MyBaseClass::starts_with(prefix);
         }
 
-        /** Returns true if the string starts with any of the specified suffixes, otherwise returns false. Test begins at start position and stops after count positions. */
+        /** \brief Returns true if the string starts with any of the specified suffixes, otherwise returns false. Test begins at start position and stops after count positions. */
         inline const bool startswith_n(const std::initializer_list<CppStringT>& prefix, const size_type start, const size_type count) const noexcept
         {
             return startswith(prefix, start, count);
