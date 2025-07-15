@@ -2,7 +2,7 @@
     Library cppstrings
     "What if c++ strings where as easy to use as Python strings?"
  
-    Copyright (C) 2023 Philippe Schmouker
+    Copyright (C) 2023-2025 Philippe Schmouker
     contact - ph (dot) schmouker (at) gmail (dot) com
 
     This program is free software: you can redistribute it and/or modify
