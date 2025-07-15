@@ -3,7 +3,7 @@
     Library cppstrings
     "What if c++ strings where as easy to use as Python strings?"
 
-    Copyright (C) 2023 Philippe Schmouker
+    Copyright (C) 2023-2025 Philippe Schmouker
     contact - ph (dot) schmouker (at) gmail (dot) com
 
     This program is free software: you can redistribute it and/or modify
@@ -361,6 +361,7 @@ namespace pcs // i.e. "pythonic c++ strings"
             }
 
             /** \brief Indexing operator. */
+            [[nodiscard]]
             inline value_type operator[] (const key_type ch) noexcept
             {
                 auto it = m_table.find(ch);
@@ -457,6 +458,7 @@ namespace pcs // i.e. "pythonic c++ strings"
         * A copy of the original string is returned if width is less than or  equal
         * to the length of the string. The original string remains unchanged.
         */
+        [[nodiscard]]
         CppStringT center(const size_type width, const value_type fillch = value_type(' ')) const noexcept
         {
             const size_type len{ this->size() };
@@ -473,6 +475,7 @@ namespace pcs // i.e. "pythonic c++ strings"
         *
         * This is a c++ implementation of Python keyword 'in' applied to strings.
         */
+        [[nodiscard]]
         constexpr bool contains(const CppStringT& substr) const noexcept
         {
             if (substr.empty())
@@ -505,6 +508,7 @@ namespace pcs // i.e. "pythonic c++ strings"
         *
         * This is a c++ implementation of Python keyword 'in' applied to Python sliced strings.
         */
+        [[nodiscard]]
         inline constexpr bool contains_n(const CppStringT& sub, const size_type start, const size_type count = -1) const noexcept
         {
             try {
@@ -518,6 +522,7 @@ namespace pcs // i.e. "pythonic c++ strings"
 
         //---   count()   -----------------------------------------
         /** \brief Returns the number of non-overlapping occurrences of substring sub in the range [start, end]. */
+        [[nodiscard]]
         constexpr size_type count(const CppStringT& sub, const size_type start = 0, const size_type end = -1) const noexcept
         {
             size_type n = 0;
@@ -540,12 +545,14 @@ namespace pcs // i.e. "pythonic c++ strings"
 
         //---   count_n()   ---------------------------------------
         /** \brief Returns the number of non-overlapping occurrences of substring sub in the range [start, start+length-1]. */
+        [[nodiscard]]
         inline constexpr size_type count_n(const CppStringT& sub, const size_type start, const size_type length) const noexcept
         {
             return count(sub, start, start + length - 1);
         }
 
         /** \brief Returns the number of non-overlapping occurrences of substring sub in the range [0, length-1]. */
+        [[nodiscard]]
         inline constexpr size_type count_n(const CppStringT& sub, const size_type length) const noexcept
         {
             return count(sub, 0, length - 1);
@@ -554,24 +561,28 @@ namespace pcs // i.e. "pythonic c++ strings"
 
         //---   endswith()   --------------------------------------
         /** \brief Returns true if the string ends with the specified suffix, otherwise returns false. Test begins at start position and stops at end position. */
+        [[nodiscard]]
         inline const bool endswith(const CppStringT& suffix, const size_type start, const size_type end) const noexcept
         {
             return this->substr(start, end - start + 1).MyBaseClass::ends_with(suffix);
         }
 
         /** \brief Returns true if the string ends with the specified suffix, otherwise returns false. Test begins at start of string and stops at end position. */
+        [[nodiscard]]
         inline const bool endswith(const CppStringT& suffix, const size_type end) const noexcept
         {
             return this->substr(0, end).MyBaseClass::ends_with(suffix);
         }
 
         /** \brief Returns true if the string ends with the specified suffix, otherwise returns false. Test runs on the whole string. */
+        [[nodiscard]]
         inline const bool endswith(const CppStringT& suffix) const noexcept
         {
             return static_cast<const bool>(MyBaseClass::ends_with(suffix));
         }
 
         /** \brief Returns true if the string ends with any of the specified suffixes, otherwise returns false. Test begins at start position and stops at end position. */
+        [[nodiscard]]
         const bool endswith(const std::initializer_list<CppStringT>& suffixes, const size_type start, const size_type end) const noexcept
         {
             if (start > end)
@@ -588,18 +599,21 @@ namespace pcs // i.e. "pythonic c++ strings"
 
         //---   endswith_n()   ------------------------------------
         /** \brief Returns true if the string ends with the specified suffix, otherwise returns false. Test begins at start position and stops after count positions. */
+        [[nodiscard]]
         inline const bool endswith_n(const CppStringT& suffix, const size_type start, const size_type count) const noexcept
         {
             return endswith(suffix, start, start + count - 1);
         }
 
         /** \brief Returns true if the string ends with the specified suffix, otherwise returns false. Test begins at position 0 and stops after count positions. */
+        [[nodiscard]]
         inline const bool endswith_n(const CppStringT& suffix, const size_type count) const noexcept
         {
             return endswith(suffix, 0, count - 1);
         }
 
         /** \brief Returns true if the string ends with any of the specified suffixes, otherwise returns false. Test begins at start position and stops after count positions. */
+        [[nodiscard]]
         inline const bool endswith_n(const std::initializer_list<CppStringT>& suffixes, const size_type start, const size_type count) const noexcept
         {
             return endswith(suffixes, start, start + count - 1);
@@ -608,6 +622,7 @@ namespace pcs // i.e. "pythonic c++ strings"
 
         //---   expand_tabs()   -----------------------------------
         /** \brief Returns a copy of the string where all tab characters are replaced by one or more spaces, depending on the current column and the given tab size. */
+        [[nodiscard]]
         CppStringT expand_tabs(const size_type tabsize = 8) const noexcept
         {
             const size_type tabsize_{ tabsize == 0 ? 1 : tabsize };
@@ -647,6 +662,7 @@ namespace pcs // i.e. "pythonic c++ strings"
         * \see find_n(), rfind() and rfind_n().
         * \see index(), index_n(), rindex() and rindex_n().
         */
+        [[nodiscard]]
         constexpr size_type find(const CppStringT& sub, const size_type start = 0, const size_type end = -1) const noexcept
         {
             const size_type end_{ (end == -1) ? this->size() : end };
@@ -671,6 +687,7 @@ namespace pcs // i.e. "pythonic c++ strings"
         * \see find(), rfind() and rfind_n().
         * \see index(), index_n(), rindex() and rindex_n().
         */
+        [[nodiscard]]
         inline constexpr size_type find_n(const CppStringT& sub, const size_type start, const size_type count) const noexcept
         {
             constexpr size_type npos{ CppStringT::npos };
@@ -698,6 +715,7 @@ namespace pcs // i.e. "pythonic c++ strings"
         * \see find(), rfind() and rfind_n().
         * \see index(), index_n(), rindex() and rindex_n().
         */
+        [[nodiscard]]
         inline constexpr size_type find_n(const CppStringT& sub, const size_type count) const noexcept
         {
             return find_n(sub, 0, count);
@@ -712,7 +730,7 @@ namespace pcs // i.e. "pythonic c++ strings"
             ArgsT&&... args
         )
         {
-            return CppStringT();
+            return *this;
         }
 
         template<class... ArgsT>
@@ -740,6 +758,7 @@ namespace pcs // i.e. "pythonic c++ strings"
         * \see index_n(), rindex() and rindex_n().
         * \see find(), find_n(), rfind() and rfind_n().
         */
+        [[nodiscard]]
         inline constexpr size_type index(const CppStringT& sub, const size_type start = 0, const size_type end = -1) const
         {
             const size_type ret_value = find(sub, start, end);
@@ -756,6 +775,7 @@ namespace pcs // i.e. "pythonic c++ strings"
         * \see index_n(), rindex() and rindex_n().
         * \see find(), find_n(), rfind() and rfind_n().
         */
+        [[nodiscard]]
         inline constexpr size_type index_n(const CppStringT& sub, const size_type start, const size_type count) const
         {
             return index(sub, start, start + count - 1);
@@ -766,6 +786,7 @@ namespace pcs // i.e. "pythonic c++ strings"
         * \see index_n(), rindex() and rindex_n().
         * \see find(), find_n(), rfind() and rfind_n().
         */
+        [[nodiscard]]
         inline constexpr size_type index_n(const CppStringT& sub, const size_type count) const
         {
             return index(sub, 0, count);
@@ -774,6 +795,7 @@ namespace pcs // i.e. "pythonic c++ strings"
 
         //---   isalnum()   ---------------------------------------
         /** \brief Returns true if all characters in the string are alphanumeric and there is at least one character, or false otherwise. */
+        [[nodiscard]]
         inline const bool isalnum() const noexcept
         {
             if (this->empty())
@@ -785,6 +807,7 @@ namespace pcs // i.e. "pythonic c++ strings"
 
         //---   isalpha()   --------------------------------------
         /** \brief Returns true if all characters in the string are alphabetic and there is at least one character, or false otherwise. */
+        [[nodiscard]]
         inline const bool isalpha() const noexcept
         {
             return !this->empty() && std::all_of(this->cbegin(), this->cend(), pcs::is_alpha<value_type>);
@@ -796,6 +819,7 @@ namespace pcs // i.e. "pythonic c++ strings"
 #if defined(isascii)  // may be already defined in header file <ctype.h>
 #undef isascii
 #endif
+        [[nodiscard]]
         inline const bool isascii() const noexcept
         {
             return this->empty() || std::all_of(this->cbegin(), this->cend(), pcs::is_ascii<value_type>);
@@ -809,6 +833,7 @@ namespace pcs // i.e. "pythonic c++ strings"
         * base 10, e.g. U+0660, ARABIC-INDIC DIGIT ZERO. Formally a decimal
         * character is a character in the Unicode General Category “Nd”.
         */
+        [[nodiscard]]
         inline const bool isdecimal() const noexcept
         {
             return !this->empty() && std::all_of(this->cbegin(), this->cend(), pcs::is_decimal<value_type>);
@@ -829,6 +854,7 @@ namespace pcs // i.e. "pythonic c++ strings"
         * not implement above algorithm. It just returns the same result
         * as 'isdecimal()' which is NOT what Python str library does.
         */
+        [[nodiscard]]
         inline const bool isdigit() const noexcept
         {
             return isdecimal();
@@ -855,6 +881,7 @@ namespace pcs // i.e. "pythonic c++ strings"
         *    identifier   ::= ID_Start id_continue*
         *    id_continue  ::= ID_Start | <decimal number>
         */
+        [[nodiscard]]
         inline const bool isidentifier() const noexcept
         {
             return !this->empty() && pcs::is_id_start((*this)[0]) && (this->size() == 1 || std::all_of(this->cbegin() + 1, this->cend(), pcs::is_id_continue<value_type>));
@@ -863,6 +890,7 @@ namespace pcs // i.e. "pythonic c++ strings"
 
         //---   islower()   ---------------------------------------
         /** \brief Returns true if all cased characters in the string are lowercase and there is at least one cased character, or false otherwise. */
+        [[nodiscard]]
         inline const bool islower() const noexcept
         {
             return !this->empty() && std::all_of(this->cbegin(), this->cend(), pcs::is_lower<value_type>);
@@ -879,6 +907,7 @@ namespace pcs // i.e. "pythonic c++ strings"
         * characters  are those with the property value Numeric_Type=Digit,
         * Numeric_Type=Decimal or Numeric_Type=Numeric.
         */
+        [[nodiscard]]
         inline const bool isnumeric() const noexcept
         {
             return isdecimal();
@@ -892,6 +921,7 @@ namespace pcs // i.e. "pythonic c++ strings"
         * character  database as "Other" or "Separator",  excepting the ASCII
         * space (0x20) which is considered printable.
         */
+        [[nodiscard]]
         inline const bool isprintable() const noexcept
         {
             return this->empty() || std::all_of(this->cbegin(), this->cend(), pcs::is_printable<value_type>);
@@ -900,6 +930,7 @@ namespace pcs // i.e. "pythonic c++ strings"
 
         //---   ispunctuation()   ---------------------------------
         /** \brief Returns true if the string contains only one character and if this character belongs to the ASCII punctuation set. */
+        [[nodiscard]]
         inline const bool ispunctuation() const noexcept
         {
             return this->size() == 1 && pcs::is_punctuation((*this)[0]);
@@ -908,6 +939,7 @@ namespace pcs // i.e. "pythonic c++ strings"
 
         //---   isspace()   ---------------------------------------
         /** \brief Returns true if there are only whitespace characters in the string and there is at least one character, or false otherwise. */
+        [[nodiscard]]
         inline const bool isspace() const noexcept
         {
             return !this->empty() && std::all_of(this->cbegin(), this->cend(), pcs::is_space<value_type>);
@@ -924,6 +956,7 @@ namespace pcs // i.e. "pythonic c++ strings"
         * characters following whitespaces and lowercase characters
         * anywhere else.
         */
+        [[nodiscard]]
         inline const bool istitle() const noexcept
         {
             return !this->empty() && this->title() == *this;
@@ -932,6 +965,7 @@ namespace pcs // i.e. "pythonic c++ strings"
 
         //---   isupper()   ---------------------------------------
         /** \brief Returns true if all cased characters in the string are uppercase and there is at least one cased character, or false otherwise. */
+        [[nodiscard]]
         inline const bool isupper() const noexcept
         {
             return !this->empty() && std::all_of(this->cbegin(), this->cend(), pcs::is_upper<value_type>);
@@ -940,6 +974,7 @@ namespace pcs // i.e. "pythonic c++ strings"
 
         //---   is_words_sep()   ----------------------------------
         /** \brief Returns true if there are only whitespace and punctuation characters in the string and there is at least one character, or false otherwise. */
+        [[nodiscard]]
         inline const bool is_words_sep() const noexcept
         {
             return !this->empty() && std::all_of(this->cbegin(), this->cend(),
@@ -953,6 +988,7 @@ namespace pcs // i.e. "pythonic c++ strings"
         * The separator between elements is the string to which this method is applied.
         */
         template<const std::size_t N>
+        [[nodiscard]]
         CppStringT join(const std::array<CppStringT, N>& strs) const noexcept
         {
             if (strs.empty())
@@ -969,6 +1005,7 @@ namespace pcs // i.e. "pythonic c++ strings"
         *
         * The separator between elements is the string to which this method is applied.
         */
+        [[nodiscard]]
         CppStringT join(const std::vector<CppStringT>& strs) const noexcept
         {
             if (strs.empty())
@@ -986,6 +1023,7 @@ namespace pcs // i.e. "pythonic c++ strings"
         * The separator between elements is the string to which this method is applied.
         */
         template<class... NextCppStringsT>
+        [[nodiscard]]
         inline CppStringT join(const CppStringT& first, const NextCppStringsT&... others) const noexcept
             requires (sizeof...(others) > 0)
         {
@@ -993,12 +1031,14 @@ namespace pcs // i.e. "pythonic c++ strings"
         }
 
         /** \brief Single parameter signature. Returns a copy of this parameter. */
+        [[nodiscard]]
         inline CppStringT join(const CppStringT& s) const noexcept
         {
             return s;
         }
 
         /** \brief Empty parameters list signature. Returns a copy of current string. */
+        [[nodiscard]]
         inline const CppStringT join() const noexcept
         {
             return *this;
@@ -1011,6 +1051,7 @@ namespace pcs // i.e. "pythonic c++ strings"
         * Padding is done using the specified fillchar (default is an ASCII space).
         * The original string is returned if width is less than or equal to len(s).
         */
+        [[nodiscard]]
         inline CppStringT ljust(const size_type width, const value_type fillch = value_type(' ')) const noexcept
         {
             if (this->size() >= width)
@@ -1040,6 +1081,7 @@ namespace pcs // i.e. "pythonic c++ strings"
         * Notice: uses the currently set std::locale, which is the "C" one
         * by default or any other one as previously set by the user.
         */
+        [[nodiscard]]
         static inline const value_type lower(const value_type ch) noexcept
         {
             return value_type(std::tolower(ch));
@@ -1054,6 +1096,7 @@ namespace pcs // i.e. "pythonic c++ strings"
         * its values are stripped.
         * To remove a prefix, rather call method 'removeprefix()'.
         */
+        [[nodiscard]]
         inline CppStringT lstrip(const CppStringT& removedchars) const noexcept
         {
             for (auto it = this->cbegin(); it != this->cend(); ++it)
@@ -1063,6 +1106,7 @@ namespace pcs // i.e. "pythonic c++ strings"
         }
 
         /** \brief Returns a copy of the string with leading whitespaces removed. */
+        [[nodiscard]]
         inline CppStringT lstrip() const noexcept
         {
             for (auto it = this->cbegin(); it != this->cend(); ++it)
@@ -1086,6 +1130,7 @@ namespace pcs // i.e. "pythonic c++ strings"
         */
         template<typename IntT>
             requires std::is_signed_v<IntT>
+        [[nodiscard]]
         CppStringT operator() (Slice<IntT> slice) const noexcept
         {
             // optimization on 1 by 1 step
@@ -1117,6 +1162,7 @@ namespace pcs // i.e. "pythonic c++ strings"
         }
 
         /** \brief Generates a new string according to the specified slicing values. */
+        [[nodiscard]]
         inline CppStringT operator() (const long long start, const long long stop, const long long step = 1) const noexcept
         {
             Slice<long long> slice(start, stop, step);
@@ -1126,6 +1172,7 @@ namespace pcs // i.e. "pythonic c++ strings"
 
         //---   operator *   --------------------------------------
         /** \brief Generates a new string with count times the content of this string. */
+        [[nodiscard]]
         CppStringT operator* (std::int64_t count) const noexcept
         {
             if (count <= 0)
@@ -1144,6 +1191,7 @@ namespace pcs // i.e. "pythonic c++ strings"
         * If the separator is not  found,  returns  a  3-items  vector
         * containing the string itself, followed by two empty strings.
         */
+        [[nodiscard]]
         std::vector<CppStringT> partition(const CppStringT& sep) const noexcept
         {
             const size_type sep_index = find(sep);
@@ -1161,6 +1209,7 @@ namespace pcs // i.e. "pythonic c++ strings"
 
         //---   removeprefix()   ----------------------------------
         /** \brief If the string starts with the prefix string, returns a new string with the prefix removed. Otherwise, returns a copy of the original string. */
+        [[nodiscard]]
         inline CppStringT removeprefix(const CppStringT& prefix) const noexcept
         {
             if (this->startswith(prefix)) {
@@ -1174,6 +1223,7 @@ namespace pcs // i.e. "pythonic c++ strings"
 
         //---   removesuffix()   ----------------------------------
         /** \brief If the string ends with the suffix string, returns a new string with the suffix removed. Otherwise, returns a copy of the original string. */
+        [[nodiscard]]
         inline CppStringT removesuffix(const CppStringT& suffix) const noexcept
         {
             if (this->endswith(suffix)) {
@@ -1187,6 +1237,7 @@ namespace pcs // i.e. "pythonic c++ strings"
 
         //---   replace()   ---------------------------------------
         /** \brief Returns a copy of the string with first count occurrences of substring 'old' replaced by 'new_'. */
+        [[nodiscard]]
         CppStringT replace(const CppStringT& old, const CppStringT& new_, size_type count = -1) const noexcept
         {
             if (old == new_ || old.empty())
@@ -1223,6 +1274,7 @@ namespace pcs // i.e. "pythonic c++ strings"
         * \see find(), find_n() and rfind_n().
         * \see index(), index_n(), rindex() and rindex_n().
         */
+        [[nodiscard]]
         inline constexpr size_type rfind(const CppStringT& sub, const size_type start, const size_type end) const noexcept
         {
             if (start > end)
@@ -1250,6 +1302,7 @@ namespace pcs // i.e. "pythonic c++ strings"
         * \see find(), find_n() and rfind_n().
         * \see index(), index_n(), rindex() and rindex_n().
         */
+        [[nodiscard]]
         inline constexpr size_type rfind(const CppStringT& sub, const size_type start) const noexcept
         {
             return rfind(sub, start, this->size() - 1);
@@ -1270,6 +1323,7 @@ namespace pcs // i.e. "pythonic c++ strings"
         * \see find(), find_n() and rfind_n().
         * \see index(), index_n(), rindex() and rindex_n().
         */
+        [[nodiscard]]
         inline constexpr size_type rfind(const CppStringT& sub) const noexcept
         {
             return MyBaseClass::rfind(sub);
@@ -1285,6 +1339,7 @@ namespace pcs // i.e. "pythonic c++ strings"
         * \see find(), find_n() and rfind().
         * \see index(), index_n(), rindex() and rindex_n().
         */
+        [[nodiscard]]
         inline constexpr size_type rfind_n(const CppStringT& sub, const size_type start, const size_type count) const noexcept
         {
             return rfind(sub, start, start + count - 1);
@@ -1298,6 +1353,7 @@ namespace pcs // i.e. "pythonic c++ strings"
          * \see find(), find_n() and rfind().
          * \see index(), index_n(), rindex() and rindex_n().
          */
+        [[nodiscard]]
         inline constexpr size_type rfind_n(const CppStringT& sub, const size_type count) const noexcept
         {
             if (count == 0)
@@ -1313,6 +1369,7 @@ namespace pcs // i.e. "pythonic c++ strings"
         * \see index(), index_n() and rindex_n().
         * \see find(), find_n(), rfind() and rfind_n().
         */
+        [[nodiscard]]
         inline constexpr size_type rindex(const CppStringT& sub, const size_type start, const size_type end) const
         {
             const size_type ret_value = rfind(sub, start, end);
@@ -1327,6 +1384,7 @@ namespace pcs // i.e. "pythonic c++ strings"
          * \see index(), index_n() and rindex_n().
          * \see find(), find_n(), rfind() and rfind_n().
          */
+        [[nodiscard]]
         inline constexpr size_type rindex(const CppStringT& sub, const size_type start) const
         {
             return rindex(sub, start, this->size() - 1);
@@ -1337,6 +1395,7 @@ namespace pcs // i.e. "pythonic c++ strings"
          * \see index(), index_n() and rindex_n().
          * \see find(), find_n(), rfind() and rfind_n().
          */
+        [[nodiscard]]
         inline constexpr size_type rindex(const CppStringT& sub) const
         {
             return rindex(sub, 0, this->size() - 1);
@@ -1349,6 +1408,7 @@ namespace pcs // i.e. "pythonic c++ strings"
         * \see index_n(), rindex() and rindex_n().
         * \see find(), find_n(), rfind() and rfind_n().
         */
+        [[nodiscard]]
         inline constexpr size_type rindex_n(const CppStringT& sub, const size_type start, const size_type count) const
         {
             return rindex(sub, start, start + count - 1);
@@ -1359,6 +1419,7 @@ namespace pcs // i.e. "pythonic c++ strings"
         * \see index_n(), rindex() and rindex_n().
         * \see find(), find_n(), rfind() and rfind_n().
         */
+        [[nodiscard]]
         inline constexpr size_type rindex_n(const CppStringT& sub, const size_type count) const
         {
             return rindex(sub, 0, count);
@@ -1371,6 +1432,7 @@ namespace pcs // i.e. "pythonic c++ strings"
         * Padding is done using the specified fillchar (default is an ASCII space).
         * The original string is returned if width is less than or equal to len(s).
         */
+        [[nodiscard]]
         inline CppStringT rjust(const size_type width, const value_type fillch = value_type(' ')) const noexcept
         {
             if (this->size() >= width)
@@ -1386,6 +1448,7 @@ namespace pcs // i.e. "pythonic c++ strings"
         * If the separator is not  found,  returns  a  3-items  vector
         * containing the string itself, followed by two empty strings.
         */
+        [[nodiscard]]
         std::vector<CppStringT> rpartition(const CppStringT& sep) const noexcept
         {
             const size_type sep_index = rfind(sep);
@@ -1407,24 +1470,28 @@ namespace pcs // i.e. "pythonic c++ strings"
         * Notice: consecutive whitespaces are each regarded as a
         * single separator. So, they each separate empty strings.
         */
+        [[nodiscard]]
         inline std::vector<CppStringT> rsplit() noexcept
         {
             return split();
         }
 
         /** \brief Returns a vector of the words in the whole string, using sep as the delimiter string. */
+        [[nodiscard]]
         inline std::vector<CppStringT> rsplit(const CppStringT& sep) noexcept
         {
             return split(sep);
         }
 
         /** \brief Returns a vector of the words in the string, as seperated with whitespace strings. At most maxsplit splits are done, the rightmost ones. */
+        [[nodiscard]]
         inline std::vector<CppStringT> rsplit(const size_type maxsplit) noexcept
         {
             return rsplit(CppStringT(value_type(' ')), maxsplit);
         }
 
         /** \brief Returns a vector of the words in the string, using sep as the delimiter string. At most maxsplit splits are done, the rightmost ones. */
+        [[nodiscard]]
         std::vector<CppStringT> rsplit(const CppStringT& sep, const size_type maxsplit) noexcept
         {
             std::vector<CppStringT> res{};
@@ -1471,6 +1538,7 @@ namespace pcs // i.e. "pythonic c++ strings"
         * its values are stripped.
         * To remove a suffix, rather call method 'removesuffix()'.
         */
+        [[nodiscard]]
         inline CppStringT rstrip(const CppStringT& removedchars) const noexcept
         {
             for (auto it = this->crbegin(); it != this->crend(); ++it)
@@ -1480,6 +1548,7 @@ namespace pcs // i.e. "pythonic c++ strings"
         }
 
         /** \brief Returns a copy of the string with trailing whitespaces removed. */
+        [[nodiscard]]
         inline CppStringT rstrip() const noexcept
         {
             for (auto it = this->crbegin(); it != this->crend(); ++it)
@@ -1495,6 +1564,7 @@ namespace pcs // i.e. "pythonic c++ strings"
         * Notice: consecutive whitespaces are each regarded as a
         * single separator. So, they each separate empty strings.
         */
+        [[nodiscard]]
         inline std::vector<CppStringT> split() noexcept
         {
             std::vector<CppStringT> res;
@@ -1513,6 +1583,7 @@ namespace pcs // i.e. "pythonic c++ strings"
         * "3"]).  Splitting  an  empty  string  with  a specified separator
         * returns {""}.
         */
+        [[nodiscard]]
         inline std::vector<CppStringT> split(const CppStringT& sep) noexcept
         {
             std::vector<CppStringT> res;
@@ -1522,12 +1593,14 @@ namespace pcs // i.e. "pythonic c++ strings"
         }
 
         /** \brief Returns a vector of the words in the string, as seperated with whitespace strings. At most maxsplit splits are done, the leftmost ones. */
+        [[nodiscard]]
         inline std::vector<CppStringT> split(const size_type maxsplit) noexcept
         {
             return split(CppStringT(value_type(' ')), maxsplit);
         }
 
         /** \brief Returns a vector of the words in the string, using sep as the delimiter string. At most maxsplit splits are done, the leftmost ones. */
+        [[nodiscard]]
         std::vector<CppStringT> split(const CppStringT& sep, const size_type maxsplit) noexcept
         {
             std::vector<CppStringT> res{};
@@ -1584,6 +1657,7 @@ namespace pcs // i.e. "pythonic c++ strings"
         * \u2028 	    Line Separator
         * \u2029 	    Paragraph Separator
         */
+        [[nodiscard]]
         std::vector<CppStringT> splitlines(const bool keep_end = false) const noexcept
         {
             std::vector<CppStringT> res{};
@@ -1651,24 +1725,28 @@ namespace pcs // i.e. "pythonic c++ strings"
 
         //---   startswith()   ------------------------------------
         /** \brief Returns true if the string starts with the specified prefix, otherwise returns false. Test begins at start position and stops at end position. */
+        [[nodiscard]]
         inline const bool startswith(const CppStringT& prefix, const size_type start, const size_type end) const noexcept
         {
             return this->substr(start, end - start + 1).MyBaseClass::starts_with(prefix);
         }
 
         /** \brief Returns true if the string starts with the specified prefix, otherwise returns false. Test begins at start position and stops at end of string. */
+        [[nodiscard]]
         inline const bool startswith(const CppStringT& prefix, const size_type start) const noexcept
         {
             return startswith(prefix, start, this->size() - 1);
         }
 
         /** \brief Returns true if the string starts with the specified prefix, otherwise returns false. Test runs on the whole string. */
+        [[nodiscard]]
         inline const bool startswith(const CppStringT& prefix) const noexcept
         {
             return this->starts_with(prefix);
         }
 
         /** \brief Returns true if the string starts with any of the specified prefixes, otherwise returns false. Test begins at start position and stops at end of string. */
+        [[nodiscard]]
         inline const bool startswith(const std::initializer_list<CppStringT>& prefixes, const size_type start, const size_type end) const noexcept
         {
             if (start > end)
@@ -1685,18 +1763,21 @@ namespace pcs // i.e. "pythonic c++ strings"
 
         //---   startswith_n()   ----------------------------------
         /** \brief Returns true if the string starts with the specified suffix, otherwise returns false. Test begins at start position and stops after count positions. */
+        [[nodiscard]]
         inline const bool startswith_n(const CppStringT& prefix, const size_type start, const size_type count) const noexcept
         {
             return this->substr(start, count).MyBaseClass::starts_with(prefix);
         }
 
         /** \brief Returns true if the string starts with the specified suffix, otherwise returns false. Test begins at position 0 and stops after count positions. */
+        [[nodiscard]]
         inline const bool startswith_n(const CppStringT& prefix, const size_type count) const noexcept
         {
             return this->substr(0, count).MyBaseClass::starts_with(prefix);
         }
 
         /** \brief Returns true if the string starts with any of the specified suffixes, otherwise returns false. Test begins at start position and stops after count positions. */
+        [[nodiscard]]
         inline const bool startswith_n(const std::initializer_list<CppStringT>& prefix, const size_type start, const size_type count) const noexcept
         {
             return startswith(prefix, start, count);
@@ -1710,12 +1791,14 @@ namespace pcs // i.e. "pythonic c++ strings"
         * The chars argument is not a prefix;  rather, all combinations of
         * its values are stripped.
         */
+        [[nodiscard]]
         inline CppStringT strip(const CppStringT& removedchars) const noexcept
         {
             return this->rstrip(removedchars).lstrip(removedchars);
         }
 
         /** \brief Returns a copy of the string with the leading and trailing whitespaces removed. */
+        [[nodiscard]]
         inline CppStringT strip() const noexcept
         {
             return this->rstrip().lstrip();
@@ -1724,6 +1807,7 @@ namespace pcs // i.e. "pythonic c++ strings"
 
         //---   substr()   ----------------------------------------
         /** \brief Returns a copy of the string, starting at index start and ending after count characters. */
+        [[nodiscard]]
         inline CppStringT substr(const size_type start, const size_type count = -1) const noexcept
         {
             if (start > this->size())
@@ -1738,6 +1822,7 @@ namespace pcs // i.e. "pythonic c++ strings"
         *
         * Note that it is not necessarily true that s.swapcase().swapcase() == s.
         */
+        [[nodiscard]]
         inline CppStringT swapcase() const noexcept
         {
             CppStringT res;
@@ -1748,6 +1833,7 @@ namespace pcs // i.e. "pythonic c++ strings"
 
         //---   title()   -----------------------------------------
         /** \brief Returns a titlecased copy of the string where words start with an uppercase character and the remaining characters are lowercase. */
+        [[nodiscard]]
         CppStringT title() const noexcept
         {
             const CppStringT whitespace(value_type(' '));
@@ -1769,6 +1855,7 @@ namespace pcs // i.e. "pythonic c++ strings"
         * to  be  translated  is not available as an entry in the tranlation
         * table, it is set as is in the resulting string.
         */
+        [[nodiscard]]
         CppStringT translate(TransTable& table) noexcept
         {
             CppStringT res{};
@@ -1798,6 +1885,7 @@ namespace pcs // i.e. "pythonic c++ strings"
         * Notice: uses the currently set std::locale, which is the "C" one
         * by default or any other one as previously set by the user.
         */
+        [[nodiscard]]
         static inline const value_type upper(const value_type ch) noexcept
         {
             return value_type(std::toupper(ch));
@@ -1811,6 +1899,7 @@ namespace pcs // i.e. "pythonic c++ strings"
         * after the sign character rather than before. The original string is
         * returned if width is less than or equal to len(s).
         */
+        [[nodiscard]]
         inline CppStringT zfill(const size_type width) const noexcept
         {
             if (this->size() >= width)
@@ -1872,6 +1961,7 @@ namespace pcs // i.e. "pythonic c++ strings"
             return _prepare_iterating(IntT(str.size()));
         }
 
+        [[nodiscard]]
         inline const bool end() const noexcept  //!< returns true when iterating is over, or false otherwise.
         {
             return _step == 0 ? true : _step > 0 ? _index >= _stop : _index <= _stop;
@@ -1889,6 +1979,7 @@ namespace pcs // i.e. "pythonic c++ strings"
             return *this;
         }
 
+        [[nodiscard]]
         inline const IntT operator*() noexcept  //!< dereferences the slice.
         {
             return _index;
@@ -1907,6 +1998,7 @@ namespace pcs // i.e. "pythonic c++ strings"
 
         IntT _index{ 0 };
 
+        [[nodiscard]]
         const IntT _prepare_iterating(const IntT str_size) noexcept
         {
             if (_start == DEFAULT) {
@@ -2056,6 +2148,7 @@ namespace pcs // i.e. "pythonic c++ strings"
     //---   is_alpha()   ------------------------------------------
     /** \brief SHOULD NEVER BE USED. Use next specializations instead. */
     template<class CharT>
+    [[nodiscard]]
     inline const bool is_alpha(const CharT ch) noexcept
     {
         return false;
@@ -2063,6 +2156,7 @@ namespace pcs // i.e. "pythonic c++ strings"
 
     /** \brief Returns true if character ch is alphabetic, or false otherwise. Conforms to the current locale settings. */
     template<>
+    [[nodiscard]]
     inline const bool is_alpha<char>(const char ch) noexcept
     {
         return static_cast<const bool>(std::isalpha(static_cast<unsigned char>(ch)));
@@ -2070,6 +2164,7 @@ namespace pcs // i.e. "pythonic c++ strings"
 
     /** \brief Returns true if character ch is alphabetic, or false otherwise. Conforms to the current locale settings. */
     template<>
+    [[nodiscard]]
     inline const bool is_alpha<wchar_t>(const wchar_t ch) noexcept
     {
         return static_cast<const bool>(std::iswalpha(ch));
@@ -2079,6 +2174,7 @@ namespace pcs // i.e. "pythonic c++ strings"
     //---   is_ascii()   ------------------------------------------
     /** \brief Returns true if character has code point in the range U+0000-U+007F. */
     template<class CharT>
+    [[nodiscard]]
     inline const bool is_ascii(const CharT ch) noexcept
     {
         return CharT(0x00) <= ch && ch <= CharT(0x7f);
@@ -2088,6 +2184,7 @@ namespace pcs // i.e. "pythonic c++ strings"
     //---   is_decimal()   ----------------------------------------
     /** \brief SHOULD NEVER BE USED. Use next specializations instead. */
     template<class CharT>
+    [[nodiscard]]
     inline const bool is_decimal(const CharT ch) noexcept
     {
         return false;
@@ -2095,6 +2192,7 @@ namespace pcs // i.e. "pythonic c++ strings"
 
     /** \brief Returns true if character is a decimal digit, or false otherwise. */
     template<>
+    [[nodiscard]]
     inline const bool is_decimal<char>(const char ch) noexcept
     {
         return static_cast<const bool>(std::isdigit(static_cast<unsigned char>(ch)));
@@ -2102,6 +2200,7 @@ namespace pcs // i.e. "pythonic c++ strings"
 
     /** \brief Returns true if character is a decimal digit, or false otherwise. */
     template<>
+    [[nodiscard]]
     inline const bool is_decimal<wchar_t>(const wchar_t ch) noexcept
     {
         return (const bool)std::iswdigit(ch);
@@ -2111,6 +2210,7 @@ namespace pcs // i.e. "pythonic c++ strings"
     //---   is_digit()   ------------------------------------------
     /** \brief SHOULD NEVER BE USED. Use next specializations instead. */
     template<class CharT>
+    [[nodiscard]]
     inline const bool is_digit(const CharT ch) noexcept
     {
         return pcs::is_decimal(ch);
@@ -2118,6 +2218,7 @@ namespace pcs // i.e. "pythonic c++ strings"
 
     /** \brief Returns true if character is a decimal digit, or false otherwise. */
     template<>
+    [[nodiscard]]
     inline const bool is_digit<char>(const char ch) noexcept
     {
         return pcs::is_decimal(ch);
@@ -2125,6 +2226,7 @@ namespace pcs // i.e. "pythonic c++ strings"
 
     /** \brief Returns true if character is a decimal digit, or false otherwise. */
     template<>
+    [[nodiscard]]
     inline const bool is_digit<wchar_t>(const wchar_t ch) noexcept
     {
         return pcs::is_decimal(ch);
@@ -2134,6 +2236,7 @@ namespace pcs // i.e. "pythonic c++ strings"
     //---   is_id_continue()   ------------------------------------
     /** \brief Returns true if character is a continuing char for identifiers, or false otherwise. */
     template<class CharT>
+    [[nodiscard]]
     inline const bool is_id_continue(const CharT ch) noexcept
     {
         return pcs::is_id_start(ch) || pcs::is_decimal(ch);
@@ -2143,6 +2246,7 @@ namespace pcs // i.e. "pythonic c++ strings"
     //---   is_id_start()   ---------------------------------------
     /** \brief Returns true if character is a starting char for identifiers, or false otherwise. */
     template<class CharT>
+    [[nodiscard]]
     inline const bool is_id_start(const CharT ch) noexcept
     {
         return pcs::is_alpha(ch) || ch == CharT('_');
@@ -2152,6 +2256,7 @@ namespace pcs // i.e. "pythonic c++ strings"
     //---   is_lower()   ------------------------------------------
     /** \brief SHOULD NEVER BE USED. Use next specializations instead. */
     template<class CharT>
+    [[nodiscard]]
     inline const bool is_lower(const CharT ch) noexcept
     {
         return false;
@@ -2159,6 +2264,7 @@ namespace pcs // i.e. "pythonic c++ strings"
 
     /** \brief Returns true if character ch is lowercase, or false otherwise. Conforms to the current locale settings. */
     template<>
+    [[nodiscard]]
     inline const bool is_lower<char>(const char ch) noexcept
     {
         return std::islower(static_cast<unsigned char>(ch));
@@ -2166,6 +2272,7 @@ namespace pcs // i.e. "pythonic c++ strings"
 
     /** \brief Returns true if character ch is lowercase, or false otherwise. Conforms to the current locale settings. */
     template<>
+    [[nodiscard]]
     inline const bool is_lower<wchar_t>(const wchar_t ch) noexcept
     {
         return std::iswlower(ch);
@@ -2175,6 +2282,7 @@ namespace pcs // i.e. "pythonic c++ strings"
     //---   is_numeric()   ----------------------------------------
     /** \brief SHOULD NEVER BE USED. Use next specializations instead. */
     template<class CharT>
+    [[nodiscard]]
     inline const bool is_numeric(const CharT ch) noexcept
     {
         return pcs::is_decimal(ch);
@@ -2182,6 +2290,7 @@ namespace pcs // i.e. "pythonic c++ strings"
 
     /** \brief Returns true if character is a decimal digit, or false otherwise. */
     template<>
+    [[nodiscard]]
     inline const bool is_numeric<char>(const char ch) noexcept
     {
         return pcs::is_decimal(ch);
@@ -2189,6 +2298,7 @@ namespace pcs // i.e. "pythonic c++ strings"
 
     /** \brief Returns true if character is a decimal digit, or false otherwise. */
     template<>
+    [[nodiscard]]
     inline const bool is_numeric<wchar_t>(const wchar_t ch) noexcept
     {
         return pcs::is_decimal(ch);
@@ -2198,6 +2308,7 @@ namespace pcs // i.e. "pythonic c++ strings"
     //---   is_printable()   --------------------------------------
     /** \brief SHOULD NEVER BE USED. Use next specializations instead. */
     template<class CharT>
+    [[nodiscard]]
     inline const bool is_printable(const CharT ch) noexcept
     {
         return false;
@@ -2205,6 +2316,7 @@ namespace pcs // i.e. "pythonic c++ strings"
 
     /** \brief Returns true if character ch is printable, or false otherwise. */
     template<>
+    [[nodiscard]]
     inline const bool is_printable<char>(const char ch) noexcept
     {
         return static_cast<const bool>(std::isprint(static_cast<unsigned char>(ch)));
@@ -2212,6 +2324,7 @@ namespace pcs // i.e. "pythonic c++ strings"
 
     /** \brief Returns true if character ch is punctuation, or false otherwise. Conforms to the current locale settings. */
     template<>
+    [[nodiscard]]
     inline const bool is_printable<wchar_t>(const wchar_t ch) noexcept
     {
         return static_cast<const bool>(std::iswprint(ch));
@@ -2221,6 +2334,7 @@ namespace pcs // i.e. "pythonic c++ strings"
     //---   is_punctuation()   ------------------------------------
     /** \brief SHOULD NEVER BE USED. Use next specializations instead. */
     template<class CharT>
+    [[nodiscard]]
     inline const bool is_punctuation(const CharT ch) noexcept
     {
         return false;
@@ -2228,6 +2342,7 @@ namespace pcs // i.e. "pythonic c++ strings"
 
     /** \brief Returns true if character ch is punctuation, or false otherwise. Conforms to the current locale settings. */
     template<>
+    [[nodiscard]]
     inline const bool is_punctuation<char>(const char ch) noexcept
     {
         return static_cast<const bool>(std::ispunct(static_cast<unsigned char>(ch)));
@@ -2235,6 +2350,7 @@ namespace pcs // i.e. "pythonic c++ strings"
 
     /** \brief Returns true if character ch is punctuation, or false otherwise. Conforms to the current locale settings. */
     template<>
+    [[nodiscard]]
     inline const bool is_punctuation<wchar_t>(const wchar_t ch) noexcept
     {
         return static_cast<const bool>(std::iswpunct(ch));
@@ -2244,6 +2360,7 @@ namespace pcs // i.e. "pythonic c++ strings"
     //---   is_space()   ------------------------------------------
     /** \brief SHOULD NEVER BE USED. Use next specializations instead. */
     template<class CharT>
+    [[nodiscard]]
     inline const bool is_space(const CharT ch) noexcept
     {
         return false;
@@ -2251,6 +2368,7 @@ namespace pcs // i.e. "pythonic c++ strings"
 
     /** \brief Returns true if character ch is alphabetic, or false otherwise. Conforms to the current locale settings. */
     template<>
+    [[nodiscard]]
     inline const bool is_space<char>(const char ch) noexcept
     {
         return static_cast<const bool>(std::isspace(static_cast<unsigned char>(ch)));
@@ -2258,6 +2376,7 @@ namespace pcs // i.e. "pythonic c++ strings"
 
     /** \brief Returns true if character ch is alphabetic, or false otherwise. Conforms to the current locale settings. */
     template<>
+    [[nodiscard]]
     inline const bool is_space<wchar_t>(const wchar_t ch) noexcept
     {
         return static_cast<const bool>(std::iswspace(ch));
@@ -2267,6 +2386,7 @@ namespace pcs // i.e. "pythonic c++ strings"
     //---   is_upper()   ------------------------------------------
     /** \brief SHOULD NEVER BE USED. Use next specializations instead. */
     template<class CharT>
+    [[nodiscard]]
     inline const bool is_upper(const CharT ch) noexcept
     {
         return false;
@@ -2274,6 +2394,7 @@ namespace pcs // i.e. "pythonic c++ strings"
 
     /** \brief Returns true if character ch is uppercase, or false otherwise. Conforms to the current locale settings. */
     template<>
+    [[nodiscard]]
     inline const bool is_upper<char>(const char ch) noexcept
     {
         return static_cast<const bool>(std::isupper(static_cast<unsigned char>(ch)));
@@ -2281,6 +2402,7 @@ namespace pcs // i.e. "pythonic c++ strings"
 
     /** \brief Returns true if character ch is uppercase, or false otherwise. Conforms to the current locale settings. */
     template<>
+    [[nodiscard]]
     inline const bool is_upper<wchar_t>(const wchar_t ch) noexcept
     {
         return static_cast<const bool>(std::iswupper(ch));
@@ -2290,6 +2412,7 @@ namespace pcs // i.e. "pythonic c++ strings"
     //---   swap_case()   -----------------------------------------
     /** \brief Returns the swapped case form of character ch if it exists, or ch itself otherwise. */
     template<class CharT>
+    [[nodiscard]]
     inline const CharT swap_case(const CharT ch) noexcept
     {
         if (pcs::is_lower(ch))
@@ -2304,6 +2427,7 @@ namespace pcs // i.e. "pythonic c++ strings"
     //---   to_lower()   ------------------------------------------
     /** \brief SHOULD NEVER BE USED. Use next specializations instead. */
     template<class CharT>
+    [[nodiscard]]
     inline const CharT to_lower(const CharT ch) noexcept
     {
         return ch;
@@ -2311,6 +2435,7 @@ namespace pcs // i.e. "pythonic c++ strings"
 
     /** \brief Returns the lowercase form of character ch if it exists, or ch itself otherwise. Conforms to the current locale settings. */
     template<>
+    [[nodiscard]]
     inline const char to_lower<char>(const char ch) noexcept
     {
         return std::tolower(static_cast<unsigned char>(ch));
@@ -2318,6 +2443,7 @@ namespace pcs // i.e. "pythonic c++ strings"
 
     /** \brief Returns the lowercase form of character ch if it exists, or ch itself otherwise. Conforms to the current locale settings. */
     template<>
+    [[nodiscard]]
     inline const wchar_t to_lower<wchar_t>(const wchar_t ch) noexcept
     {
         return std::towlower(ch);
@@ -2327,6 +2453,7 @@ namespace pcs // i.e. "pythonic c++ strings"
     //---   to_upper()   ------------------------------------------
     /** \brief SHOULD NEVER BE USED. Use next specializations instead. */
     template<class CharT>
+    [[nodiscard]]
     inline const CharT to_upper(const CharT ch) noexcept
     {
         return ch;
@@ -2334,6 +2461,7 @@ namespace pcs // i.e. "pythonic c++ strings"
 
     /** \brief Returns the uppercase form of character ch if it exists, or ch itself otherwise. Conforms to the current locale settings. */
     template<>
+    [[nodiscard]]
     inline const char to_upper<char>(const char ch) noexcept
     {
         return std::toupper(static_cast<unsigned char>(ch));
@@ -2341,6 +2469,7 @@ namespace pcs // i.e. "pythonic c++ strings"
 
     /** \brief Returns the uppercase form of character ch if it exists, or ch itself otherwise. Conforms to the current locale settings. */
     template<>
+    [[nodiscard]]
     inline const wchar_t to_upper<wchar_t>(const wchar_t ch) noexcept
     {
         return std::towupper(ch);
