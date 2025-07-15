@@ -32,13 +32,17 @@
 #include <ranges>
 #include <span>
 #include <stdexcept>
-//#include <string_view>
 #include <type_traits>
 #include <vector>
 
 
 namespace pcs // i.e. "pythonic c++ strings"
 {
+#if defined(_MSC_VER)
+#   pragma warning(push)
+#   pragma warning(disable: 4455)  // to avoid boring warnings with litteral operators definitions
+#endif
+
     //=============================================================
     // Forward declarations
 
@@ -85,11 +89,9 @@ namespace pcs // i.e. "pythonic c++ strings"
 
 
     // litteral operators
-#pragma warning(push)
-#pragma warning(disable: 4455)
     inline CppString operator""cs(const char* str, std::size_t len);          //!< Forms a CppString literal. 
     inline CppWString operator""cs(const wchar_t* str, std::size_t len);      //!< Forms a CppWString literal. 
-#pragma warning(pop)
+
 
     // chars classifications -- not to be directly called, see respective specializations at the very end of this module.
     template<class CharT>
@@ -141,28 +143,29 @@ namespace pcs // i.e. "pythonic c++ strings"
     //=====   CppStringT<>   ======================================
     /** \brief This is the templated base class for all CppString classes.
     *
-    * Users should instantiate any specialization of this  base  class
+    * Users should instantiate any specialization  of  this  base  class
     * rather than this base class itself:
     *   - \see CppString for CppStringT<char>.
     *   - \see CppWString for CppStringT<wchar_t>.
     *
-    * This base class inherits from std::basic_string<CharT>. As such,
-    * it  gets  direct access to all public methods of its base class.
-    * \see  https://en.cppreference.com/w/cpp/string/basic_string  for
-    * a full list of such methods, for instance.
+    * This base class inherits from std::basic_string<CharT>.  As  such,
+    * it  gets  direct  access  to all public methods of its base class.
+    * \see  https://en.cppreference.com/w/cpp/string/basic_string  for a
+    * full list of such methods, for instance.
     *
-    * You may specialize it by your own with any of the next char
-    * types:
+    * You may specialize it by your own with any of the next char types:
     *   - char8_t  (C++20)
     *   - char16_t (C++11)
     *   - char32_t (C++11)
+    * Caution:  templated method format() may be difficult to specialize
+    *           with these types --> let us know if you succeed!
     */
     template<class CharT, class TraitsT, class AllocatorT>
     class CppStringT : public std::basic_string<CharT, TraitsT, AllocatorT>
     {
     public:
         //===   Wrappers   ========================================
-        using MyBaseClass  = std::basic_string<CharT, TraitsT, AllocatorT>;
+        using MyBaseClass = std::basic_string<CharT, TraitsT, AllocatorT>;
 
         using traits_type            = MyBaseClass::traits_type;
         using value_type             = MyBaseClass::value_type;
@@ -185,7 +188,7 @@ namespace pcs // i.e. "pythonic c++ strings"
         {
         public:
             //---   wrappers   ------------------------------------
-            using key_type = CharT;
+            using key_type   = CharT;
             using value_type = CppStringT;
 
             //---   Constructors / destructor   -------------------
@@ -275,7 +278,7 @@ namespace pcs // i.e. "pythonic c++ strings"
             * Parameters keys and values must have the same size. The i-th
             * character in key is associated in the translation table with
             * the i -th entry in values. Finally, the characters contained
-            * in  string  not_translated are associated in the translation 
+            * in  string  not_translated are associated in the translation
             * table with the empty string.
             */
             inline TransTable(const CharT* keys, const CharT* values, const CharT* not_translated)
@@ -311,8 +314,8 @@ namespace pcs // i.e. "pythonic c++ strings"
             */
             template<class Key1It, class ValueIt, class Key2It>
             inline TransTable(Key1It first_key, Key1It last_key,
-                              ValueIt first_value, ValueIt last_value,
-                              Key2It first_not_translated, Key2It last_not_translated)
+                ValueIt first_value, ValueIt last_value,
+                Key2It first_not_translated, Key2It last_not_translated)
             {
                 Key1It key1_it{ first_key };
                 ValueIt val_it{ first_value };
@@ -338,34 +341,12 @@ namespace pcs // i.e. "pythonic c++ strings"
                 for (const auto k : keys)
                     m_table[(*k)[0]] = value_type(*val_it++);
             }
-            /**/
 
-            /** \brief Creates a TransTable from three string views (#11).
-            *
-            * Parameters keys and values must have the same size. The i-th
-            * character in key is associated in the translation table with
-            * the i -th  character  in  values.  Finally,  the  characters
-            * contained  in  string  not_translated  are associated in the
-            * translation table with the empty string.
-            */
-            /** /
-            template<class StringViewLike>
-            TransTable(const StringViewLike& keys, const StringViewLike& values, const StringViewLike& not_translated)
-            {
-                assert(keys.size() == values.size());
-                auto val_it = values.cbegin();
-                for (const auto k : keys)
-                    m_table[k] = value_type(*val_it++);
-                for (const auto k : not_translated)
-                    m_table[k] = CppStringT();
-            }
-            /**/
+            inline TransTable() noexcept = default;                                 //!< Default empty constructor.
+            inline TransTable(const TransTable&) noexcept = default;                //!< Default copy constructor.
+            inline TransTable(TransTable&&) noexcept = default;                     //!< Default move constructor.
 
-            inline TransTable() noexcept = default;                     //!< Default empty constructor.
-            inline TransTable(const TransTable&) noexcept = default;    //!< Default copy constructor.
-            inline TransTable(TransTable&&) noexcept = default;         //!< Default move constructor.
-
-            inline ~TransTable() noexcept = default;                    //!< Default descrtuctor
+            inline ~TransTable() noexcept = default;                                //!< Default descrtuctor
 
             //---   operators   -----------------------------------
             inline TransTable& operator= (const TransTable&) noexcept = default;    //!< Default copy assignment
@@ -380,14 +361,13 @@ namespace pcs // i.e. "pythonic c++ strings"
 
             /** \brief Indexing operator. */
             inline value_type operator[] (const key_type ch) noexcept
-            //inline CppStringT operator[] (const key_type ch) noexcept
             {
                 auto it = m_table.find(ch);
                 if (it != m_table.end()) {
                     return it->second;
                 }
                 else {
-                    return ch;  // CppStringT(ch);
+                    return ch;
                 }
             }
 
@@ -398,8 +378,8 @@ namespace pcs // i.e. "pythonic c++ strings"
 
         private:
             std::map<typename key_type, typename value_type> m_table{};  // the internal storage of the translation table. Access it via the indexing operator.
-        
-};
+
+        };
 
 
         //===   Constructors / Destructor   =======================
@@ -724,11 +704,32 @@ namespace pcs // i.e. "pythonic c++ strings"
 
 
         //---   format()   ----------------------------------------
-        /** Formats this string according to c++20 std::format() specification. Returns it (may be discarded). */
+        /** Formats this string according to c++20 std::format() specification. Returns this string. */
+        template<typename T, class... ArgsT>
+        inline CppStringT& format(
+            const std::basic_format_string<T, std::type_identity_t<ArgsT>...> frmt,
+            ArgsT&&... args
+        )
+        {
+            return CppStringT();
+        }
+
         template<class... ArgsT>
-        inline CppStringT format(const std::format_string<ArgsT...> frmt, ArgsT&&... args)
+        inline CppStringT& format(      //!< specialzation for char's
+            const std::basic_format_string<char , std::type_identity_t<ArgsT>... > frmt,
+            ArgsT&&... args
+        )
         {
             return *this = std::vformat(frmt.get(), std::make_format_args(args...));
+        }
+
+        template<class... ArgsT>
+        inline CppStringT& format(      //!< specialzation for wchar_t's
+            const std::basic_format_string<wchar_t, std::type_identity_t<ArgsT>... > frmt,
+            ArgsT&&... args
+        )
+        {
+            return *this = std::vformat(frmt.get(), std::make_wformat_args(args...));
         }
 
 
@@ -743,7 +744,6 @@ namespace pcs // i.e. "pythonic c++ strings"
             const size_type ret_value = find(sub, start, end);
             if (ret_value == CppStringT::npos)
                 throw NotFoundException("substring not found in string.");
-                //throw NotFoundException(CppStringT(std::format("substring \"{}\" not found in string \"{}\"", sub.c_str(), this->c_str()).c_str()));
             else
                 return ret_value;
         }
@@ -778,7 +778,7 @@ namespace pcs // i.e. "pythonic c++ strings"
             if (this->empty())
                 return false;
             return std::all_of(this->cbegin(), this->cend(),
-                               [](const value_type ch) { return pcs::is_alpha(ch) || pcs::is_decimal(ch) || pcs::is_digit(ch) || pcs::is_numeric(ch); });
+                [](const value_type ch) { return pcs::is_alpha(ch) || pcs::is_decimal(ch) || pcs::is_digit(ch) || pcs::is_numeric(ch); });
         }
 
 
@@ -792,38 +792,38 @@ namespace pcs // i.e. "pythonic c++ strings"
 
         //---   isascii()   ---------------------------------------
         /** \brief Returns true if the string is empty or all characters in the string are ASCII, or false otherwise. */
-        #if defined(isascii)  // may be already defined in header file <ctype.h>
-            #undef isascii
-        #endif
+#if defined(isascii)  // may be already defined in header file <ctype.h>
+#undef isascii
+#endif
         inline const bool isascii() const noexcept
         {
-            return this->empty()  ||  std::all_of(this->cbegin(), this->cend(), pcs::is_ascii<value_type>);
+            return this->empty() || std::all_of(this->cbegin(), this->cend(), pcs::is_ascii<value_type>);
         }
 
 
         //---   isdecimal()   -------------------------------------
         /** \brief Returns true if all characters in the string are decimal characters and there is at least one character, or false otherwise.
         *
-        * Decimal characters are those that can be used to form numbers  in 
-        * base 10, e.g. U+0660, ARABIC-INDIC DIGIT ZERO. Formally a decimal 
+        * Decimal characters are those that can be used to form numbers  in
+        * base 10, e.g. U+0660, ARABIC-INDIC DIGIT ZERO. Formally a decimal
         * character is a character in the Unicode General Category “Nd”.
         */
         inline const bool isdecimal() const noexcept
         {
-            return !this->empty()  &&  std::all_of(this->cbegin(), this->cend(), pcs::is_decimal<value_type>);
+            return !this->empty() && std::all_of(this->cbegin(), this->cend(), pcs::is_decimal<value_type>);
         }
 
 
         //---   isdigit()   ---------------------------------------
         /** \brief Returns true if all characters in the string are digits and there is at least one character, or false otherwise.
         *
-        * Digits include decimal characters and digits that need special 
-        * handling,  such as the compatibility superscript digits.  This 
-        * covers digits which cannot be used to form numbers in base 10, 
-        * like the Kharosthi numbers.  Formally,  a digit is a character 
+        * Digits include decimal characters and digits that need special
+        * handling,  such as the compatibility superscript digits.  This
+        * covers digits which cannot be used to form numbers in base 10,
+        * like the Kharosthi numbers.  Formally,  a digit is a character
         * that has the property value Numeric_Type=Digit or Numeric_Type
         * =Decimal.
-        * 
+        *
         * CAUTION: current implementation of  library  cpp-strings  does
         * not implement above algorithm. It just returns the same result
         * as 'isdecimal()' which is NOT what Python str library does.
@@ -838,19 +838,19 @@ namespace pcs // i.e. "pythonic c++ strings"
         /** \brief Returns true if the string is not empty and is a valid identifier according to the language definition, or false otherwise.
         *
         * CAUTION:  the current implementation of this method does not deal with the proper c++
-        * defintiion of identifiers (see https://en.cppreference.com/w/cpp/language/identifiers 
+        * defintiion of identifiers (see https://en.cppreference.com/w/cpp/language/identifiers
         * and https://www.unicode.org/reports/tr31/#Table_Lexical_Classes_for_Identifiers).
         *
         * While the specification of identifiers in c++ is this one:
-        * 
+        *
         *    identifier   ::= XID_Start XID_Continue*
         *    XID_Start    ::= ID_Start XID_Continue*
         *    ID_Start     ::= <characters derived from the Unicode General_Category of uppercase letters, lowercase letters, titlecase letters, modifier letters, other letters, letter numbers, plus Other_ID_Start, minus Pattern_Syntax and Pattern_White_Space code points>
         *    XID_Continue ::= <characters  derived from ID_Continue as per Unicode specs Section 5.1, NFKC Modifications (https://www.unicode.org/reports/tr31/#NFKC_Modifications)>
         *    ID_Continue  ::= ID_Start | <characters having the Unicode General_Category of nonspacing marks, spacing combining marks, decimal number, connector punctuation, plus Other_ID_Continue, minus Pattern_Syntax and Pattern_White_Space code points>
-        * 
+        *
         * the currently implemented rule is this simpler one:
-        * 
+        *
         *    identifier   ::= ID_Start id_continue*
         *    id_continue  ::= ID_Start | <decimal number>
         */
@@ -873,7 +873,7 @@ namespace pcs // i.e. "pythonic c++ strings"
         *
         * CAUTION:  current implementation just returns isdecimal() result,
         * while the description of isnumeric() should be this one:
-        * Numeric  characters  include digit characters, and all characters 
+        * Numeric  characters  include digit characters, and all characters
         * that have the Unicode numeric value property.  Formally,  numeric
         * characters  are those with the property value Numeric_Type=Digit,
         * Numeric_Type=Decimal or Numeric_Type=Numeric.
@@ -887,8 +887,8 @@ namespace pcs // i.e. "pythonic c++ strings"
         //---   isprintable()   -----------------------------------
         /** \brief Returns true if all characters in the string are printable or if the string is empty, or false otherwise.
         *
-        * Nonprintable characters are those characters defined in the Unicode 
-        * character  database as “Other” or “Separator”,  excepting the ASCII 
+        * Nonprintable characters are those characters defined in the Unicode
+        * character  database as "Other" or "Separator",  excepting the ASCII
         * space (0x20) which is considered printable.
         */
         inline const bool isprintable() const noexcept
@@ -916,9 +916,9 @@ namespace pcs // i.e. "pythonic c++ strings"
         //---   istitle()   ---------------------------------------
         /** \brief Returns true if the string is a titlecased string and there is at least one character, or false otherwise.
         *
-        * For instance uppercase characters may only follow uncased 
+        * For instance uppercase characters may only follow uncased
         * characters and lowercase characters only cased ones.
-        * 
+        *
         * CAUTION:  current implementation only tests for uppercase
         * characters following whitespaces and lowercase characters
         * anywhere else.
@@ -942,7 +942,7 @@ namespace pcs // i.e. "pythonic c++ strings"
         inline const bool is_words_sep() const noexcept
         {
             return !this->empty() && std::all_of(this->cbegin(), this->cend(),
-                                                 [](const value_type ch){ return pcs::is_space(ch) || pcs::is_punctuation(ch); });
+                [](const value_type ch) { return pcs::is_space(ch) || pcs::is_punctuation(ch); });
         }
 
 
@@ -980,7 +980,7 @@ namespace pcs // i.e. "pythonic c++ strings"
             return res;
         }
 
-        /** \brief Returns a string which is the concatenation of the strings in the parameters list. 
+        /** \brief Returns a string which is the concatenation of the strings in the parameters list.
         *
         * The separator between elements is the string to which this method is applied.
         */
@@ -1007,7 +1007,7 @@ namespace pcs // i.e. "pythonic c++ strings"
         //---   ljust()   -----------------------------------------
         /** \brief Returns the string left justified in a string of length width.
         *
-        * Padding is done using the specified fillchar (default is an ASCII space). 
+        * Padding is done using the specified fillchar (default is an ASCII space).
         * The original string is returned if width is less than or equal to len(s).
         */
         inline CppStringT ljust(const size_type width, const value_type fillch = value_type(' ')) const noexcept
@@ -1028,8 +1028,9 @@ namespace pcs // i.e. "pythonic c++ strings"
         inline CppStringT& lower() noexcept
         {
             std::transform(this->begin(), this->end(),
-                           this->begin(),
-                           [&](value_type ch) { return this->lower(ch); });
+                this->begin(),
+                [&](value_type ch) { return this->lower(ch); }
+            );
             return *this;
         }
 
@@ -1042,13 +1043,13 @@ namespace pcs // i.e. "pythonic c++ strings"
         {
             return value_type(std::tolower(ch));
         }
-        
+
 
         //---   lstrip()   ----------------------------------------
         /** \brief Returns a copy of the string with leading characters removed.
         *
-        * The passed string specifies the set of characters to be removed. 
-        * The chars argument is not a prefix;  rather, all combinations of 
+        * The passed string specifies the set of characters to be removed.
+        * The chars argument is not a prefix;  rather, all combinations of
         * its values are stripped.
         * To remove a prefix, rather call method 'removeprefix()'.
         */
@@ -1103,14 +1104,14 @@ namespace pcs // i.e. "pythonic c++ strings"
                 if (slice.stop() < slice.start()) {
                     res = this->substr(size_type(slice.stop()), size_type(slice.start() - slice.stop() + 1));
                     std::ranges::reverse(res);  // notice: may use vectorization if available
-                }                
+                }
                 return res;
             }
 
             // finally, no trivial optimization -- and naive implementation...
             for (slice.begin(*this); !slice.end(); ++slice)
                 res += (*this)[size_type(*slice)];
-            
+
             return res;
         }
 
@@ -1129,7 +1130,7 @@ namespace pcs // i.e. "pythonic c++ strings"
             if (count <= 0)
                 return CppStringT();
 
-            CppStringT res( *this );
+            CppStringT res(*this);
             while (--count)
                 res += *this;
             return res;
@@ -1140,7 +1141,7 @@ namespace pcs // i.e. "pythonic c++ strings"
         /** Splits the string at the first occurrence of sep, and returns a 3-items vector containing the part before the separator, the separator itself, and the part after the separator.
         *
         * If the separator is not  found,  returns  a  3-items  vector
-        * containing the string itself, followed by two empty strings. 
+        * containing the string itself, followed by two empty strings.
         */
         std::vector<CppStringT> partition(const CppStringT& sep) const noexcept
         {
@@ -1316,7 +1317,6 @@ namespace pcs // i.e. "pythonic c++ strings"
             const size_type ret_value = rfind(sub, start, end);
             if (ret_value == CppStringT::npos)
                 throw NotFoundException("substring not found in string");
-                //throw NotFoundException(std::format("substring \"{}\" not found in string \"{}\"", sub, this->c_str()));
             else
                 return ret_value;
         }
@@ -1403,7 +1403,7 @@ namespace pcs // i.e. "pythonic c++ strings"
         //---   rsplit()   ----------------------------------------
         /** \brief Returns a vector of the words in the whole string, as seperated with whitespace strings.
         *
-        * Notice: consecutive whitespaces are each regarded as a 
+        * Notice: consecutive whitespaces are each regarded as a
         * single separator. So, they each separate empty strings.
         */
         inline std::vector<CppStringT> rsplit() noexcept
@@ -1438,7 +1438,7 @@ namespace pcs // i.e. "pythonic c++ strings"
                 size_type count{ maxsplit };
                 size_type index{ 0 };
 
-                while ((index = tmp.rfind(sep)) != CppStringT::npos  &&  count > 0) {
+                while ((index = tmp.rfind(sep)) != CppStringT::npos && count > 0) {
                     indexes.insert(indexes.begin(), index);
                     if (index == 0)
                         break;
@@ -1506,10 +1506,10 @@ namespace pcs // i.e. "pythonic c++ strings"
         /** \brief Returns a vector of the words in the whole string, using sep as the delimiter string.
         *
         * Notice: consecutive delimiters are not grouped together  and  are
-        * deemed  to delimit empty strings  (for example, "1,,2".split(",") 
-        * returns {"1", "", "2"}). The sep argument may consist of multiple 
-        * characters (for example, "1<>2<>3".split("<>") returns {"1", "2", 
-        * "3"]).  Splitting  an  empty  string  with  a specified separator 
+        * deemed  to delimit empty strings  (for example, "1,,2".split(",")
+        * returns {"1", "", "2"}). The sep argument may consist of multiple
+        * characters (for example, "1<>2<>3".split("<>") returns {"1", "2",
+        * "3"]).  Splitting  an  empty  string  with  a specified separator
         * returns {""}.
         */
         inline std::vector<CppStringT> split(const CppStringT& sep) noexcept
@@ -1578,7 +1578,7 @@ namespace pcs // i.e. "pythonic c++ strings"
         * \x1c 	        File Separator
         * \x1d 	        Group Separator
         * \x1e 	        Record Separator
-        * Next separators values, detected by Python method splitlines(), are NOT detected with CppStrings
+        * Next separators values, detected by Python method splitlines(), are currently NOT detected by CppStrings
         * \x85 	        Next Line (C1 Control Code)
         * \u2028 	    Line Separator
         * \u2029 	    Paragraph Separator
@@ -1679,9 +1679,6 @@ namespace pcs // i.e. "pythonic c++ strings"
                     return true;
             }
             return false;
-
-            //else
-            //    return std::any_of(prefixes.cbegin(), prefixes.cend(), this->substr(start, end).starts_with);
         }
 
 
@@ -1726,7 +1723,7 @@ namespace pcs // i.e. "pythonic c++ strings"
 
         //---   substr()   ----------------------------------------
         /** \brief Returns a copy of the string, starting at index start and ending after count characters. */
-        inline CppStringT substr(const size_type start, const size_type count=-1) const noexcept
+        inline CppStringT substr(const size_type start, const size_type count = -1) const noexcept
         {
             if (start > this->size())
                 return CppStringT();
@@ -1767,7 +1764,7 @@ namespace pcs // i.e. "pythonic c++ strings"
         //---   translate()   -------------------------------------
         /** \brief Returns a copy of the string in which each character has been mapped through the given translation table.
         *
-        * The table must be of type CppStringT::TransTable. When a character 
+        * The table must be of type CppStringT::TransTable. When a character
         * to  be  translated  is not available as an entry in the tranlation
         * table, it is set as is in the resulting string.
         */
@@ -1809,8 +1806,8 @@ namespace pcs // i.e. "pythonic c++ strings"
         //---   zfill()   -----------------------------------------
         /** \brief Returns a copy of the string left filled with ASCII '0' digits to make a string of length width.
         *
-        * A leading sign prefix ('+'/'-') is handled by inserting the padding 
-        * after the sign character rather than before. The original string is 
+        * A leading sign prefix ('+'/'-') is handled by inserting the padding
+        * after the sign character rather than before. The original string is
         * returned if width is less than or equal to len(s).
         */
         inline CppStringT zfill(const size_type width) const noexcept
@@ -1820,7 +1817,7 @@ namespace pcs // i.e. "pythonic c++ strings"
 
             const size_type padding_width = width - this->size();
             if ((*this)[0] == '+' || (*this)[0] == '-')
-                return (*this)[0] + this->substr(1, this->size() - 1).ljust(width-1, value_type('0'));
+                return (*this)[0] + this->substr(1, this->size() - 1).ljust(width - 1, value_type('0'));
             else
                 return this->ljust(width, value_type('0'));
         }
@@ -1836,7 +1833,7 @@ namespace pcs // i.e. "pythonic c++ strings"
     class Slice
     {
     public:
-        static constexpr IntT DEFAULT{ std::numeric_limits<IntT>::min()};
+        static constexpr IntT DEFAULT{ std::numeric_limits<IntT>::min() };
 
         //---   Constructors / Destructor   -------------------
         Slice(const IntT start = DEFAULT, const IntT stop = DEFAULT, const IntT step = DEFAULT) noexcept   //!< Valued constructor
@@ -1849,14 +1846,15 @@ namespace pcs // i.e. "pythonic c++ strings"
 
 
         //---   iterating   -----------------------------------
-        inline const IntT begin(const CppString& str) noexcept  //!< starts iterating on specified CppString.
+        template<typename CharT = char>
+#if (defined(_HAS_CXX20) && _HAS_CXX20)
+            requires std::is_same_v<CharT, char> || std::is_same_v<CharT, char8_t> || std::is_same_v<CharT, char16_t> || std::is_same_v<CharT, char32_t> || std::is_same_v<CharT, wchar_t>
+#else
+            requires std::is_same_v<CharT, char> || std::is_same_v<CharT, char16_t> || std::is_same_v<CharT, char32_t> || std::is_same_v<CharT, wchar_t>
+#endif
+        inline const IntT begin(const CppStringT<CharT>& str) noexcept  //!< starts iterating on specified CppString.
         {
             return _prepare_iterating(IntT(str.size()));
-        }
-
-        inline const IntT begin(const CppWString& wstr) noexcept  //!< starts iterating on specified CppWString.
-        {
-            return _prepare_iterating(IntT(wstr.size()));
         }
 
         inline const bool end() const noexcept  //!< returns true when iterating is over, or false otherwise.
@@ -1883,8 +1881,8 @@ namespace pcs // i.e. "pythonic c++ strings"
 
         //---   properties   ----------------------------------
         inline IntT start() { return _start; }  //!< Returns the start index of this slide
-        inline IntT stop()  { return _stop;  }  //!< Returns the stop index of this slide
-        inline IntT step()  { return _step;  }  //!< Returns the step value of this slide
+        inline IntT stop() { return _stop; }  //!< Returns the stop index of this slide
+        inline IntT step() { return _step; }  //!< Returns the step value of this slide
 
 
     private:
@@ -2040,8 +2038,6 @@ namespace pcs // i.e. "pythonic c++ strings"
 
 
     //=====   litteral operators   ============================
-#pragma warning(push)
-#pragma warning(disable: 4455)
     /** \brief  Forms a CppString literal. */
     inline CppString operator""cs(const char* str, std::size_t len)
     {
@@ -2053,7 +2049,6 @@ namespace pcs // i.e. "pythonic c++ strings"
     {
         return CppWString(CppWString::MyBaseClass(str, len));
     }
-#pragma warning(pop)
 
 
     //=====   templated chars classes   ===========================
@@ -2061,41 +2056,55 @@ namespace pcs // i.e. "pythonic c++ strings"
     /** \brief SHOULD NEVER BE USED. Use next specializations instead. */
     template<class CharT>
     inline const bool is_alpha(const CharT ch) noexcept
-    { return false; }
+    {
+        return false;
+    }
 
     /** \brief Returns true if character ch is alphabetic, or false otherwise. Conforms to the current locale settings. */
     template<>
     inline const bool is_alpha<char>(const char ch) noexcept
-    { return static_cast<const bool>(std::isalpha(static_cast<unsigned char>(ch))); }
+    {
+        return static_cast<const bool>(std::isalpha(static_cast<unsigned char>(ch)));
+    }
 
     /** \brief Returns true if character ch is alphabetic, or false otherwise. Conforms to the current locale settings. */
     template<>
     inline const bool is_alpha<wchar_t>(const wchar_t ch) noexcept
-    { return static_cast<const bool>(std::iswalpha(ch)); }
+    {
+        return static_cast<const bool>(std::iswalpha(ch));
+    }
 
 
     //---   is_ascii()   ------------------------------------------
     /** \brief Returns true if character has code point in the range U+0000-U+007F. */
     template<class CharT>
     inline const bool is_ascii(const CharT ch) noexcept
-    { return CharT(0x00) <= ch && ch <= CharT(0x7f); }
+    {
+        return CharT(0x00) <= ch && ch <= CharT(0x7f);
+    }
 
 
     //---   is_decimal()   ----------------------------------------
     /** \brief SHOULD NEVER BE USED. Use next specializations instead. */
     template<class CharT>
     inline const bool is_decimal(const CharT ch) noexcept
-    { return false; }
+    {
+        return false;
+    }
 
     /** \brief Returns true if character is a decimal digit, or false otherwise. */
     template<>
     inline const bool is_decimal<char>(const char ch) noexcept
-    { return static_cast<const bool>(std::isdigit(static_cast<unsigned char>(ch))); }
+    {
+        return static_cast<const bool>(std::isdigit(static_cast<unsigned char>(ch)));
+    }
 
     /** \brief Returns true if character is a decimal digit, or false otherwise. */
     template<>
     inline const bool is_decimal<wchar_t>(const wchar_t ch) noexcept
-    { return (const bool)std::iswdigit(ch); }
+    {
+        return (const bool)std::iswdigit(ch);
+    }
 
 
     //---   is_digit()   ------------------------------------------
@@ -2125,14 +2134,18 @@ namespace pcs // i.e. "pythonic c++ strings"
     /** \brief Returns true if character is a continuing char for identifiers, or false otherwise. */
     template<class CharT>
     inline const bool is_id_continue(const CharT ch) noexcept
-    { return pcs::is_id_start(ch) || pcs::is_decimal(ch); }
+    {
+        return pcs::is_id_start(ch) || pcs::is_decimal(ch);
+    }
 
 
     //---   is_id_start()   ---------------------------------------
     /** \brief Returns true if character is a starting char for identifiers, or false otherwise. */
     template<class CharT>
     inline const bool is_id_start(const CharT ch) noexcept
-    { return pcs::is_alpha(ch) || ch == CharT('_'); }
+    {
+        return pcs::is_alpha(ch) || ch == CharT('_');
+    }
 
 
     //---   is_lower()   ------------------------------------------
@@ -2185,8 +2198,10 @@ namespace pcs // i.e. "pythonic c++ strings"
     /** \brief SHOULD NEVER BE USED. Use next specializations instead. */
     template<class CharT>
     inline const bool is_printable(const CharT ch) noexcept
-    { return false; }
-    
+    {
+        return false;
+    }
+
     /** \brief Returns true if character ch is printable, or false otherwise. */
     template<>
     inline const bool is_printable<char>(const char ch) noexcept
@@ -2206,34 +2221,46 @@ namespace pcs // i.e. "pythonic c++ strings"
     /** \brief SHOULD NEVER BE USED. Use next specializations instead. */
     template<class CharT>
     inline const bool is_punctuation(const CharT ch) noexcept
-    { return false; }
+    {
+        return false;
+    }
 
     /** \brief Returns true if character ch is punctuation, or false otherwise. Conforms to the current locale settings. */
     template<>
     inline const bool is_punctuation<char>(const char ch) noexcept
-    { return static_cast<const bool>(std::ispunct(static_cast<unsigned char>(ch))); }
+    {
+        return static_cast<const bool>(std::ispunct(static_cast<unsigned char>(ch)));
+    }
 
     /** \brief Returns true if character ch is punctuation, or false otherwise. Conforms to the current locale settings. */
     template<>
     inline const bool is_punctuation<wchar_t>(const wchar_t ch) noexcept
-    { return static_cast<const bool>(std::iswpunct(ch)); }
+    {
+        return static_cast<const bool>(std::iswpunct(ch));
+    }
 
 
     //---   is_space()   ------------------------------------------
     /** \brief SHOULD NEVER BE USED. Use next specializations instead. */
     template<class CharT>
     inline const bool is_space(const CharT ch) noexcept
-    { return false; }
+    {
+        return false;
+    }
 
     /** \brief Returns true if character ch is alphabetic, or false otherwise. Conforms to the current locale settings. */
     template<>
     inline const bool is_space<char>(const char ch) noexcept
-    { return static_cast<const bool>(std::isspace(static_cast<unsigned char>(ch))); }
+    {
+        return static_cast<const bool>(std::isspace(static_cast<unsigned char>(ch)));
+    }
 
     /** \brief Returns true if character ch is alphabetic, or false otherwise. Conforms to the current locale settings. */
     template<>
     inline const bool is_space<wchar_t>(const wchar_t ch) noexcept
-    { return static_cast<const bool>(std::iswspace(ch)); }
+    {
+        return static_cast<const bool>(std::iswspace(ch));
+    }
 
 
     //---   is_upper()   ------------------------------------------
@@ -2318,5 +2345,9 @@ namespace pcs // i.e. "pythonic c++ strings"
         return std::towupper(ch);
     }
 
+
+#if defined(_MSC_VER)
+#   pragma warning(pop)  // to avoid boring warnings with litteral operators definitions
+#endif
 
 } // end of namespace pcs  // (pythonic c++ strings)
