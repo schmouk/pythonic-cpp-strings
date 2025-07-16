@@ -141,10 +141,6 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="cppstrings.cpp" />
-  </ItemGroup>
-  <ItemGroup>
-    <ClInclude Include="archive\cppstrings.h" />
     <ClInclude Include="cppstrings.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
