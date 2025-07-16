@@ -2,7 +2,7 @@
     Library cppstrings
     "What if c++ strings where as easy to use as Python strings?"
  
-    Copyright (C) 2023 Philippe Schmouker
+    Copyright (C) 2023-2025 Philippe Schmouker
     contact - ph (dot) schmouker (at) gmail (dot) com
 
     This program is free software: you can redistribute it and/or modify
@@ -29,11 +29,17 @@ using namespace pcs;
 */
 int main()
 {
-    CppString  s = "-5.1";
-    CppWString ws{ L"-5.2"cs };
+    CppString  s = "-5.1"_cs;
+    CppWString ws{ L"-5.2"_cs };
 
     std::cout << ws.isupper() << std::endl;
     std::cout << s.zfill(10).c_str() << std::endl;
+
+    s.format("{} {}", 1, 3.14);
+    ws.format(L"{} abc", 2);
+
+    std::cout << s.c_str() << " / ";
+    std::wcout << ws.c_str() << std::endl;
 
     return 0;
 }
