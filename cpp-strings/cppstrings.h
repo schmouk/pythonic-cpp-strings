@@ -365,10 +365,10 @@ namespace pcs // i.e. "pythonic c++ strings"
             inline value_type operator[] (const key_type ch) noexcept
             {
                 auto it = m_table.find(ch);
-                if (it != m_table.end()) {
+                if (it != m_table.end()) [[likely]] {
                     return it->second;
                 }
-                else {
+                else [[unlikely]] {
                     return ch;
                 }
             }
@@ -443,7 +443,7 @@ namespace pcs // i.e. "pythonic c++ strings"
         inline CppStringT capitalize() noexcept
         {
             CppStringT res(*this);
-            if (!res.empty()) {
+            if (!res.empty()) [[likely]] {
                 res.lower();
                 res[0] = pcs::to_upper(res[0]);
             }
@@ -462,7 +462,7 @@ namespace pcs // i.e. "pythonic c++ strings"
         CppStringT center(const size_type width, const value_type fillch = value_type(' ')) const noexcept
         {
             const size_type len{ this->size() };
-            if (width <= len)
+            if (width <= len) [[unlikely]]
                 return CppStringT(*this);
 
             const size_type half{ (width - len) / 2 };
@@ -478,7 +478,7 @@ namespace pcs // i.e. "pythonic c++ strings"
         [[nodiscard]]
         constexpr bool contains(const CppStringT& substr) const noexcept
         {
-            if (substr.empty())
+            if (substr.empty()) [[unlikely]]
                 // the empty string is always contained in any string
                 return true;
 
@@ -490,10 +490,10 @@ namespace pcs // i.e. "pythonic c++ strings"
             const size_type substr_width{ substr.size() };
             const size_type width{ this->size() };
 
-            if (substr_width > width)
+            if (substr_width > width) [[unlikely]]
                 return false;
 
-            for (size_type index = 0; index <= width - substr_width; ++index) {
+            for (size_type index = 0; index <= width - substr_width; ++index) [[likely]] {
                 if (substr == this->substr(index, substr_width))
                     return true;
             }
@@ -585,12 +585,12 @@ namespace pcs // i.e. "pythonic c++ strings"
         [[nodiscard]]
         const bool endswith(const std::initializer_list<CppStringT>& suffixes, const size_type start, const size_type end) const noexcept
         {
-            if (start > end)
+            if (start > end) [[unlikely]]
                 return false;
 
             CppStringT tmp(this->substr(start, end - start + 1));
             for (auto& suffix : suffixes) {
-                if (tmp.ends_with(suffix))
+                if (tmp.ends_with(suffix)) [[unlikely]]
                     return true;
             }
             return false;
@@ -630,17 +630,17 @@ namespace pcs // i.e. "pythonic c++ strings"
 
             std::size_t current_pos{ 0 };
             for (const value_type ch : *this) {
-                if (ch == value_type('\t')) {
+                if (ch == value_type('\t')) [[unlikely]] {
                     do {
                         ret += value_type(' ');
                         current_pos++;
                     } while (current_pos % tabsize_ != 0);
                 }
-                else if (ch == value_type('\n') || ch == value_type('\r')) {
+                else if (ch == value_type('\n') || ch == value_type('\r')) [[unlikely]] {
                     ret += ch;
                     current_pos = 0;
                 }
-                else {
+                else [[likely]] {
                     ret += ch;
                     current_pos++;
                 }
@@ -667,9 +667,9 @@ namespace pcs // i.e. "pythonic c++ strings"
         {
             const size_type end_{ (end == -1) ? this->size() : end };
 
-            if (start > end_)
+            if (start > end_) [[unlikely]]
                 return CppStringT::npos;
-            else
+            else [[likely]]
                 return find_n(sub, start, end_ - start + 1);
         }
 
@@ -798,10 +798,14 @@ namespace pcs // i.e. "pythonic c++ strings"
         [[nodiscard]]
         inline const bool isalnum() const noexcept
         {
-            if (this->empty())
+            if (this->empty()) [[unlikely]]
                 return false;
-            return std::all_of(this->cbegin(), this->cend(),
-                [](const value_type ch) { return pcs::is_alpha(ch) || pcs::is_decimal(ch) || pcs::is_digit(ch) || pcs::is_numeric(ch); });
+            else [[likely]]
+                return std::all_of(
+                    this->cbegin(),
+                    this->cend(),
+                    [](const value_type ch) { return pcs::is_alpha(ch) || pcs::is_decimal(ch) || pcs::is_digit(ch) || pcs::is_numeric(ch); }
+                );
         }
 
 
@@ -977,8 +981,12 @@ namespace pcs // i.e. "pythonic c++ strings"
         [[nodiscard]]
         inline const bool is_words_sep() const noexcept
         {
-            return !this->empty() && std::all_of(this->cbegin(), this->cend(),
-                [](const value_type ch) { return pcs::is_space(ch) || pcs::is_punctuation(ch); });
+            return !this->empty() &&
+                std::all_of(
+                    this->cbegin(),
+                    this->cend(),
+                    [](const value_type ch) { return pcs::is_space(ch) || pcs::is_punctuation(ch); }
+                );
         }
 
 
@@ -991,12 +999,12 @@ namespace pcs // i.e. "pythonic c++ strings"
         [[nodiscard]]
         CppStringT join(const std::array<CppStringT, N>& strs) const noexcept
         {
-            if (strs.empty())
+            if (strs.empty()) [[unlikely]]
                 return CppStringT();
 
             auto str_it = strs.cbegin();
             CppStringT res{ *str_it++ };
-            while (str_it != strs.cend())
+            while (str_it != strs.cend()) [[likely]]
                 res += *this + *str_it++;
             return res;
         }
@@ -1008,12 +1016,12 @@ namespace pcs // i.e. "pythonic c++ strings"
         [[nodiscard]]
         CppStringT join(const std::vector<CppStringT>& strs) const noexcept
         {
-            if (strs.empty())
+            if (strs.empty()) [[unlikely]]
                 return CppStringT();
 
             auto str_it = strs.cbegin();
             CppStringT res{ *str_it++ };
-            while (str_it != strs.cend())
+            while (str_it != strs.cend()) [[likely]]
                 res += *this + *str_it++;
             return res;
         }
@@ -1054,9 +1062,9 @@ namespace pcs // i.e. "pythonic c++ strings"
         [[nodiscard]]
         inline CppStringT ljust(const size_type width, const value_type fillch = value_type(' ')) const noexcept
         {
-            if (this->size() >= width)
+            if (this->size() >= width) [[unlikely]]
                 return *this;
-            else
+            else [[likely]]
                 return CppStringT(width - this->size(), fillch) + *this;
         }
 
@@ -1069,7 +1077,9 @@ namespace pcs // i.e. "pythonic c++ strings"
         */
         inline CppStringT& lower() noexcept
         {
-            std::transform(this->begin(), this->end(),
+            std::transform(
+                this->begin(),
+                this->end(),
                 this->begin(),
                 [&](value_type ch) { return this->lower(ch); }
             );
@@ -1099,8 +1109,8 @@ namespace pcs // i.e. "pythonic c++ strings"
         [[nodiscard]]
         inline CppStringT lstrip(const CppStringT& removedchars) const noexcept
         {
-            for (auto it = this->cbegin(); it != this->cend(); ++it)
-                if (std::none_of(removedchars.cbegin(), removedchars.cend(), [it](const value_type ch) { return *it == ch; }))
+            for (auto it = this->cbegin(); it != this->cend(); ++it) [[likely]]
+                if (std::none_of(removedchars.cbegin(), removedchars.cend(), [it](const value_type ch) { return *it == ch; })) [[likely]]
                     return CppStringT(it, this->cend());
             return CppStringT();
         }
@@ -1109,8 +1119,8 @@ namespace pcs // i.e. "pythonic c++ strings"
         [[nodiscard]]
         inline CppStringT lstrip() const noexcept
         {
-            for (auto it = this->cbegin(); it != this->cend(); ++it)
-                if (*it != value_type(' '))
+            for (auto it = this->cbegin(); it != this->cend(); ++it) [[likely]]
+                if (*it != value_type(' ')) [[unlikely]]
                     return CppStringT(it, this->cend());
             return CppStringT();
         }
@@ -1134,11 +1144,11 @@ namespace pcs // i.e. "pythonic c++ strings"
         CppStringT operator() (Slice<IntT> slice) const noexcept
         {
             // optimization on 1 by 1 step
-            if (slice.step() == 1) {
+            if (slice.step() == 1) [[likely]] {
                 slice.begin(*this);
-                if (slice.start() < slice.stop())
+                if (slice.start() < slice.stop()) [[likely]]
                     return this->substr(size_type(slice.start()), size_type(slice.stop() - slice.start() + 1));
-                else
+                else [[unlikely]]
                     return CppStringT();
             }
 
@@ -1147,7 +1157,7 @@ namespace pcs // i.e. "pythonic c++ strings"
             // optimization on reversed 1 by 1 step
             if (slice.step() == -1) {
                 slice.begin(*this);
-                if (slice.stop() < slice.start()) {
+                if (slice.stop() < slice.start()) [[likely]] {
                     res = this->substr(size_type(slice.stop()), size_type(slice.start() - slice.stop() + 1));
                     std::ranges::reverse(res);  // notice: may use vectorization if available
                 }
@@ -1175,11 +1185,11 @@ namespace pcs // i.e. "pythonic c++ strings"
         [[nodiscard]]
         CppStringT operator* (std::int64_t count) const noexcept
         {
-            if (count <= 0)
+            if (count <= 0) [[unlikely]]
                 return CppStringT();
 
             CppStringT res(*this);
-            while (--count)
+            while (--count) [[likely]]
                 res += *this;
             return res;
         }
@@ -1240,7 +1250,7 @@ namespace pcs // i.e. "pythonic c++ strings"
         [[nodiscard]]
         CppStringT replace(const CppStringT& old, const CppStringT& new_, size_type count = -1) const noexcept
         {
-            if (old == new_ || old.empty())
+            if (old == new_ || old.empty()) [[unlikely]]
                 return *this;
 
             CppStringT res{};
@@ -1252,7 +1262,7 @@ namespace pcs // i.e. "pythonic c++ strings"
                 --count;
             }
 
-            if (prev_index < this->size())
+            if (prev_index < this->size()) [[likely]]
                 res += this->substr(prev_index, this->size() - prev_index);
 
             return res;
@@ -1277,11 +1287,11 @@ namespace pcs // i.e. "pythonic c++ strings"
         [[nodiscard]]
         inline constexpr size_type rfind(const CppStringT& sub, const size_type start, const size_type end) const noexcept
         {
-            if (start > end)
+            if (start > end) [[unlikely]]
                 return CppStringT::npos;
-            else if (sub.empty())
+            else if (sub.empty()) [[unlikely]]
                 return 0;
-            else {
+            else [[likely]] {
                 const size_type found_pos{ this->substr(start, end - start + 1).rfind(sub) };
                 return (found_pos == CppStringT::npos) ? CppStringT::npos : found_pos + start;
             }
@@ -1356,9 +1366,9 @@ namespace pcs // i.e. "pythonic c++ strings"
         [[nodiscard]]
         inline constexpr size_type rfind_n(const CppStringT& sub, const size_type count) const noexcept
         {
-            if (count == 0)
+            if (count == 0) [[unlikely]]
                 return CppStringT::npos;
-            else
+            else [[likely]]
                 return rfind(sub, 0, count - 1);
         }
 
@@ -1435,9 +1445,9 @@ namespace pcs // i.e. "pythonic c++ strings"
         [[nodiscard]]
         inline CppStringT rjust(const size_type width, const value_type fillch = value_type(' ')) const noexcept
         {
-            if (this->size() >= width)
+            if (this->size() >= width) [[unlikely]]
                 return *this;
-            else
+            else [[likely]]
                 return *this + CppStringT(width - this->size(), fillch);
         }
 
@@ -1496,10 +1506,10 @@ namespace pcs // i.e. "pythonic c++ strings"
         {
             std::vector<CppStringT> res{};
 
-            if (maxsplit == 0) {
+            if (maxsplit == 0) [[unlikely]] {
                 res.push_back({ *this });
             }
-            else {
+            else [[likely]] {
                 const size_type sep_size{ sep.size() };
                 std::vector<size_type> indexes{};
                 CppStringT tmp{ *this };
@@ -1605,10 +1615,10 @@ namespace pcs // i.e. "pythonic c++ strings"
         {
             std::vector<CppStringT> res{};
 
-            if (maxsplit == 0) {
+            if (maxsplit == 0) [[unlikely]] {
                 res.push_back(*this);
             }
-            else {
+            else [[likely]] {
                 const size_type sep_size{ sep.size() };
                 std::vector<size_type> indexes{};
                 size_type count{ maxsplit };
@@ -1666,37 +1676,37 @@ namespace pcs // i.e. "pythonic c++ strings"
 
             for (const value_type ch : *this) {
                 switch (ch) {
-                case 0x0b:       // Line Tabulation, \v as well as \x0b and \013
-                case 0x0c:       // Form Feed, \f as well as \x0c and \014
-                case 0x1c:       // File Separator, or \034
-                case 0x1d:       // Group Separator, or \035
-                case 0x1e:       // Record Separator, or \036
-                //case L'\u0085':  // Next Line (C1 Control Code), or \0205
-                //case L'\u2028':  // Line Separator
-                //case L'\u2029':  // Paragraph Separator
-                    if (prev_cr) {
+                case 0x0b:  [[unlikely]]        // Line Tabulation, \v as well as \x0b and \013
+                case 0x0c:  [[unlikely]]        // Form Feed, \f as well as \x0c and \014
+                case 0x1c:  [[unlikely]]        // File Separator, or \034
+                case 0x1d:  [[unlikely]]        // Group Separator, or \035
+                case 0x1e:  [[unlikely]]        // Record Separator, or \036
+                //case L'\u0085':   [[unlikely]]  // Next Line (C1 Control Code), or \0205
+                //case L'\u2028':   [[unlikely]]  // Line Separator
+                //case L'\u2029':   [[unlikely]]  // Paragraph Separator
+                    if (prev_cr) [[unlikely]] {
                         res.push_back(current);
                         current.clear();
                     }
-                    if (keep_end)
+                    if (keep_end) [[unlikely]]
                         current += ch;
                     res.push_back(current);
                     current.clear();
                     prev_cr = false;
                     break;
 
-                case value_type('\r'):      // Line Feed
-                    if (prev_cr) {
+                case value_type('\r'): [[unlikely]]      // Line Feed
+                    if (prev_cr) [[unlikely]] {
                         res.push_back(current);
                         current.clear();
                     }
-                    if (keep_end)
+                    if (keep_end) [[unlikely]]
                         current += ch;
                     prev_cr = true;
                     break;
 
-                case value_type('\n'):      // Carriage return
-                    if (keep_end)
+                case value_type('\n'): [[unlikely]]      // Carriage return
+                    if (keep_end) [[unlikely]]
                         current += ch;
                     res.push_back(current);
                     current.clear();
@@ -1704,8 +1714,8 @@ namespace pcs // i.e. "pythonic c++ strings"
                     break;
 
 
-                default:
-                    if (prev_cr) {
+                default: [[likely]]
+                    if (prev_cr) [[unlikely]] {
                         res.push_back(current);
                         current.clear();
                         prev_cr = false;
@@ -1715,7 +1725,7 @@ namespace pcs // i.e. "pythonic c++ strings"
                 }
             }
 
-            if (prev_cr) {
+            if (prev_cr) [[unlikely]] {
                 res.push_back(current);
             }
 
@@ -1810,8 +1820,9 @@ namespace pcs // i.e. "pythonic c++ strings"
         [[nodiscard]]
         inline CppStringT substr(const size_type start, const size_type count = -1) const noexcept
         {
-            if (start > this->size())
+            if (start > this->size()) [[unlikely]]
                 return CppStringT();
+
             const size_type width{ std::min(count, this->size() - start + 1) };
             return CppStringT(MyBaseClass::substr(start, width));
         }
@@ -1902,13 +1913,13 @@ namespace pcs // i.e. "pythonic c++ strings"
         [[nodiscard]]
         inline CppStringT zfill(const size_type width) const noexcept
         {
-            if (this->size() >= width)
+            if (this->size() >= width) [[unlikely]]
                 return *this;
 
             const size_type padding_width = width - this->size();
-            if ((*this)[0] == '+' || (*this)[0] == '-')
+            if ((*this)[0] == '-' || (*this)[0] == '+') [[unlikely]]
                 return (*this)[0] + this->substr(1, this->size() - 1).ljust(width - 1, value_type('0'));
-            else
+            else [[likely]]
                 return this->ljust(width, value_type('0'));
         }
 
@@ -2002,14 +2013,14 @@ namespace pcs // i.e. "pythonic c++ strings"
         const IntT _prepare_iterating(const IntT str_size) noexcept
         {
             if (_start == DEFAULT) {
-                if (_step < 0 && _step != DEFAULT)
+                if (_step < 0 && _step != DEFAULT) [[unlikely]]
                     _start = str_size - 1;
-                else
+                else [[likely]]
                     _start = 0;
             }
             else if (_start < 0) {
                 _start += str_size;
-                if (_start < 0)
+                if (_start < 0) [[unlikely]]
                     _start = 0;
             }
             else if (_start >= str_size) {
@@ -2018,7 +2029,7 @@ namespace pcs // i.e. "pythonic c++ strings"
             }
 
             if (_stop == DEFAULT) {
-                if (_step < 0 && _step != DEFAULT)
+                if (_step < 0 && _step != DEFAULT) [[unlikely]]
                     _stop = 0;
                 else
                     _stop = str_size;
@@ -2031,13 +2042,13 @@ namespace pcs // i.e. "pythonic c++ strings"
             else if (_stop > str_size)
                 _stop = str_size;
 
-            if (_step == DEFAULT)
+            if (_step == DEFAULT) [[likely]]
                 _step = 1;
-            if (_step < 0) {
+            if (_step < 0) [[unlikely]] {
                 if (_start <= _stop)
                     _step = 0;  // will force end() to true
             }
-            else {
+            else [[unlikely]] {
                 if (_start >= _stop)
                     _step = 0;  // will force end() to true
             }
