@@ -1,0 +1,21 @@
+var searchData=
+[
+  ['slice_0',['Slice',['../classpcs_1_1_slice.html#ab51c3b03351e495729545f2fdaebb888',1,'pcs::Slice']]],
+  ['split_1',['split',['../classpcs_1_1_cpp_string_t.html#a7ca47096b03baa0091c3b0349d210931',1,'pcs::CppStringT::split() noexcept'],['../classpcs_1_1_cpp_string_t.html#acf4d923cfed55cfd90cf12651ce0ac3d',1,'pcs::CppStringT::split(const CppStringT &amp;sep) noexcept'],['../classpcs_1_1_cpp_string_t.html#a8fa2afe84d7fc26f96bbd55f4266df2a',1,'pcs::CppStringT::split(const size_type maxsplit) noexcept'],['../classpcs_1_1_cpp_string_t.html#a55a3fa32de834f644ac28d7c2495fa77',1,'pcs::CppStringT::split(const CppStringT &amp;sep, const size_type maxsplit) noexcept']]],
+  ['splitlines_2',['splitlines',['../classpcs_1_1_cpp_string_t.html#a0bd53df14569c307b5ca50a2e1e62960',1,'pcs::CppStringT']]],
+  ['start_3',['start',['../classpcs_1_1_slice.html#a5280a9d6974217c94de5d9027e10d4e1',1,'pcs::Slice']]],
+  ['startslice_4',['StartSlice',['../structpcs_1_1_start_slice.html#ae435a090e0d93fe221cab4822e352886',1,'pcs::StartSlice']]],
+  ['startstepslice_5',['StartStepSlice',['../structpcs_1_1_start_step_slice.html#a438eef8b248cc00ed48afda08aff6d4c',1,'pcs::StartStepSlice']]],
+  ['startstopslice_6',['StartStopSlice',['../structpcs_1_1_start_stop_slice.html#a7c8ad9cb9d63fb9d56b3dbc9647297b4',1,'pcs::StartStopSlice']]],
+  ['startswith_7',['startswith',['../classpcs_1_1_cpp_string_t.html#a5a131c385a01ccc5410d4cffa55cf700',1,'pcs::CppStringT::startswith(const CppStringT &amp;prefix, const size_type start, const size_type end) const noexcept'],['../classpcs_1_1_cpp_string_t.html#ad2cfcc7bd22736ebd9f91f04e6a42f8c',1,'pcs::CppStringT::startswith(const CppStringT &amp;prefix, const size_type start) const noexcept'],['../classpcs_1_1_cpp_string_t.html#ae2f755ae7903586a2086b7b7f943d96e',1,'pcs::CppStringT::startswith(const CppStringT &amp;prefix) const noexcept'],['../classpcs_1_1_cpp_string_t.html#a326eb96e19c3559a84af86ff1bf54aa4',1,'pcs::CppStringT::startswith(const std::initializer_list&lt; CppStringT &gt; &amp;prefixes, const size_type start, const size_type end) const noexcept']]],
+  ['startswith_5fn_8',['startswith_n',['../classpcs_1_1_cpp_string_t.html#a3b7955f9c7f9452a6a025caaaf0e6d73',1,'pcs::CppStringT::startswith_n(const CppStringT &amp;prefix, const size_type start, const size_type count) const noexcept'],['../classpcs_1_1_cpp_string_t.html#ae0865e2c7f8a4871804bf71c1c982dc6',1,'pcs::CppStringT::startswith_n(const CppStringT &amp;prefix, const size_type count) const noexcept'],['../classpcs_1_1_cpp_string_t.html#ab2b293c5f1b55af52ceb75b8f7e4d42e',1,'pcs::CppStringT::startswith_n(const std::initializer_list&lt; CppStringT &gt; &amp;prefix, const size_type start, const size_type count) const noexcept']]],
+  ['step_9',['step',['../classpcs_1_1_slice.html#a55f046a5343a6ea1bbff8686d2e72d78',1,'pcs::Slice']]],
+  ['stepslice_10',['StepSlice',['../structpcs_1_1_step_slice.html#ad24accb58329f71457fbaf00fbbbf874',1,'pcs::StepSlice']]],
+  ['stop_11',['stop',['../classpcs_1_1_slice.html#a0fed0ac66885187eb64d1982e0461916',1,'pcs::Slice']]],
+  ['stopslice_12',['StopSlice',['../structpcs_1_1_stop_slice.html#a9d59c11b1bc398b71abc59b4071da379',1,'pcs::StopSlice']]],
+  ['stopstepslice_13',['StopStepSlice',['../structpcs_1_1_stop_step_slice.html#a86288ad6b535b8b4d522e8173511c639',1,'pcs::StopStepSlice']]],
+  ['strip_14',['strip',['../classpcs_1_1_cpp_string_t.html#a02919129cdf158e75eae1e9815a071bf',1,'pcs::CppStringT::strip(const CppStringT &amp;removedchars) const noexcept'],['../classpcs_1_1_cpp_string_t.html#a12bc043347f555b4701e0c70d972058d',1,'pcs::CppStringT::strip() const noexcept']]],
+  ['substr_15',['substr',['../classpcs_1_1_cpp_string_t.html#a9debc70420a3fbc7722e3111aeccd819',1,'pcs::CppStringT']]],
+  ['swap_5fcase_16',['swap_case',['../namespacepcs.html#ac6e0b881e35c04e9b5bbe6e8b17ee1a7',1,'pcs']]],
+  ['swapcase_17',['swapcase',['../classpcs_1_1_cpp_string_t.html#a6ab02b4d1c8093a5dfc089a45427f63c',1,'pcs::CppStringT']]]
+];
