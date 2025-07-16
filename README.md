@@ -1,9 +1,7 @@
 # Library cpp-strings
  [![license](http://img.shields.io/github/license/schmouk/cpp-strings.svg?style=plastic&labelColor=blueviolet&color=lightblue)](https://github.com/schmouk/cpprandlib/license)  [![Latest release](http://img.shields.io/github/release/schmouk/cpp-strings.svg?style=plastic&labelColor=blueviolet&color=success)](https://github.com/schmouk/cpprandlib/releases)  [![code_coverage](https://img.shields.io/badge/code_coverage-100%25-success?style=plastic&labelColor=blueviolet)]()  [![tests](https://img.shields.io/badge/tests-passing-success?style=plastic&labelColor=blueviolet)]()
 
-github repository: [https://github.com/schmouk/pythonic-cpp-strings](https://github.com/schmouk/pythonic-cpp-strings)
-
-What if c++ strings where as easy to use as Python strings?
+###What if c++ strings where as easy to use as Python strings?
 
 Let's just use c++ strings as are Python ones, with same API or as similar API as possible.  
 Library **cpp-strings** is fully templated. Just download header file `cppstrings.h` and put it anywhere in your project. Notice: all of its stuff is declared and defined in namespace `pcs` - which stands for **P**ythonic **C**++ **S**trings.
@@ -28,6 +26,9 @@ or option `-std=c++2a` for clang and gcc (v. 9 and earlier);
 
 If you want to run the unitary tests, well, use the last version of Visual Studio (i.e. VS 2022, by July 2025). The Community free version will truly be fine.  
 The vcproject associated with the unit tests in **cpp-strings** is already configured to use the option flag `/std:c++latest` since the implemented code uses a very few but very useful c++23 goodies.
+
+github repository: [https://github.com/schmouk/pythonic-cpp-strings](https://github.com/schmouk/pythonic-cpp-strings)
+pythonic-cpp-strings github web pages are here: [https://schmouk.github.io/pythonic-cpp-strings/](https://schmouk.github.io/pythonic-cpp-strings/)
 
 
 ---
