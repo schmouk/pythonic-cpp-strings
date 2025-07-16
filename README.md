@@ -19,12 +19,13 @@ This file tests all the library stuff. It is a valuable code container with so m
 
 The code has been developed using VS2022 IDE. As such, unitary tests have been coded using Microsoft Visual Studio Cpp Unit Test Framework. The related VS project is provided with this library.
 
-Notice: no clang, gcc or msvc specific declarations or goodies have been use to code library **cpp-strings**. It should then be compilable with any of these compilers. To be able to use it with your project, just ensure that the c++ standard used with you favorite compiler is **c++20**: options `-std=c++20` or 
+Notice: no clang, gcc or msvc specific declarations or goodies have been use to code library **cpp-strings**. It should then be compilable with any of these compilers. To be able to use it with your project, just ensure that the c++ standard used with you favorite compiler is **c++20**: 
 * options `-std=c++20` or `-std=c++latest` for clang and gcc (v. 10 and above),  
 or option `-std=c++2a` for clang and gcc (v. 9 and earlier);
-* options `/std=c++20` or `/std=c++latest` for Visual Studio 2019 and above
+* options `/std=c++20` or `/std=c++latest` for Visual Studio 2019 and later.
 
-If you want to run the unitary tests, well, use Visual Studio 2022. The Community free version will truly be fine. The vcproject associated with the unit tests is already configured to use the option flag `/std:c++latest` since the implemented code uses a very few but very useful c++23 goodies.
+If you want to run the unitary tests, well, use the last version of Visual Studio (i.e. VS 2022, by July 2025). The Community free version will truly be fine.  
+The vcproject associated with the unit tests in **cpp-strings** is already configured to use the option flag `/std:c++latest` since the implemented code uses a very few but very useful c++23 goodies.
 
 
 ---
