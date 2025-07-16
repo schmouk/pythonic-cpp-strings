@@ -10,7 +10,7 @@ Library **cpp-strings** is fully templated. Just download header file `cppstring
 * Class `pcs::CppString` specializes the templated class with `char` characters.
 * Class `pcs::CppWString` specializes the templated class with `wchar_t` characters.
 
-The **cpp-strings** HTML documentation is available here: [html/index.html](html/index.html).
+The cpp-strings **HTML documentation** is available here: [cpp-strings/html/index.html](cpp-strings/html/index.html).
 
 Library **cpp-strings** is implemented with the currently most recent c++ standard available with gcc, clang and msvc c++ compilers, i.e. standard **c++20**.
 
@@ -99,7 +99,7 @@ N.B. "*planned for a next release*" does not imply that a fixed date is planned 
 ---
 ## Documentation
 
-The **cpp-strings** HTML documentation is available here: [html/index.html](html/index.html).
+The **cpp-strings** HTML documentation is available here: [cpp-strings/html/index.html](cpp-strings/html/index.html).
 
 It has then been produced with the great utility **doxygen** developed by Vicente Hernando (the doxygen Github repository can be accessed [here](https://github.com/doxygen/doxygen), and the utility can be downloaded from there: [https://www.doxygen.nl/download.html](https://www.doxygen.nl/download.html)).
 
