@@ -1,5 +1,5 @@
 # Library cpp-strings
- [![license](http://img.shields.io/github/license/schmouk/cpp-strings.svg?style=plastic&labelColor=blueviolet&color=lightblue)](https://github.com/schmouk/cpprandlib/license)  [![Latest release](http://img.shields.io/github/release/schmouk/cpp-strings.svg?style=plastic&labelColor=blueviolet&color=success)](https://github.com/schmouk/cpprandlib/releases)  [![code_coverage](https://img.shields.io/badge/code_coverage-100%25-success?style=plastic&labelColor=blueviolet)]()  [![tests](https://img.shields.io/badge/tests-passing-success?style=plastic&labelColor=blueviolet)]()
+ [![license](http://img.shields.io/github/license/schmouk/pythonic-cpp-strings.svg?style=plastic&labelColor=blueviolet&color=lightblue)](https://github.com/schmouk/pythonic-cpp-strings/license)  [![Latest release](http://img.shields.io/github/release/schmouk/pythonic-cpp-strings.svg?style=plastic&labelColor=blueviolet&color=success)](https://github.com/schmouk/cpprandlib/releases)  [![code_coverage](https://img.shields.io/badge/code_coverage-100%25-success?style=plastic&labelColor=blueviolet)]()  [![tests](https://img.shields.io/badge/tests-passing-success?style=plastic&labelColor=blueviolet)]()
 
 ### What if c++ strings where as easy to use as Python strings?
 
@@ -10,7 +10,9 @@ Library **cpp-strings** is fully templated. Just download header file `cppstring
 * Class `pcs::CppString` specializes the templated class with `char` characters.
 * Class `pcs::CppWString` specializes the templated class with `wchar_t` characters.
 
-**cpp-strings** is implemented with the currently most recent c++ standard available with gcc, clang and msvc c++ compilers, i.e. standard **c++20**.
+The **cpp-strings** HTML documentation is available here: [html/index.html](html/index.html).
+
+Library **cpp-strings** is implemented with the currently most recent c++ standard available with gcc, clang and msvc c++ compilers, i.e. standard **c++20**.
 
 * directory `cpp-strings` contains the header file `cppstring.h`.  
 This is the header file to include in your projects.
@@ -28,7 +30,7 @@ If you want to run the unitary tests, well, use the last version of Visual Studi
 The vcproject associated with the unit tests in **cpp-strings** is already configured to use the option flag `/std:c++latest` since the implemented code uses a very few but very useful c++23 goodies.
 
 github repository: [https://github.com/schmouk/pythonic-cpp-strings](https://github.com/schmouk/pythonic-cpp-strings)  
-pythonic-cpp-strings github web pages are here: [https://schmouk.github.io/pythonic-cpp-strings/](https://schmouk.github.io/pythonic-cpp-strings/)
+pythonic-cpp-strings github web pages: [https://schmouk.github.io/pythonic-cpp-strings/](https://schmouk.github.io/pythonic-cpp-strings/)
 
 
 ---
