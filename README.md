@@ -27,7 +27,7 @@ or option `-std=c++2a` for clang and gcc (v. 9 and earlier);
 If you want to run the unitary tests, well, use the last version of Visual Studio (i.e. VS 2022, by July 2025). The Community free version will truly be fine.  
 The vcproject associated with the unit tests in **cpp-strings** is already configured to use the option flag `/std:c++latest` since the implemented code uses a very few but very useful c++23 goodies.
 
-github repository: [https://github.com/schmouk/pythonic-cpp-strings](https://github.com/schmouk/pythonic-cpp-strings)
+github repository: [https://github.com/schmouk/pythonic-cpp-strings](https://github.com/schmouk/pythonic-cpp-strings)  
 pythonic-cpp-strings github web pages are here: [https://schmouk.github.io/pythonic-cpp-strings/](https://schmouk.github.io/pythonic-cpp-strings/)
 
 
