@@ -99,7 +99,7 @@ N.B. "*planned for a next release*" does not imply that a fixed date is planned 
 ---
 ## Documentation
 
-The **cpp-strings** HTML documentation is available in subdirectory `cpp-strings/html`. Click on file `index.html` there from your file manager to browse its content or click [here]](https://github.com/schmouk/pythonic-cpp-strings/cpp-strings/html/index.html) when being currently browsing from [https://schmouk.github.io/pythonic-cpp-strings/](https://schmouk.github.io/pythonic-cpp-strings/).
+The **cpp-strings** HTML documentation is available in subdirectory `cpp-strings/html`. Click on file `index.html` there from your file manager to browse its content or click [here](https://github.com/schmouk/pythonic-cpp-strings/cpp-strings/html/index.html) when being currently browsing from [https://schmouk.github.io/pythonic-cpp-strings/](https://schmouk.github.io/pythonic-cpp-strings/).
 
 It has then been produced with the great utility **doxygen** developed by Vicente Hernando (the doxygen Github repository can be accessed [here](https://github.com/doxygen/doxygen), and the utility can be downloaded from there: [https://www.doxygen.nl/download.html](https://www.doxygen.nl/download.html)).
 
