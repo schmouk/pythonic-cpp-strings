@@ -1,5 +1,4 @@
 var searchData=
 [
-  ['release_201_200_201_200_200_20224_202025_2007_0',['Latest Release - Release 1.0 (1.0.0.224) 2025/07',['../index.html#autotoc_md5',1,'']]],
-  ['release_20release_201_200_201_200_200_20224_202025_2007_1',['Latest Release - Release 1.0 (1.0.0.224) 2025/07',['../index.html#autotoc_md5',1,'']]]
+  ['easy_20to_20use_20as_20python_20strings_0',['What if c++ strings where as easy to use as Python strings?',['../index.html#autotoc_md1',1,'']]]
 ];

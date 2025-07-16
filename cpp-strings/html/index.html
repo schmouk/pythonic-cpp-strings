@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=11"/>
 <meta name="generator" content="Doxygen 1.14.0"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>cpp-strings: Library cpp-string</title>
+<title>cpp-strings: Library cpp-strings</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -86,12 +86,13 @@ $(function(){initNavTree('index.html','',''); });
 </div>
 
 <div><div class="header">
-  <div class="headertitle"><div class="title">Library cpp-string </div></div>
+  <div class="headertitle"><div class="title">Library cpp-strings </div></div>
 </div><!--header-->
 <div class="contents">
 <div class="textblock"><p><a class="anchor" id="md__e_1_2_git_hub_2pythonic-cpp-strings_2_r_e_a_d_m_e"></a></p>
-<p><a href="https://github.com/schmouk/cpprandlib/license"><img src="http://img.shields.io/github/license/schmouk/cpp-strings.svg?style=plastic&amp;labelColor=blueviolet&amp;color=lightblue" alt="license" style="pointer-events: none;" class="inline"/></a> <a href="https://github.com/schmouk/cpprandlib/releases"><img src="http://img.shields.io/github/release/schmouk/cpp-strings.svg?style=plastic&amp;labelColor=blueviolet&amp;color=success" alt="Latest release" style="pointer-events: none;" class="inline"/></a> <img src="https://img.shields.io/badge/code_coverage-100%25-success?style=plastic&amp;labelColor=blueviolet" alt="code_coverage" class="inline"/> <img src="https://img.shields.io/badge/tests-passing-success?style=plastic&amp;labelColor=blueviolet" alt="tests" class="inline"/></p>
-<p>What if c++ strings where as easy to use as Python strings?</p>
+<p><a href="https://github.com/schmouk/pythonic-cpp-strings/license"><img src="http://img.shields.io/github/license/schmouk/pythonic-cpp-strings.svg?style=plastic&amp;labelColor=blueviolet&amp;color=lightblue" alt="license" style="pointer-events: none;" class="inline"/></a> <a href="https://github.com/schmouk/pythonic-cpp-strings/releases"><img src="http://img.shields.io/github/release/schmouk/pythonic-cpp-strings.svg?style=plastic&amp;labelColor=blueviolet&amp;color=success" alt="Latest release" style="pointer-events: none;" class="inline"/></a> <img src="https://img.shields.io/badge/code_coverage-100%25-success?style=plastic&amp;labelColor=blueviolet" alt="code_coverage" class="inline"/> <img src="https://img.shields.io/badge/tests-passing-success?style=plastic&amp;labelColor=blueviolet" alt="tests" class="inline"/></p>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md1"></a>
+What if c++ strings where as easy to use as Python strings?</h2>
 <p>Let's just use c++ strings as are Python ones, with same API or as similar API as possible. <br  />
  Library <b>cpp-strings</b> is fully templated. Just download header file <span class="tt">cppstrings.h</span> and put it anywhere in your project. Notice: all of its stuff is declared and defined in namespace <span class="tt">pcs</span> - which stands for <b>P**ythonic **C</b>++ **S**trings.</p>
 <ul>
@@ -100,11 +101,12 @@ $(function(){initNavTree('index.html','',''); });
 <li>Class <span class="tt">pcs::CppString</span> specializes the templated class with <span class="tt">char</span> characters.</li>
 <li>Class <span class="tt">pcs::CppWString</span> specializes the templated class with <span class="tt">wchar_t</span> characters.</li>
 </ul>
-<p><b>cpp-strings</b> is implemented with the currently most recent c++ standard available with gcc, clang and msvc c++ compilers, i.e. standard <b>c++20</b>.</p>
+<p>The <b>cpp-strings</b> HTML documentation is available here: <a href="html/index.html">html/index.html</a>.</p>
+<p>Library <b>cpp-strings</b> is implemented with the currently most recent c++ standard available with gcc, clang and msvc c++ compilers, i.e. standard <b>c++20</b>.</p>
 <ul>
 <li>directory <span class="tt">cpp-strings</span> contains the header file <span class="tt">cppstring.h</span>. <br  />
  This is the header file to include in your projects.</li>
-<li>directory <span class="tt">cpp-strings-tests</span> contains the unit test file <span class="tt">cpp-strings-tests.cpp</span> <br  />
+<li>directory <span class="tt">cpp-strings-tests</span> contains the unit-tests file <span class="tt">cpp-strings-tests.cpp</span> <br  />
  This file tests all the library stuff. It is a valuable code container with so many examples of use of the library, the classes, the methods and the functions it defines.</li>
 </ul>
 <p>The code has been developed using VS2022 IDE. As such, unitary tests have been coded using Microsoft Visual Studio Cpp Unit Test Framework. The related VS project is provided with this library.</p>
@@ -115,8 +117,10 @@ $(function(){initNavTree('index.html','',''); });
 </ul>
 <p>If you want to run the unitary tests, well, use the last version of Visual Studio (i.e. VS 2022, by July 2025). The Community free version will truly be fine. <br  />
  The vcproject associated with the unit tests in <b>cpp-strings</b> is already configured to use the option flag <span class="tt">/std:c++latest</span> since the implemented code uses a very few but very useful c++23 goodies.</p>
+<p>github repository: <a href="https://github.com/schmouk/pythonic-cpp-strings">https://github.com/schmouk/pythonic-cpp-strings</a> <br  />
+ pythonic-cpp-strings github web pages: <a href="https://schmouk.github.io/pythonic-cpp-strings/">https://schmouk.github.io/pythonic-cpp-strings/</a></p>
 <hr  />
- <h1 class="doxsection"><a class="anchor" id="autotoc_md2"></a>
+ <h1 class="doxsection"><a class="anchor" id="autotoc_md3"></a>
 License</h1>
 <pre class="fragment">Library cpp-strings
 "What if c++ strings where as easy to use as Python strings?"
@@ -137,23 +141,40 @@ GNU General Public License for more details.
 You should have received a copy  of  the  GNU General Public License
 along with this program.  If not, see &lt;https://www.gnu.org/licenses/&gt;.
 </pre><hr  />
- <h1 class="doxsection"><a class="anchor" id="autotoc_md3"></a>
+ <h1 class="doxsection"><a class="anchor" id="autotoc_md4"></a>
 Intro</h1>
 <p>The creation of this library has been started with the aim at easing the use of strings in c++. Other projects exist, even aiming also to implement a Python-like strings API, but the only ones we have found were either started but not completed, or were not implementing the whole Python API.</p>
 <p>So, we started to work on <b>Pythonic c++ strings</b>. Library <b>cpp-strings</b> is now ready. It fully implements the Python API (even with a c++ implementation of <em>slices</em>) and it is fully tested with <em>unitary tests</em>.</p>
 <p>The implementation of library <b>cpp-strings</b> is fully templated and is contained into a single header file: <span class="tt">cpp-strings/cppstrings.h</span>. To take a whole benefit of it, just add this header file to your project and include it in your own files. It very fastly compiles. That's all!</p>
 <p>Header file <span class="tt">cpp-strings/cppstrings.h</span> defines:</p><ul>
 <li>templated class <span class="tt">template&lt;typename CharT&gt; class pcs::CppStringT</span> which implements all the stuff about pythonic c++ strings. It inherits from c++ STL class <span class="tt">std::basic_string&lt;CharT&gt;</span>, so it gets access to all c++ STL methods, functions and goodies about strings;</li>
-<li>this class is specialized by <span class="tt">using pcs::CppString&gt; = pcs::CppStringT&lt;char&gt;</span> for pythonic c++ strings based on <span class="tt">char</span> characters;</li>
-<li>it is also specialized by <span class="tt">using pcs::CppWString&gt; = pcs::CppStringT&lt;wchar_t&gt;</span> for pythonic c++ strings based on <span class="tt">wchar_t</span> characters.</li>
+<li>this class is specialized by: <span class="tt">using pcs::CppString&gt; = pcs::CppStringT&lt;char&gt;</span> for pythonic c++ strings based on <span class="tt">char</span> characters;</li>
+<li>it is also specialized by: <span class="tt">using pcs::CppWString&gt; = pcs::CppStringT&lt;wchar_t&gt;</span> for pythonic c++ strings based on <span class="tt">wchar_t</span> characters.</li>
 </ul>
-<p>The unitary tests are provided in directory <span class="tt">cpp-strings-tests/</span>. File <span class="tt">cpp-strings-tests.cpp</span> contains the related code. They has been coded using VS2022 IDE and as such, are using the Microsoft Visual Studio Cpp Unit Test Framework. The related VS project can be found in the same directory. It is already configured to create code for Release as well as for Debug configurations, and for 32-bits or 64-bits platforms at your choice. <br  />
- This <span class="tt">.cpp file</span> is a great place to see <b>cpp-strings</b> code in action. Each structure, class, method, litteral operator and function being unitary tested, you should find there many examples of their use for all <b>cpp-strings</b> stuff.</p>
+<p>The unitary tests are provided in directory <span class="tt">cpp-strings-tests/</span>. File <span class="tt">cpp-strings-tests/cpp-strings-tests.cpp</span> contains the related code. Tests have been coded using VS2022 IDE and as such, are using the Microsoft Visual Studio Cpp Unit Test Framework. The related VS project can be found in the same directory. It is already configured to create code for Release as well as for Debug configurations, and for 32-bits or 64-bits platforms at your choice. <br  />
+ This <span class="tt">.cpp</span> file is a great place to see <b>cpp-strings</b> code in action. Each structure, class, method, litteral operator and function being unitary tested in here, you should find there many examples of its use for all <b>cpp-strings</b> stuff.</p>
 <hr  />
- <h1 class="doxsection"><a class="anchor" id="autotoc_md5"></a>
-Latest Release - Release 1.0 (1.0.0.224) 2025/07</h1>
-<p>The coding of this project started by March 2023 and had been put in standby mode for some months. The very first release is now availble (since July 2025), as <b>Release 1.0</b>.</p>
-<p>This release has been fully tested. It implements all Python strings API but one feature (see below). Python <em>slices</em> are implemented via c++ <span class="tt">operator()</span> as declared and defined in the templated class <span class="tt">pcs::CppStringT&lt;&gt;</span>. Python slices have next specific notation: <span class="tt">[start : stop : step]</span> and allow the running through range [start, stop) (notice: stop is excluded from the range) step by step. Operator <span class="tt">(start, stop, step)</span> acts the same way while running through the content of c++ strings. </p>
+ <h1 class="doxsection"><a class="anchor" id="autotoc_md6"></a>
+Latest Release - Release 1.0 (1.0.0.229) 2025/07</h1>
+<p>The coding of this project started by March 2023 and had been put in standby mode for some months - no time to work on it. The very first release is now availble (since July 2025), as <b>Release 1.0</b>.</p>
+<p>This release has been fully tested. Code coverage is 100%.</p>
+<p>Release 1.0 implements all Python strings API but one feature (see below).</p>
+<p>Python <em>slices</em> are implemented via c++ <span class="tt">operator()</span> as declared and defined in the templated class <span class="tt">pcs::CppStringT&lt;&gt;</span>. Python slices have next specific notation: <span class="tt">[start : stop : step]</span> and allow the running step by step through range [start, stop) (notice: stop is excluded from the range). Operator <span class="tt">(start, stop, step)</span> acts the same way while running through the content of pythonic c++ strings. A dedicated base class <span class="tt">Slice</span> is also provided and can be passed as argument to <span class="tt">operator()</span>. It is derived in many simpler slices classes, since Python slices may not define either <span class="tt">start</span>, <span class="tt">stop</span> or <span class="tt">step</span> which then get default values (resp. 0, <em>end-of-sequence</em>, and 1).</p>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md7"></a>
+Missing parts in Release 1.0</h2>
+<p>Python strings are based on Unicode chars. This is currently not the case for pythonic c++ strings in <b>cpp-strings</b>. <br  />
+ Unicode encoding allows for a specific comparison mode on strings, the <b>casefold</b> mode. There, Unicode chars are transformed into their lower equivalent char in a standardized manner which is more "agressive" than the simpler lowering method <span class="tt">lower()</span>. Comparing strings without taking into account the case of their chars is then performed in a far more accurate manner. <br  />
+ This feature is currently NOT implemented in library <b>cpp-strings</b>.</p>
+<p>So up to now, if you want to compare pythonic c++ strings from <b>cpp-strings</b> on whatever the case is for each of their chars, compare them applying method <span class="tt">.lower()</span> to both strings. This will do the job for chars and for wchar_t also for a majority of languages (but might fail for very few signs of specific languages in this last case).</p>
+<p>Notice: dealing with Unicode chars and implementing method <span class="tt">casefold()</span> as it is the case in Python is planned for a next release of library <b>cpp-strings</b>. <br  />
+ N.B. "*planned for a next release*" does not imply that a fixed date is planned either.</p>
+<hr  />
+ <h1 class="doxsection"><a class="anchor" id="autotoc_md9"></a>
+Documentation</h1>
+<p>The <b>cpp-strings</b> HTML documentation is available here: <a href="html/index.html">html/index.html</a>.</p>
+<p>It has then been produced with the great utility <b>doxygen</b> developed by Vicente Hernando (the doxygen Github repository can be accessed <a href="https://github.com/doxygen/doxygen">here</a>, and the utility can be downloaded from there: <a href="https://www.doxygen.nl/download.html">https://www.doxygen.nl/download.html</a>).</p>
+<p>This is a short documentation of the library. For some of its part it is a copy of the Python original documentation on strings. For its other part it documents the c++ implementation of <b>cpp-strings</b>.</p>
+<p>And remember: to better understand how to use this pythonic c++ strings library, have a look also at <a href="cpp-strings-tests/cpp-strings-tests.cpp"><span class="tt">cpp-strings-tests/cpp-strings-tests.cpp</span></a> to see <b>cpp-strings</b> library code in action! </p>
 </div></div><!-- PageDoc -->
 <a href="doxygen_crawl.html"></a>
 </div><!-- contents -->
