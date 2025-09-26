@@ -74,9 +74,9 @@ This `.cpp` file is a great place to see **cpp-strings** code in action. Each st
 
 
 ---
-## Latest Release - Release 1.0 (1.0.0.229) 2025/07
+## Latest Release - Release 1.0 (1.0.2.232) 2025/07
 
-The coding of this project started by March 2023 and had been put in standby mode for some months - no time to work on it. The very first release is now availble (since July 2025), as **Release 1.0**.
+The coding of this project started by March 2023 and had been put in standby mode for some months - no time to work on it. The very first release is now availble (since July 2025), as **Release 1.0.2**.
 
 This release has been fully tested. Code coverage is 100%.
 
