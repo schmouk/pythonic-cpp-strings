@@ -25,7 +25,7 @@
 var NAVTREE =
 [
   [ "cpp-strings", "index.html", [
-    [ "Library cpp-string", "index.html", "index" ],
+    [ "Library cpp-strings", "index.html", "index" ],
     [ "Namespaces", "namespaces.html", [
       [ "Namespace List", "namespaces.html", "namespaces_dup" ],
       [ "Namespace Members", "namespacemembers.html", [

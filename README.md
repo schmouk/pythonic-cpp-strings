@@ -1,9 +1,8 @@
-# Library cpp-strings
- [![license](http://img.shields.io/github/license/schmouk/cpp-strings.svg?style=plastic&labelColor=blueviolet&color=lightblue)](https://github.com/schmouk/cpprandlib/license)  [![Latest release](http://img.shields.io/github/release/schmouk/cpp-strings.svg?style=plastic&labelColor=blueviolet&color=success)](https://github.com/schmouk/cpprandlib/releases)  [![code_coverage](https://img.shields.io/badge/code_coverage-100%25-success?style=plastic&labelColor=blueviolet)]()  [![tests](https://img.shields.io/badge/tests-passing-success?style=plastic&labelColor=blueviolet)]()
+<img src="banner-image.jpg" width="512" height="454" alt="Library banner">
 
-github repository: [https://github.com/schmouk/pythonic-cpp-strings](https://github.com/schmouk/pythonic-cpp-strings)
+ [![license](http://img.shields.io/github/license/schmouk/pythonic-cpp-strings.svg?style=plastic&labelColor=blueviolet&color=lightblue)](https://github.com/schmouk/pythonic-cpp-strings/license)  [![Latest release](http://img.shields.io/github/release/schmouk/pythonic-cpp-strings.svg?style=plastic&labelColor=blueviolet&color=success)](https://github.com/schmouk/pythonic-cpp-strings/releases)  [![code_coverage](https://img.shields.io/badge/code_coverage-100%25-success?style=plastic&labelColor=blueviolet)]()  [![tests](https://img.shields.io/badge/tests-passing-success?style=plastic&labelColor=blueviolet)]()
 
-What if c++ strings where as easy to use as Python strings?
+### What if c++ strings were as easy to use as Python strings?
 
 Let's just use c++ strings as are Python ones, with same API or as similar API as possible.  
 Library **cpp-strings** is fully templated. Just download header file `cppstrings.h` and put it anywhere in your project. Notice: all of its stuff is declared and defined in namespace `pcs` - which stands for **P**ythonic **C**++ **S**trings.
@@ -12,7 +11,9 @@ Library **cpp-strings** is fully templated. Just download header file `cppstring
 * Class `pcs::CppString` specializes the templated class with `char` characters.
 * Class `pcs::CppWString` specializes the templated class with `wchar_t` characters.
 
-**cpp-strings** is implemented with the currently most recent c++ standard available with gcc, clang and msvc c++ compilers, i.e. standard **c++20**.
+The cpp-strings **HTML documentation** is available in subdirectory `cpp-strings/html`. Click on file `index.html` there from your local file manager to browse its content.
+
+Library **cpp-strings** is implemented with the currently most recent c++ standard available with gcc, clang and msvc c++ compilers, i.e. standard **c++20**.
 
 * directory `cpp-strings` contains the header file `cppstring.h`.  
 This is the header file to include in your projects.
@@ -28,6 +29,9 @@ or option `-std=c++2a` for clang and gcc (v. 9 and earlier);
 
 If you want to run the unitary tests, well, use the last version of Visual Studio (i.e. VS 2022, by July 2025). The Community free version will truly be fine.  
 The vcproject associated with the unit tests in **cpp-strings** is already configured to use the option flag `/std:c++latest` since the implemented code uses a very few but very useful c++23 goodies.
+
+github repository: [https://github.com/schmouk/pythonic-cpp-strings](https://github.com/schmouk/pythonic-cpp-strings)  
+pythonic-cpp-strings github web pages: [https://schmouk.github.io/pythonic-cpp-strings/](https://schmouk.github.io/pythonic-cpp-strings/)
 
 
 ---
@@ -71,9 +75,9 @@ This `.cpp` file is a great place to see **cpp-strings** code in action. Each st
 
 
 ---
-## Latest Release - Release 1.0 (1.0.0.224) 2025/07
+## Latest Release - Release 1.0 (1.0.2.232) 2025/07
 
-The coding of this project started by March 2023 and had been put in standby mode for some months - no time to work on it. The very first release is now availble (since July 2025), as **Release 1.0**.
+The coding of this project started by March 2023 and had been put in standby mode for some months - no time to work on it. The very first release is now availble (since July 2025), as **Release 1.0.2**.
 
 This release has been fully tested. Code coverage is 100%.
 
@@ -96,7 +100,7 @@ N.B. "*planned for a next release*" does not imply that a fixed date is planned 
 ---
 ## Documentation
 
-The **cpp-strings** HTML documentation is available here: [html/index.html](html/index.html).
+The **cpp-strings** HTML documentation is available in subdirectory `cpp-strings/html`. Click on file `index.html` there from your local file manager to browse its content.
 
 It has then been produced with the great utility **doxygen** developed by Vicente Hernando (the doxygen Github repository can be accessed [here](https://github.com/doxygen/doxygen), and the utility can be downloaded from there: [https://www.doxygen.nl/download.html](https://www.doxygen.nl/download.html)).
 
