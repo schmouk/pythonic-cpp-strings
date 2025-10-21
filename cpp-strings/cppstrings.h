@@ -835,7 +835,7 @@ namespace pcs // i.e. "pythonic c++ strings"
         *
         * Decimal characters are those that can be used to form numbers  in
         * base 10, e.g. U+0660, ARABIC-INDIC DIGIT ZERO. Formally a decimal
-        * character is a character in the Unicode General Category “Nd”.
+        * character is a character in the Unicode General Category ï¿½Ndï¿½.
         */
         [[nodiscard]]
         inline const bool isdecimal() const noexcept
@@ -883,7 +883,7 @@ namespace pcs // i.e. "pythonic c++ strings"
         * the currently implemented rule is this simpler one:
         *
         *    identifier   ::= ID_Start id_continue*
-        *    id_continue  ::= ID_Start | <decimal number>
+        *    id_continue  ::= ID_Start | decimal_number
         */
         [[nodiscard]]
         inline const bool isidentifier() const noexcept
@@ -1654,18 +1654,18 @@ namespace pcs // i.e. "pythonic c++ strings"
         * Line breaks are not included in the resulting list unless keepends is given and true.
         *
         * This method splits on the following line boundaries. In particular, the boundaries are a superset of universal newlines:
-        * \n 	        Line Feed
-        * \r 	        Carriage Return
-        * \r\n 	        Carriage Return + Line Feed
-        * \v or \x0b 	Line Tabulation
-        * \f or \x0c 	Form Feed
-        * \x1c 	        File Separator
-        * \x1d 	        Group Separator
-        * \x1e 	        Record Separator
+        * '\n' 	            Line Feed
+        * '\r' 	            Carriage Return
+        * '\r\n' 	        Carriage Return + Line Feed
+        * '\v' or '\x0b' 	Line Tabulation
+        * '\f' or '\x0c' 	Form Feed
+        * '\x1c' 	        File Separator
+        * '\x1d' 	        Group Separator
+        * '\x1e' 	        Record Separator
         * Next separators values, detected by Python method splitlines(), are currently NOT detected by CppStrings
-        * \x85 	        Next Line (C1 Control Code)
-        * \u2028 	    Line Separator
-        * \u2029 	    Paragraph Separator
+        * '\x85' 	        Next Line (C1 Control Code)
+        * '\u2028' 	        Line Separator
+        * '\u2029' 	        Paragraph Separator
         */
         [[nodiscard]]
         std::vector<CppStringT> splitlines(const bool keep_end = false) const noexcept
