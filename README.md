@@ -1,4 +1,5 @@
-# Library cpp-strings
+<img src="banner-image.jpg" width="512" height="454" alt="Library banner">
+
  [![license](http://img.shields.io/github/license/schmouk/pythonic-cpp-strings.svg?style=plastic&labelColor=blueviolet&color=lightblue)](https://github.com/schmouk/pythonic-cpp-strings/license)  [![Latest release](http://img.shields.io/github/release/schmouk/pythonic-cpp-strings.svg?style=plastic&labelColor=blueviolet&color=success)](https://github.com/schmouk/pythonic-cpp-strings/releases)  [![code_coverage](https://img.shields.io/badge/code_coverage-100%25-success?style=plastic&labelColor=blueviolet)]()  [![tests](https://img.shields.io/badge/tests-passing-success?style=plastic&labelColor=blueviolet)]()
 
 ### What if c++ strings were as easy to use as Python strings?
