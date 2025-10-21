@@ -1,4 +1,4 @@
-<img src="banner-image.jpg" width="512" height="454" alt="Library banner">
+<img src="./banner-image.jpg" width="512" height="454" alt="[Library banner]">
 
  [![license](http://img.shields.io/github/license/schmouk/pythonic-cpp-strings.svg?style=plastic&labelColor=blueviolet&color=lightblue)](https://github.com/schmouk/pythonic-cpp-strings/license)  [![Latest release](http://img.shields.io/github/release/schmouk/pythonic-cpp-strings.svg?style=plastic&labelColor=blueviolet&color=success)](https://github.com/schmouk/pythonic-cpp-strings/releases)  [![code_coverage](https://img.shields.io/badge/code_coverage-100%25-success?style=plastic&labelColor=blueviolet)]()  [![tests](https://img.shields.io/badge/tests-passing-success?style=plastic&labelColor=blueviolet)]()
 
@@ -75,9 +75,9 @@ This `.cpp` file is a great place to see **cpp-strings** code in action. Each st
 
 
 ---
-## Latest Release - Release 1.0 (1.0.2.232) 2025/07
+## Latest Release - Release 1.0 (1.0.4 - 2025/10)
 
-The coding of this project started by March 2023 and had been put in standby mode for some months - no time to work on it. The very first release is now availble (since July 2025), as **Release 1.0.2**.
+The coding of this project started by March 2023 and had been put in standby mode for some months - no time to work on it. The very first release is now availble (since July 2025), as **Release 1.0.4**.
 
 This release has been fully tested. Code coverage is 100%.
 
@@ -100,7 +100,7 @@ N.B. "*planned for a next release*" does not imply that a fixed date is planned 
 ---
 ## Documentation
 
-The **cpp-strings** HTML documentation is available in subdirectory `cpp-strings/html`. Click on file `index.html` there from your local file manager to browse its content.
+The **cpp-strings** HTML documentation is available in subdirectory `./documentation`. Click on file `index.html` there from your local file manager to browse its content.
 
 It has then been produced with the great utility **doxygen** developed by Vicente Hernando (the doxygen Github repository can be accessed [here](https://github.com/doxygen/doxygen), and the utility can be downloaded from there: [https://www.doxygen.nl/download.html](https://www.doxygen.nl/download.html)).
 
