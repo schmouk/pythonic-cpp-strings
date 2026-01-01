@@ -3,7 +3,7 @@
 	"What if c++ strings where as easy to use as Python strings?"
 	Unit tests part of the library.
 
-	Copyright (C) 2025 Philippe Schmouker
+	Copyright (C) 2025-2026 Philippe Schmouker
 	contact - ph (dot) schmouker (at) gmail (dot) com
 
 	This program is free software: you can redistribute it and/or modify
