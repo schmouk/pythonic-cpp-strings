@@ -40,7 +40,7 @@ pythonic-cpp-strings github web pages: [https://schmouk.github.io/pythonic-cpp-s
     Library cpp-strings
     "What if c++ strings where as easy to use as Python strings?"
 
-    Copyright (C) 2023-2025 Philippe Schmouker
+    Copyright (C) 2023-2026 Philippe Schmouker
     contact - ph (dot) schmouker (at) gmail (dot) com
 
     This program is free software: you can redistribute it and/or modify
