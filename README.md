@@ -85,6 +85,8 @@ Release 1.0 implements all Python strings API but one feature (see below).
 
 Python *slices* are implemented via c++ `operator()` as declared and defined in the templated class `pcs::CppStringT<>`. Python slices have next specific notation: `[start : stop : step]` and allow the running step by step through range [start, stop) (notice: stop is excluded from the range). Operator `(start, stop, step)` acts the same way while running through the content of pythonic c++ strings. A dedicated base class `Slice` is also provided and can be passed as argument to `operator()`. It is derived in many simpler slices classes, since Python slices may not define either `start`, `stop` or `step` which then get default values (resp. 0, *end-of-sequence*, and 1).
 
+Notice: Python 3.14 (released by Oct. 2025) implements Template Strings (T-Strings), see [string.templatelib — Support for template string literals](https://docs.python.org/3/library/string.templatelib.html) in Python 3.14 documentation and [PEP 750](https://peps.python.org/pep-0750/) for full explanations. Meanwhile, T-strings are not implemented in CppStrings library: the templates concept is already available in c++ language. The "translation" of T-Strings into CppStrings library is then left as an (easy) exercice to the user.
+
 
 ### Missing parts in Release 1.0
 Python strings are based on Unicode chars. This is currently not the case for pythonic c++ strings in **cpp-strings**.  
